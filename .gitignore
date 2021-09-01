@@ -1,11 +1,3 @@
-eGENIEPaperCode/save/
-EmpiricalMEC/
-RadSamples/
-Rad_G2018_NoxBcut/
-Rad_G2018_NoxBcut_NoChargedPions/
-Rad_G2018_xBcut/
-Rad_SuSav2_NoxBcut/
-systematics
 *.pcm
 *_maincxx
 *_.cxx
@@ -14,3 +6,5 @@ systematics
 *.d
 e2a_ep
 genie_analysis
+myPlots/*
+mySamples/*
