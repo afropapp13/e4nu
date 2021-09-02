@@ -594,13 +594,33 @@ void genie_analysis::Loop(Int_t choice) {
 	TH1F *h1_Npimi=new TH1F("h1_Npimi","",10,-0.5,4.5);
 	TH1F *h1_MissMomentum = new TH1F("MissMomentum","",80,0.,1.);
 
-	TH1F *h1_PMiss = new TH1F("PMiss","",80,0.,1.);
-	TH1F *h1_kMiss = new TH1F("kMiss","",80,0.,1.);		
-	TH1F *h1_PnProxy = new TH1F("PnProxy","",80,0.,1.);
-	TH2F *h2_PMiss_kMiss = new TH2F("PMiss_kMiss","",80,0.,1.,80,0.,1.);
+	// ------------------------------------------------------------------------------
+
+	int NBinsNucMom = 80;
+	double MinNucMom = 0.;
+	double MaxNucMom = 1.;	
+
+	const int Regions = 3;
+
+	TH1F *h1_PMiss[Regions];
+	TH1F *h1_kMiss[Regions];	
+	TH1F *h1_PnProxy[Regions];
+	TH2F *h2_PMiss_kMiss[Regions];
+
+	for (int region = 0; region < Regions; region ++) {
+
+		h1_PMiss[region] = new TH1F("PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+		h1_kMiss[region] = new TH1F("kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+		h1_PnProxy[region] = new TH1F("PnProxy_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);	
+		h2_PMiss_kMiss[region] = new TH2F("PMiss_kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);	
+
+	}		
+
+	// ------------------------------------------------------------------------------
 
 	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.};
 	const int NRanges = PMissRange.size() - 1;
+	double SplitPoint = 0.3; // GeV, split for PT
 
 	TH1F* h1_PMiss_Slice[NRanges];
 	TH1F* h1_kMiss_Slice[NRanges];	
@@ -608,9 +628,9 @@ void genie_analysis::Loop(Int_t choice) {
 
 	for (int slice = 0; slice < NRanges; slice ++) {
 
-		h1_PMiss_Slice[slice] = new TH1F("PMiss_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
-		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
-		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
+		h1_PMiss_Slice[slice] = new TH1F("PMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
 
 	}	
 
@@ -2296,14 +2316,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);																									
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot_2p[f] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}
 
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[f]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[f]);
@@ -2546,14 +2568,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_miss_perp_2p1pi_to2p0pi[z] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -2731,13 +2755,15 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);													
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot_2p[z] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}															
 					
 					deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);	
@@ -2911,13 +2937,15 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);														
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot_2p[z] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
 					deltaphiT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -3175,14 +3203,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);		
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);		
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);												
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot_2p[z] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -3448,14 +3478,16 @@ void genie_analysis::Loop(Int_t choice) {
 						double Pmiss = STLV[7];
 						double kMiss = STLV[9];
 						double PnProxy = STLV[12];	
-						h1_PMiss->Fill(Pmiss,LocalWeight);
-						h1_kMiss->Fill(kMiss,LocalWeight);
-						h1_PnProxy->Fill(PnProxy,LocalWeight);	
-						h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+						h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+						h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 						int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 						h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 						h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-						h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);																	
+						h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);
+						if (p_miss_perp_3pto2p[count][j] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+						else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																							
 						
 						double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 						double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -3640,14 +3672,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);														
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_miss_perp[j] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -3893,14 +3927,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);													
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_miss_perp[j] < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																															
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -4682,14 +4718,16 @@ void genie_analysis::Loop(Int_t choice) {
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
-				h1_PMiss->Fill(Pmiss,LocalWeight);
-				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+				h1_kMiss[0]->Fill(kMiss,LocalWeight);
+				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
 				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);											
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+				if (p_perp_tot < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+				else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																																											
 				
 				double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
@@ -4943,14 +4981,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
@@ -5213,14 +5253,16 @@ void genie_analysis::Loop(Int_t choice) {
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
-					h1_PMiss->Fill(Pmiss,LocalWeight);
-					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
 					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+					if (p_perp_tot < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+					else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
@@ -5415,14 +5457,16 @@ void genie_analysis::Loop(Int_t choice) {
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
-				h1_PMiss->Fill(Pmiss,LocalWeight);
-				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);		
+				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+				h1_kMiss[0]->Fill(kMiss,LocalWeight);
+				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);		
 				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);										
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+				if (p_perp_tot < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+				else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}													
 				
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
@@ -5673,14 +5717,16 @@ void genie_analysis::Loop(Int_t choice) {
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
-				h1_PMiss->Fill(Pmiss,LocalWeight);
-				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
+				h1_kMiss[0]->Fill(kMiss,LocalWeight);
+				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
 				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
 				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);											
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
+				if (p_perp_tot < SplitPoint) { h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
+				else { h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}														
 				
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
