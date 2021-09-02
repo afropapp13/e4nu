@@ -52,7 +52,7 @@ void PrettyPlot(int font, double size,TH1D* h, int Color) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-void OverlayLFGProxy() {
+void OverlayLFGProxy(TString Id = "") {
 
 	// -----------------------------------------------------------------------------
 
@@ -138,13 +138,13 @@ void OverlayLFGProxy() {
 			// -----------------------------------------------------------------------------------------------
 
 			// Open the relevant file
-			Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly");
+			Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly");
 
 			// -----------------------------------------------------------------------------------------------	
 
 			// Create the relevant canvas & Legend
 
-			TString CanvasName= "LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy];
+			TString CanvasName= Id+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy];
 			TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
 			can->SetBottomMargin(0.42);
 

@@ -31,7 +31,7 @@ using namespace std;
 
 // __________________________________________________________________________________________________________________________________________________
 
-void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, double ProtonEnergy, double STLV[]) {
+void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, double ProtonEnergy, double STLV[],double P, double N, double BindE, double EE) {
 
 	// ----------------------------------------------------------------------------------------------------
 
@@ -142,8 +142,8 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	// For the calcukation of the masses
 	//https://journals.aps.org/prc/pdf/10.1103/PhysRevC.95.065501
 
-	double MA = 22 * NeutronMass_GeV + 18 * ProtonMass_GeV - 0.34381; // GeV
-	double MAPrime = MA - NeutronMass_GeV + 0.00556; // GeV, constant obtained from table I 
+	double MA = N * NeutronMass_GeV + P * ProtonMass_GeV - BindE; // GeV
+	double MAPrime = MA - NeutronMass_GeV + EE; // GeV, constant obtained from table I 
 
 	// For the calculation of p_n, back to the Minerva PRL
 	// https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.121.022504
@@ -285,6 +285,45 @@ void genie_analysis::Loop(Int_t choice) {
 	en_beam["1161"]=1.161;
 	en_beam["2261"]=2.261;
 	en_beam["4461"]=4.461;
+
+	// ----------------------------------
+
+	// Protons in target
+
+	std::map<std::string,double> NProtons;	
+	NProtons["3He"]  = 2.;
+	NProtons["4He"]  = 2.;
+	NProtons["C12"]  = 6.;
+	NProtons["56Fe"]  = 26.;
+	NProtons["40Ar"]  = 18.;
+
+	// Neutrons in target
+
+	std::map<std::string,double> NNeutrons;	
+	NNeutrons["3He"]  = 1.;
+	NNeutrons["4He"]  = 2.;
+	NNeutrons["C12"]  = 6.;
+	NNeutrons["56Fe"]  = 30.;
+	NNeutrons["40Ar"]  = 22.;
+
+	// Binding Energy
+
+	std::map<std::string,double> BindE;	
+	BindE["3He"]  = 0.02316;
+	BindE["4He"]  = 0.02829;
+	BindE["C12"]  = 0.09216;
+	BindE["56Fe"]  = 0.4922;
+	BindE["40Ar"]  = 0.34381;	
+
+	// Separation Energy
+
+	std::map<std::string,double> EE;	
+	EE["3He"]  = 0.00499;
+	EE["4He"]  = 0.01929;
+	EE["C12"]  = 0.02713;
+	EE["56Fe"]  = 0.00968;
+
+	// ---------------------------------
 
 	en_beam_Ecal["1161"]=1.161;
 	en_beam_Ecal["2261"]=2.261;
@@ -558,6 +597,22 @@ void genie_analysis::Loop(Int_t choice) {
 	TH1F *h1_PMiss = new TH1F("PMiss","",80,0.,1.);
 	TH1F *h1_kMiss = new TH1F("kMiss","",80,0.,1.);		
 	TH1F *h1_PnProxy = new TH1F("PnProxy","",80,0.,1.);
+	TH2F *h2_PMiss_kMiss = new TH2F("PMiss_kMiss","",80,0.,1.,80,0.,1.);
+
+	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.};
+	const int NRanges = PMissRange.size() - 1;
+
+	TH1F* h1_PMiss_Slice[NRanges];
+	TH1F* h1_kMiss_Slice[NRanges];	
+	TH1F* h1_PnProxy_Slice[NRanges];
+
+	for (int slice = 0; slice < NRanges; slice ++) {
+
+		h1_PMiss_Slice[slice] = new TH1F("PMiss_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
+		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
+		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",80,0.,1.);
+
+	}	
 
 	TH1F *h1_el_mom = new TH1F("h1_el_mom","",100,0.2,6);
 	TH1F *h1_el_mom_corr = new TH1F("h1_el_mom_corr","",100,0.,5.);
@@ -2237,13 +2292,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);														
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);																									
 
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[f]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[f]);
@@ -2482,13 +2542,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -2668,7 +2733,11 @@ void genie_analysis::Loop(Int_t choice) {
 	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);				
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);													
 					
 					deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);	
@@ -2844,7 +2913,11 @@ void genie_analysis::Loop(Int_t choice) {
 
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);														
 					
 					deltaphiT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -3098,13 +3171,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);		
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);												
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
@@ -3366,13 +3444,18 @@ void genie_analysis::Loop(Int_t choice) {
 						Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 						double STLV[20] = {};
-						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 						double Pmiss = STLV[7];
 						double kMiss = STLV[9];
 						double PnProxy = STLV[12];	
 						h1_PMiss->Fill(Pmiss,LocalWeight);
 						h1_kMiss->Fill(kMiss,LocalWeight);
-						h1_PnProxy->Fill(PnProxy,LocalWeight);						
+						h1_PnProxy->Fill(PnProxy,LocalWeight);	
+						h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+						int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+						h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+						h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);																	
 						
 						double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 						double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -3553,13 +3636,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);														
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -3801,13 +3889,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);	
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);													
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
@@ -4585,13 +4678,18 @@ void genie_analysis::Loop(Int_t choice) {
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
 				h1_PMiss->Fill(Pmiss,LocalWeight);
 				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);				
+				h1_PnProxy->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);											
 				
 				double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
@@ -4841,13 +4939,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
@@ -5106,13 +5209,18 @@ void genie_analysis::Loop(Int_t choice) {
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					h1_PMiss->Fill(Pmiss,LocalWeight);
 					h1_kMiss->Fill(kMiss,LocalWeight);
-					h1_PnProxy->Fill(PnProxy,LocalWeight);					
+					h1_PnProxy->Fill(PnProxy,LocalWeight);
+					h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);
+					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);															
 					
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
@@ -5303,13 +5411,18 @@ void genie_analysis::Loop(Int_t choice) {
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
 				h1_PMiss->Fill(Pmiss,LocalWeight);
 				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);				
+				h1_PnProxy->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);		
+				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);										
 				
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
@@ -5556,13 +5669,18 @@ void genie_analysis::Loop(Int_t choice) {
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
 				h1_PMiss->Fill(Pmiss,LocalWeight);
 				h1_kMiss->Fill(kMiss,LocalWeight);
-				h1_PnProxy->Fill(PnProxy,LocalWeight);				
+				h1_PnProxy->Fill(PnProxy,LocalWeight);
+				h2_PMiss_kMiss->Fill(Pmiss,kMiss,LocalWeight);	
+				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
+				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
+				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
+				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);											
 				
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
