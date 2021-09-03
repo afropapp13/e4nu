@@ -618,7 +618,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 	// ------------------------------------------------------------------------------
 
-	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.};
+	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,10.};
 	const int NRanges = PMissRange.size() - 1;
 	double SplitPoint = 0.3; // GeV, split for PT
 

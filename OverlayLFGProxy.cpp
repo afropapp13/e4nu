@@ -120,10 +120,19 @@ void OverlayLFGProxy(TString Id = "") {
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
+	// Slices
+
+	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
+	Slice.push_back("_0"); SliceLabel.push_back("");
+
+	const int NSlices = Slice.size();	
+
+	// -----------------------------------------------------------------------------------------------------------------------------------------
+
 	// TFiles to be opened & plots to be used
 
 	TFile* Files[NEnergy][NNuclei];
-	TH1D* Plots[NEnergy][NNuclei][NPlots];	
+	TH1D* Plots[NEnergy][NNuclei][NPlots][NSlices];	
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------	
 
@@ -142,83 +151,87 @@ void OverlayLFGProxy(TString Id = "") {
 
 			// -----------------------------------------------------------------------------------------------	
 
-			// Create the relevant canvas & Legend
+			for (int WhichSlice = 0; WhichSlice < NSlices; WhichSlice++) {
 
-			TString CanvasName= Id+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy];
-			TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
-			can->SetBottomMargin(0.42);
+				// Create the relevant canvas & Legend
 
-			TLegend* leg = new TLegend(0.7,0.7,0.85,0.89);
-			leg->SetTextFont(font);
-			leg->SetTextSize(size);
-			leg->SetBorderSize(0);	
+				TString CanvasName= Id+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
+				can->SetBottomMargin(0.42);
 
-			TLatex *text = new TLatex();
-			text->SetTextFont(font);
-			text->SetTextSize(size);				
+				TLegend* leg = new TLegend(0.7,0.7,0.85,0.89);
+				leg->SetTextFont(font);
+				leg->SetTextSize(size);
+				leg->SetBorderSize(0);	
 
-			// -----------------------------------------------------------------------------------------------	
+				TLatex *text = new TLatex();
+				text->SetTextFont(font);
+				text->SetTextSize(size);				
 
-			// Loop over the plots of interest
+				// -----------------------------------------------------------------------------------------------	
 
-			for (int WhichPlot = 0; WhichPlot < NPlots; WhichPlot++) {
+				// Loop over the plots of interest
 
-				Plots[WhichEnergy][WhichNucleus][WhichPlot] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]));
-				PrettyPlot(font,size,Plots[WhichEnergy][WhichNucleus][WhichPlot],Color[WhichPlot]);
-				leg->AddEntry(Plots[WhichEnergy][WhichNucleus][WhichPlot],PlotLatex[WhichPlot],"p");
-				Plots[WhichEnergy][WhichNucleus][WhichPlot]->Draw("p0 hist same");
+				for (int WhichPlot = 0; WhichPlot < NPlots; WhichPlot++) {
 
-			}	
+					Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+Slice[WhichSlice]));
+					PrettyPlot(font,size,Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],Color[WhichPlot]);
+					leg->AddEntry(Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PlotLatex[WhichPlot],"p");
+					Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("p0 hist same");
 
-			leg->Draw();
-			text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				}	
 
-			// --------------------------------------------------------------------------------------------------------
+				leg->Draw();
+				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
 
-			// Residual plots with respect to PMiss
+				// --------------------------------------------------------------------------------------------------------
 
-			TPad* pad = new TPad("pad","pad",0.,0.,1.,0.3,21);
-			pad->SetFillColor(kWhite);
-			pad->SetTopMargin(0.);
-			pad->Draw();
-			pad->cd();
-			pad->SetGridx();
-			pad->SetGridy();						
+				// Residual plots with respect to PMiss
 
-			TH1D* kMissClone = (TH1D*)(Plots[WhichEnergy][WhichNucleus][1]->Clone());
-			kMissClone->Add(Plots[WhichEnergy][WhichNucleus][0],-1);
-			kMissClone->Divide(Plots[WhichEnergy][WhichNucleus][0]);
+				TPad* pad = new TPad("pad","pad",0.,0.,1.,0.3,21);
+				pad->SetFillColor(kWhite);
+				pad->SetTopMargin(0.);
+				pad->Draw();
+				pad->cd();
+				pad->SetGridx();
+				pad->SetGridy();						
 
-			kMissClone->GetXaxis()->SetTitleSize(0.);
-			kMissClone->GetXaxis()->SetLabelSize(0.);
-			kMissClone->GetXaxis()->SetTickSize(0.1);				
+				TH1D* kMissClone = (TH1D*)(Plots[WhichEnergy][WhichNucleus][1][WhichSlice]->Clone());
+				kMissClone->Add(Plots[WhichEnergy][WhichNucleus][0][WhichSlice],-1);
+				kMissClone->Divide(Plots[WhichEnergy][WhichNucleus][0][WhichSlice]);
 
-			kMissClone->GetYaxis()->SetTitle("Residual");
-			kMissClone->GetYaxis()->SetTitleSize(0.17);
-			kMissClone->GetYaxis()->SetLabelSize(0.17);			
-			kMissClone->GetYaxis()->SetTitleOffset(0.3);
-			kMissClone->GetYaxis()->SetNdivisions(8);
+				kMissClone->GetXaxis()->SetTitleSize(0.);
+				kMissClone->GetXaxis()->SetLabelSize(0.);
+				kMissClone->GetXaxis()->SetTickSize(0.1);				
 
-			TH1D* PnProxyClone = (TH1D*)(Plots[WhichEnergy][WhichNucleus][2]->Clone());	
-			PnProxyClone->Add(Plots[WhichEnergy][WhichNucleus][0],-1);
-			PnProxyClone->Divide(Plots[WhichEnergy][WhichNucleus][0]);			
+				kMissClone->GetYaxis()->SetTitle("Residual");
+				kMissClone->GetYaxis()->SetTitleSize(0.17);
+				kMissClone->GetYaxis()->SetLabelSize(0.17);			
+				kMissClone->GetYaxis()->SetTitleOffset(0.3);
+				kMissClone->GetYaxis()->SetNdivisions(8);
 
-			double Min = TMath::Min(kMissClone->GetMinimum(),PnProxyClone->GetMinimum());
-			double Max = TMath::Max(kMissClone->GetMaximum(),PnProxyClone->GetMaximum());;
-			kMissClone->GetYaxis()->SetRangeUser( 1.1*TMath::Max(-0.5,Min),1.1*TMath::Min(0.5,Max));
+				TH1D* PnProxyClone = (TH1D*)(Plots[WhichEnergy][WhichNucleus][2][WhichSlice]->Clone());	
+				PnProxyClone->Add(Plots[WhichEnergy][WhichNucleus][0][WhichSlice],-1);
+				PnProxyClone->Divide(Plots[WhichEnergy][WhichNucleus][0][WhichSlice]);			
 
-			kMissClone->GetYaxis()->SetTickSize(0.02);			
+				double Min = TMath::Min(kMissClone->GetMinimum(),PnProxyClone->GetMinimum());
+				double Max = TMath::Max(kMissClone->GetMaximum(),PnProxyClone->GetMaximum());;
+				kMissClone->GetYaxis()->SetRangeUser( 1.1*TMath::Max(-0.5,Min),1.1*TMath::Min(0.5,Max));
 
-			kMissClone->Draw("p0 hist same");					 
-			PnProxyClone->Draw("p0 hist same");
+				kMissClone->GetYaxis()->SetTickSize(0.02);			
+
+				kMissClone->Draw("p0 hist same");					 
+				PnProxyClone->Draw("p0 hist same");
 
 
-			// --------------------------------------------------------------------------------------------------------
+				// --------------------------------------------------------------------------------------------------------
 
-			can->SaveAs("myPlots/"+CanvasName+".pdf");			
-			delete can;
+				can->SaveAs("myPlots/"+CanvasName+".pdf");			
+				delete can;
 
-		}
+			} // End of the loop over the slices 
+
+		} // End of the loop over the nuclei
 
 	} // End of the loop over the energies
 

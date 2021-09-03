@@ -1,0 +1,108 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage{adjustbox}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[usenames, dvipsnames]{color}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.9cm,right=2.9cm,marginparwidth=2.cm]{geometry}
+
+%\hfuzz=length is a parameter that allows hbox's to be overfull by length before an overfull error occurs
+\hfuzz=150pt 
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{cite}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage{lineno}
+%\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{makecell}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\DraftVersion}{\textbf{\Large{Version 0.0.0.1}}}
+\usepackage{import}
+\usepackage{tikz}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=red,
+    linktoc=all
+}
+
+
+\newcommand{\cfootnote}[1]{\footnote{\centering #1}}
+\makeatletter
+\renewcommand\listoffigures{%
+        \@starttoc{lof}%
+}
+\makeatother
+
+\newcommand{\Figures}{../myPlots/}
+\newcommand{\FigSize}{0.49}
+
+
+\renewcommand{\arraystretch}{1.2}
+\usepackage[LGRgreek]{mathastext}
+
+\setlength{\headheight}{23pt}
+
+
+\usepackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\myList{4He/2261,4He/4461,C12/1161,C12/2261,C12/4461,56Fe/2261,56Fe/4461}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% #1 = nucleus
+% #2 = energy
+
+\newcommand{\PrintPlots}[2]{
+
+	\foreach \plot/\Label in \myList
+	{
+        \begin{figure}[H]
+            \centering  
+            %\includegraphics[width=\FigSize\linewidth]{\Figures LFG_Pn_#1_#2.pdf}
+            \caption{Breakdown for \Label.}
+        \label{#1_\plot_#2}
+        \end{figure}
+	}
+		
+}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+    \linenumbers
+
+    \justify
+	\section{Events passing e4$\nu$ selection}
+	
+	
+		
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	
+	\section{Events passing e4$\nu$ selection with |x$_B$ -1| < 0.2}
+
+	
+
+
+
+\end{document}
