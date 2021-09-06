@@ -315,13 +315,13 @@ void genie_analysis::Loop(Int_t choice) {
 	BindE["56Fe"]  = 0.4922;
 	BindE["40Ar"]  = 0.34381;	
 
-	// Separation Energy
+	// Excitation Energy
 
 	std::map<std::string,double> EE;	
-	EE["3He"]  = 0.00499;
-	EE["4He"]  = 0.01929;
-	EE["C12"]  = 0.02713;
-	EE["56Fe"]  = 0.00968;
+	EE["3He"]  = 0.0042;
+	EE["4He"]  = 0.0083;
+	EE["C12"]  = 0.0261;
+	EE["56Fe"]  = 0.0191;
 
 	// ---------------------------------
 

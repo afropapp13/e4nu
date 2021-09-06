@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.8.23)  2 SEP 2021 18:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.8.23)  3 SEP 2021 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -861,32 +861,33 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count308
 \l__pdf_internal_box=\box65
 )
-No file apapadop_LightCone_Neutrinos.aux.
+(./apapadop_LightCone_Neutrinos.aux)
 \openout1 = `apapadop_LightCone_Neutrinos.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 91.
-LaTeX Font Info:    ... okay on input line 91.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 91.
-LaTeX Font Info:    Trying to load font information for LGR+cmr on input line 9
-1.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 117.
+LaTeX Font Info:    Trying to load font information for LGR+cmr on input line 1
+17.
+
 (/usr/share/texlive/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
 File: lgrcmr.fd 2017/07/29 v1.2 Greek European Computer Regular
 )
-LaTeX Font Info:    ... okay on input line 91.
+LaTeX Font Info:    ... okay on input line 117.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -951,7 +952,7 @@ fontencoding LGR patched
 
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box67
-Package hyperref Info: Link coloring ON on input line 91.
+Package hyperref Info: Link coloring ON on input line 117.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
@@ -964,100 +965,1844 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count315
 )
-LaTeX Info: Redefining \ref on input line 91.
-LaTeX Info: Redefining \pageref on input line 91.
-LaTeX Info: Redefining \nameref on input line 91.
+LaTeX Info: Redefining \ref on input line 117.
+LaTeX Info: Redefining \pageref on input line 117.
+LaTeX Info: Redefining \nameref on input line 117.
+
+(./apapadop_LightCone_Neutrinos.out) (./apapadop_LightCone_Neutrinos.out)
 \@outlinefile=\write5
 \openout5 = `apapadop_LightCone_Neutrinos.out'.
 
 
 ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 91.
+LaTeX Info: Redefining \selectfont on input line 117.
 Package mathastext Info: current meaning of amsmath \resetMathstrut@ saved on i
-nput line 91.
-LaTeX Font Info:    Trying to load font information for T1+cmss on input line 9
-6.
+nput line 117.
+LaTeX Font Info:    Trying to load font information for T1+cmss on input line 1
+22.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 96.
+(hyperref)                removing `math shift' on input line 122.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\nu' on input line 96.
+(hyperref)                removing `\nu' on input line 122.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 96.
+(hyperref)                removing `math shift' on input line 122.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 102.
+(hyperref)                removing `math shift' on input line 124.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\nu' on input line 102.
+(hyperref)                removing `superscript' on input line 124.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 102.
+(hyperref)                removing `math shift' on input line 124.
 
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 102.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `subscript' on input line 102.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 102.
-
+<../myPlots/LFG_Pn_4He_2261_0.pdf, id=95, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_2261_0.pdf  used on input line 1
+25.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_4He_2261_1.pdf, id=96, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_2261_1.pdf  used on input line 1
+25.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_4He_2261_2.pdf, id=97, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_2261_2.pdf  used on input line 1
+25.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_4He_2261_0.pdf, id=98, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_2261_0.pdf  used on input l
+ine 125.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_4He_2261_1.pdf, id=99, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_2261_1.pdf  used on input l
+ine 125.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_4He_2261_2.pdf, id=100, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_2261_2.pdf  used on input l
+ine 125.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 108.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 108.
+ <../myPlots/LFG_Pn_4He_2261_0.pdf, page is rotated 90 degrees> <../myPlots/LFG
+_Pn_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_4He_2261_2.p
+df, page is rotated 90 degrees>]
+<../myPlots/PMiss_4He_2261_0.pdf, id=245, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_0.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_1.pdf, id=246, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_1.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_2.pdf, id=247, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_2.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_3.pdf, id=248, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_3.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [2 <../myPlots/PMiss_kMiss_4He_2261_0.pdf, page is rotated 90 degrees> <../myP
+lots/PMiss_kMiss_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_
+kMiss_4He_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_4He_2261_4.pdf, id=383, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_4.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_5.pdf, id=384, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_5.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_6.pdf, id=385, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_6.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_7.pdf, id=386, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_7.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_8.pdf, id=387, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_8.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_2261_9.pdf, id=388, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_2261_9.pdf  used on input line 12
+5.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [3 <../myPlots/PMiss_4He_2261_0.pdf, page is rotated 90 degrees> <../myPlots/P
+Miss_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_4He_2261_2.p
+df, page is rotated 90 degrees> <../myPlots/PMiss_4He_2261_3.pdf, page is rotat
+ed 90 degrees>]
+[4 <../myPlots/PMiss_4He_2261_4.pdf, page is rotated 90 degrees> <../myPlots/PM
+iss_4He_2261_5.pdf, page is rotated 90 degrees> <../myPlots/PMiss_4He_2261_6.pd
+f, page is rotated 90 degrees> <../myPlots/PMiss_4He_2261_7.pdf, page is rotate
+d 90 degrees> <../myPlots/PMiss_4He_2261_8.pdf, page is rotated 90 degrees> <..
+/myPlots/PMiss_4He_2261_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 128.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 128.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 128.
+
+<../myPlots/LFG_Pn_4He_4461_0.pdf, id=831, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_4461_0.pdf  used on input line 1
+29.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_4He_4461_1.pdf, id=832, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_4461_1.pdf  used on input line 1
+29.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_4He_4461_2.pdf, id=833, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_4He_4461_2.pdf  used on input line 1
+29.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_4He_4461_0.pdf, id=834, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_4461_0.pdf  used on input l
+ine 129.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_4He_4461_1.pdf, id=835, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_4461_1.pdf  used on input l
+ine 129.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_4He_4461_2.pdf, id=836, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_4He_4461_2.pdf  used on input l
+ine 129.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[5
+
+ <../myPlots/LFG_Pn_4He_4461_0.pdf, page is rotated 90 degrees> <../myPlots/LFG
+_Pn_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_4He_4461_2.p
+df, page is rotated 90 degrees>]
+<../myPlots/PMiss_4He_4461_0.pdf, id=972, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_0.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_1.pdf, id=973, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_1.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_2.pdf, id=974, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_2.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_3.pdf, id=975, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_3.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [6 <../myPlots/PMiss_kMiss_4He_4461_0.pdf, page is rotated 90 degrees> <../myP
+lots/PMiss_kMiss_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_
+kMiss_4He_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_4He_4461_4.pdf, id=1110, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_4.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_5.pdf, id=1111, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_5.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_6.pdf, id=1112, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_6.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_7.pdf, id=1113, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_7.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_8.pdf, id=1114, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_8.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_4He_4461_9.pdf, id=1115, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_4He_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_4He_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_4He_4461_9.pdf  used on input line 12
+9.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [7 <../myPlots/PMiss_4He_4461_0.pdf, page is rotated 90 degrees> <../myPlots/P
+Miss_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_4He_4461_2.p
+df, page is rotated 90 degrees> <../myPlots/PMiss_4He_4461_3.pdf, page is rotat
+ed 90 degrees>] [8 <../myPlots/PMiss_4He_4461_4.pdf, page is rotated 90 degrees
+> <../myPlots/PMiss_4He_4461_5.pdf, page is rotated 90 degrees> <../myPlots/PMi
+ss_4He_4461_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_4He_4461_7.pdf
+, page is rotated 90 degrees> <../myPlots/PMiss_4He_4461_8.pdf, page is rotated
+ 90 degrees> <../myPlots/PMiss_4He_4461_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 132.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 132.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 132.
+
+<../myPlots/LFG_Pn_C12_1161_0.pdf, id=1559, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_1161_0.pdf  used on input line 1
+33.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_1161_1.pdf, id=1560, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_1161_1.pdf  used on input line 1
+33.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_1161_2.pdf, id=1561, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_1161_2.pdf  used on input line 1
+33.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_C12_1161_0.pdf, id=1562, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_1161_0.pdf  used on input l
+ine 133.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_1161_1.pdf, id=1563, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_1161_1.pdf  used on input l
+ine 133.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_1161_2.pdf, id=1564, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_1161_2.pdf  used on input l
+ine 133.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[9
+
+ <../myPlots/LFG_Pn_C12_1161_0.pdf, page is rotated 90 degrees> <../myPlots/LFG
+_Pn_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_C12_1161_2.p
+df, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_1161_0.pdf, id=1700, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_0.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_1.pdf, id=1701, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_1.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_2.pdf, id=1702, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_2.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_3.pdf, id=1703, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_3.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [10 <../myPlots/PMiss_kMiss_C12_1161_0.pdf, page is rotated 90 degrees> <../my
+Plots/PMiss_kMiss_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss
+_kMiss_C12_1161_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_1161_4.pdf, id=1838, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_4.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_5.pdf, id=1839, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_5.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_6.pdf, id=1840, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_6.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_7.pdf, id=1841, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_7.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_8.pdf, id=1842, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_8.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_1161_9.pdf, id=1843, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_1161_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_1161_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_1161_9.pdf  used on input line 13
+3.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [11 <../myPlots/PMiss_C12_1161_0.pdf, page is rotated 90 degrees> <../myPlots/
+PMiss_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_1161_2.
+pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_1161_3.pdf, page is rota
+ted 90 degrees>] [12 <../myPlots/PMiss_C12_1161_4.pdf, page is rotated 90 degre
+es> <../myPlots/PMiss_C12_1161_5.pdf, page is rotated 90 degrees> <../myPlots/P
+Miss_C12_1161_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_1161_7.p
+df, page is rotated 90 degrees> <../myPlots/PMiss_C12_1161_8.pdf, page is rotat
+ed 90 degrees> <../myPlots/PMiss_C12_1161_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 136.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 136.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 136.
+
+<../myPlots/LFG_Pn_C12_2261_0.pdf, id=2286, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_2261_0.pdf  used on input line 1
+37.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_2261_1.pdf, id=2287, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_2261_1.pdf  used on input line 1
+37.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_2261_2.pdf, id=2288, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_2261_2.pdf  used on input line 1
+37.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_C12_2261_0.pdf, id=2289, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_2261_0.pdf  used on input l
+ine 137.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_2261_1.pdf, id=2290, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_2261_1.pdf  used on input l
+ine 137.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_2261_2.pdf, id=2291, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_2261_2.pdf  used on input l
+ine 137.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[13
+
+ <../myPlots/LFG_Pn_C12_2261_0.pdf, page is rotated 90 degrees> <../myPlots/LFG
+_Pn_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_C12_2261_2.p
+df, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_2261_0.pdf, id=2428, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_0.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_1.pdf, id=2429, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_1.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_2.pdf, id=2430, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_2.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_3.pdf, id=2431, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_3.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [14 <../myPlots/PMiss_kMiss_C12_2261_0.pdf, page is rotated 90 degrees> <../my
+Plots/PMiss_kMiss_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss
+_kMiss_C12_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_2261_4.pdf, id=2566, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_4.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_5.pdf, id=2567, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_5.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_6.pdf, id=2568, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_6.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_7.pdf, id=2569, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_7.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_8.pdf, id=2570, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_8.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_2261_9.pdf, id=2571, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_2261_9.pdf  used on input line 13
+7.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [15 <../myPlots/PMiss_C12_2261_0.pdf, page is rotated 90 degrees> <../myPlots/
+PMiss_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_2261_2.
+pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_2261_3.pdf, page is rota
+ted 90 degrees>] [16 <../myPlots/PMiss_C12_2261_4.pdf, page is rotated 90 degre
+es> <../myPlots/PMiss_C12_2261_5.pdf, page is rotated 90 degrees> <../myPlots/P
+Miss_C12_2261_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_2261_7.p
+df, page is rotated 90 degrees> <../myPlots/PMiss_C12_2261_8.pdf, page is rotat
+ed 90 degrees> <../myPlots/PMiss_C12_2261_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 140.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 140.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 140.
+
+<../myPlots/LFG_Pn_C12_4461_0.pdf, id=3014, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_4461_0.pdf  used on input line 1
+41.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_4461_1.pdf, id=3015, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_4461_1.pdf  used on input line 1
+41.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_C12_4461_2.pdf, id=3016, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_C12_4461_2.pdf  used on input line 1
+41.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_C12_4461_0.pdf, id=3017, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_4461_0.pdf  used on input l
+ine 141.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_4461_1.pdf, id=3018, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_4461_1.pdf  used on input l
+ine 141.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_C12_4461_2.pdf, id=3019, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_C12_4461_2.pdf  used on input l
+ine 141.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[17
+
+ <../myPlots/LFG_Pn_C12_4461_0.pdf, page is rotated 90 degrees> <../myPlots/LFG
+_Pn_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_C12_4461_2.p
+df, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_4461_0.pdf, id=3155, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_0.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_1.pdf, id=3156, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_1.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_2.pdf, id=3157, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_2.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_3.pdf, id=3158, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_3.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [18 <../myPlots/PMiss_kMiss_C12_4461_0.pdf, page is rotated 90 degrees> <../my
+Plots/PMiss_kMiss_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss
+_kMiss_C12_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_C12_4461_4.pdf, id=3293, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_4.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_5.pdf, id=3294, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_5.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_6.pdf, id=3295, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_6.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_7.pdf, id=3296, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_7.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_8.pdf, id=3297, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_8.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_C12_4461_9.pdf, id=3298, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_C12_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_C12_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_C12_4461_9.pdf  used on input line 14
+1.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [19 <../myPlots/PMiss_C12_4461_0.pdf, page is rotated 90 degrees> <../myPlots/
+PMiss_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_4461_2.
+pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_4461_3.pdf, page is rota
+ted 90 degrees>] [20 <../myPlots/PMiss_C12_4461_4.pdf, page is rotated 90 degre
+es> <../myPlots/PMiss_C12_4461_5.pdf, page is rotated 90 degrees> <../myPlots/P
+Miss_C12_4461_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_C12_4461_7.p
+df, page is rotated 90 degrees> <../myPlots/PMiss_C12_4461_8.pdf, page is rotat
+ed 90 degrees> <../myPlots/PMiss_C12_4461_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 144.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 144.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 144.
+
+<../myPlots/LFG_Pn_56Fe_2261_0.pdf, id=3742, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_2261_0.pdf  used on input line 
+145.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_56Fe_2261_1.pdf, id=3743, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_2261_1.pdf  used on input line 
+145.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_56Fe_2261_2.pdf, id=3744, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_2261_2.pdf  used on input line 
+145.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_56Fe_2261_0.pdf, id=3745, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_2261_0.pdf  used on input 
+line 145.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_56Fe_2261_1.pdf, id=3746, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_2261_1.pdf  used on input 
+line 145.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_56Fe_2261_2.pdf, id=3747, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_2261_2.pdf  used on input 
+line 145.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[21
+
+ <../myPlots/LFG_Pn_56Fe_2261_0.pdf, page is rotated 90 degrees> <../myPlots/LF
+G_Pn_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_56Fe_2261_
+2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_56Fe_2261_0.pdf, id=3883, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_0.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_1.pdf, id=3884, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_1.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_2.pdf, id=3885, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_2.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_3.pdf, id=3886, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_3.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [22 <../myPlots/PMiss_kMiss_56Fe_2261_0.pdf, page is rotated 90 degrees> <../m
+yPlots/PMiss_kMiss_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMi
+ss_kMiss_56Fe_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_56Fe_2261_4.pdf, id=4021, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_4.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_5.pdf, id=4022, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_5.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_6.pdf, id=4023, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_6.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_7.pdf, id=4024, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_7.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_8.pdf, id=4025, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_8.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_2261_9.pdf, id=4026, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_2261_9.pdf  used on input line 1
+45.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [23 <../myPlots/PMiss_56Fe_2261_0.pdf, page is rotated 90 degrees> <../myPlots
+/PMiss_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_2261
+_2.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_2261_3.pdf, page is 
+rotated 90 degrees>] [24 <../myPlots/PMiss_56Fe_2261_4.pdf, page is rotated 90 
+degrees> <../myPlots/PMiss_56Fe_2261_5.pdf, page is rotated 90 degrees> <../myP
+lots/PMiss_56Fe_2261_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_
+2261_7.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_2261_8.pdf, page
+ is rotated 90 degrees> <../myPlots/PMiss_56Fe_2261_9.pdf, page is rotated 90 d
+egrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 148.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 148.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 148.
+
+<../myPlots/LFG_Pn_56Fe_4461_0.pdf, id=4469, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_4461_0.pdf  used on input line 
+149.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_56Fe_4461_1.pdf, id=4470, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_4461_1.pdf  used on input line 
+149.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/LFG_Pn_56Fe_4461_2.pdf, id=4471, 569.12625pt x 412.54124pt>
+File: ../myPlots/LFG_Pn_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/LFG_Pn_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/LFG_Pn_56Fe_4461_2.pdf  used on input line 
+149.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_kMiss_56Fe_4461_0.pdf, id=4472, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_4461_0.pdf  used on input 
+line 149.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_56Fe_4461_1.pdf, id=4473, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_4461_1.pdf  used on input 
+line 149.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/PMiss_kMiss_56Fe_4461_2.pdf, id=4474, 569.12625pt x 551.05875pt>
+File: ../myPlots/PMiss_kMiss_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_kMiss_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_kMiss_56Fe_4461_2.pdf  used on input 
+line 149.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[25
+
+ <../myPlots/LFG_Pn_56Fe_4461_0.pdf, page is rotated 90 degrees> <../myPlots/LF
+G_Pn_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlots/LFG_Pn_56Fe_4461_
+2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_56Fe_4461_0.pdf, id=4611, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_0.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_1.pdf, id=4612, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_1.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_2.pdf, id=4613, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_2.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_3.pdf, id=4614, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_3.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [26 <../myPlots/PMiss_kMiss_56Fe_4461_0.pdf, page is rotated 90 degrees> <../m
+yPlots/PMiss_kMiss_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMi
+ss_kMiss_56Fe_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/PMiss_56Fe_4461_4.pdf, id=4749, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_4.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_5.pdf, id=4750, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_5.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_6.pdf, id=4751, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_6.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_7.pdf, id=4752, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_7.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_8.pdf, id=4753, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_8.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/PMiss_56Fe_4461_9.pdf, id=4754, 569.12625pt x 412.54124pt>
+File: ../myPlots/PMiss_56Fe_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/PMiss_56Fe_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/PMiss_56Fe_4461_9.pdf  used on input line 1
+49.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [27 <../myPlots/PMiss_56Fe_4461_0.pdf, page is rotated 90 degrees> <../myPlots
+/PMiss_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_4461
+_2.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_4461_3.pdf, page is 
+rotated 90 degrees>] [28 <../myPlots/PMiss_56Fe_4461_4.pdf, page is rotated 90 
+degrees> <../myPlots/PMiss_56Fe_4461_5.pdf, page is rotated 90 degrees> <../myP
+lots/PMiss_56Fe_4461_6.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_
+4461_7.pdf, page is rotated 90 degrees> <../myPlots/PMiss_56Fe_4461_8.pdf, page
+ is rotated 90 degrees> <../myPlots/PMiss_56Fe_4461_9.pdf, page is rotated 90 d
+egrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\nu' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 154.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 156.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 156.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 156.
+
+<../myPlots/xB_LFG_Pn_4He_2261_0.pdf, id=5197, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_2261_0.pdf  used on input lin
+e 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_4He_2261_1.pdf, id=5198, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_2261_1.pdf  used on input lin
+e 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_4He_2261_2.pdf, id=5199, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_2261_2.pdf  used on input lin
+e 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_4He_2261_0.pdf, id=5200, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_2261_0.pdf  used on inpu
+t line 157.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_4He_2261_1.pdf, id=5201, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_2261_1.pdf  used on inpu
+t line 157.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_4He_2261_2.pdf, id=5202, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_2261_2.pdf  used on inpu
+t line 157.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[29
+
+ <../myPlots/xB_LFG_Pn_4He_2261_0.pdf, page is rotated 90 degrees> <../myPlots/
+xB_LFG_Pn_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_4He
+_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_4He_2261_0.pdf, id=5339, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_0.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_1.pdf, id=5340, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_1.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_2.pdf, id=5341, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_2.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_3.pdf, id=5342, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_3.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [30 <../myPlots/xB_PMiss_kMiss_4He_2261_0.pdf, page is rotated 90 degrees> <..
+/myPlots/xB_PMiss_kMiss_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots
+/xB_PMiss_kMiss_4He_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_4He_2261_4.pdf, id=5477, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_4.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_5.pdf, id=5478, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_5.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_6.pdf, id=5479, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_6.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_7.pdf, id=5480, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_7.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_8.pdf, id=5481, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_8.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_2261_9.pdf, id=5482, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_2261_9.pdf  used on input line
+ 157.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [31 <../myPlots/xB_PMiss_4He_2261_0.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_4He_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4H
+e_2261_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4He_2261_3.pdf, 
+page is rotated 90 degrees>] [32 <../myPlots/xB_PMiss_4He_2261_4.pdf, page is r
+otated 90 degrees> <../myPlots/xB_PMiss_4He_2261_5.pdf, page is rotated 90 degr
+ees> <../myPlots/xB_PMiss_4He_2261_6.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_4He_2261_7.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4H
+e_2261_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4He_2261_9.pdf, 
+page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 160.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 160.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 160.
+
+<../myPlots/xB_LFG_Pn_4He_4461_0.pdf, id=5926, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_4461_0.pdf  used on input lin
+e 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_4He_4461_1.pdf, id=5927, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_4461_1.pdf  used on input lin
+e 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_4He_4461_2.pdf, id=5928, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_4He_4461_2.pdf  used on input lin
+e 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_4He_4461_0.pdf, id=5929, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_4461_0.pdf  used on inpu
+t line 161.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_4He_4461_1.pdf, id=5930, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_4461_1.pdf  used on inpu
+t line 161.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_4He_4461_2.pdf, id=5931, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_4He_4461_2.pdf  used on inpu
+t line 161.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[33
+
+ <../myPlots/xB_LFG_Pn_4He_4461_0.pdf, page is rotated 90 degrees> <../myPlots/
+xB_LFG_Pn_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_4He
+_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_4He_4461_0.pdf, id=6067, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_0.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_1.pdf, id=6068, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_1.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_2.pdf, id=6069, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_2.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_3.pdf, id=6070, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_3.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [34 <../myPlots/xB_PMiss_kMiss_4He_4461_0.pdf, page is rotated 90 degrees> <..
+/myPlots/xB_PMiss_kMiss_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots
+/xB_PMiss_kMiss_4He_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_4He_4461_4.pdf, id=6206, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_4.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_5.pdf, id=6207, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_5.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_6.pdf, id=6208, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_6.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_7.pdf, id=6209, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_7.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_8.pdf, id=6210, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_8.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_4He_4461_9.pdf, id=6211, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_4He_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_4He_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_4He_4461_9.pdf  used on input line
+ 161.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [35 <../myPlots/xB_PMiss_4He_4461_0.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_4He_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4H
+e_4461_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4He_4461_3.pdf, 
+page is rotated 90 degrees>] [36 <../myPlots/xB_PMiss_4He_4461_4.pdf, page is r
+otated 90 degrees> <../myPlots/xB_PMiss_4He_4461_5.pdf, page is rotated 90 degr
+ees> <../myPlots/xB_PMiss_4He_4461_6.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_4He_4461_7.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4H
+e_4461_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_4He_4461_9.pdf, 
+page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 164.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 164.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 164.
+
+<../myPlots/xB_LFG_Pn_C12_1161_0.pdf, id=6653, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_1161_0.pdf  used on input lin
+e 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_1161_1.pdf, id=6654, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_1161_1.pdf  used on input lin
+e 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_1161_2.pdf, id=6655, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_1161_2.pdf  used on input lin
+e 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_C12_1161_0.pdf, id=6656, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_1161_0.pdf  used on inpu
+t line 165.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_1161_1.pdf, id=6657, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_1161_1.pdf  used on inpu
+t line 165.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_1161_2.pdf, id=6658, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_1161_2.pdf  used on inpu
+t line 165.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[37
+
+ <../myPlots/xB_LFG_Pn_C12_1161_0.pdf, page is rotated 90 degrees> <../myPlots/
+xB_LFG_Pn_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_C12
+_1161_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_1161_0.pdf, id=6795, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_0.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_1.pdf, id=6796, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_1.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_2.pdf, id=6797, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_2.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_3.pdf, id=6798, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_3.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [38 <../myPlots/xB_PMiss_kMiss_C12_1161_0.pdf, page is rotated 90 degrees> <..
+/myPlots/xB_PMiss_kMiss_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots
+/xB_PMiss_kMiss_C12_1161_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_1161_4.pdf, id=6934, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_4.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_5.pdf, id=6935, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_5.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_6.pdf, id=6936, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_6.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_7.pdf, id=6937, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_7.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_8.pdf, id=6938, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_8.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_1161_9.pdf, id=6939, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_1161_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_1161_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_1161_9.pdf  used on input line
+ 165.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [39 <../myPlots/xB_PMiss_C12_1161_0.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_1161_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_1161_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_1161_3.pdf, 
+page is rotated 90 degrees>] [40 <../myPlots/xB_PMiss_C12_1161_4.pdf, page is r
+otated 90 degrees> <../myPlots/xB_PMiss_C12_1161_5.pdf, page is rotated 90 degr
+ees> <../myPlots/xB_PMiss_C12_1161_6.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_1161_7.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_1161_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_1161_9.pdf, 
+page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 168.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 168.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 168.
+
+<../myPlots/xB_LFG_Pn_C12_2261_0.pdf, id=7381, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_2261_0.pdf  used on input lin
+e 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_2261_1.pdf, id=7382, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_2261_1.pdf  used on input lin
+e 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_2261_2.pdf, id=7383, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_2261_2.pdf  used on input lin
+e 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_C12_2261_0.pdf, id=7384, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_2261_0.pdf  used on inpu
+t line 169.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_2261_1.pdf, id=7385, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_2261_1.pdf  used on inpu
+t line 169.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_2261_2.pdf, id=7386, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_2261_2.pdf  used on inpu
+t line 169.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[41
+
+ <../myPlots/xB_LFG_Pn_C12_2261_0.pdf, page is rotated 90 degrees> <../myPlots/
+xB_LFG_Pn_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_C12
+_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_2261_0.pdf, id=7522, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_0.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_1.pdf, id=7523, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_1.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_2.pdf, id=7524, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_2.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_3.pdf, id=7525, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_3.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [42 <../myPlots/xB_PMiss_kMiss_C12_2261_0.pdf, page is rotated 90 degrees> <..
+/myPlots/xB_PMiss_kMiss_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots
+/xB_PMiss_kMiss_C12_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_2261_4.pdf, id=7661, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_4.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_5.pdf, id=7662, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_5.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_6.pdf, id=7663, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_6.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_7.pdf, id=7664, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_7.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_8.pdf, id=7665, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_8.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_2261_9.pdf, id=7666, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_2261_9.pdf  used on input line
+ 169.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [43 <../myPlots/xB_PMiss_C12_2261_0.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_2261_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_2261_3.pdf, 
+page is rotated 90 degrees>] [44 <../myPlots/xB_PMiss_C12_2261_4.pdf, page is r
+otated 90 degrees> <../myPlots/xB_PMiss_C12_2261_5.pdf, page is rotated 90 degr
+ees> <../myPlots/xB_PMiss_C12_2261_6.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_2261_7.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_2261_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_2261_9.pdf, 
+page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 172.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 172.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 172.
+
+<../myPlots/xB_LFG_Pn_C12_4461_0.pdf, id=8109, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_4461_0.pdf  used on input lin
+e 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_4461_1.pdf, id=8110, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_4461_1.pdf  used on input lin
+e 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_C12_4461_2.pdf, id=8111, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_C12_4461_2.pdf  used on input lin
+e 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_C12_4461_0.pdf, id=8112, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_4461_0.pdf  used on inpu
+t line 173.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_4461_1.pdf, id=8113, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_4461_1.pdf  used on inpu
+t line 173.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_C12_4461_2.pdf, id=8114, 569.12625pt x 551.05875pt>
+File: ../myPlots/xB_PMiss_kMiss_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_C12_4461_2.pdf  used on inpu
+t line 173.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[45
+
+ <../myPlots/xB_LFG_Pn_C12_4461_0.pdf, page is rotated 90 degrees> <../myPlots/
+xB_LFG_Pn_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_C12
+_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_4461_0.pdf, id=8250, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_0.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_1.pdf, id=8251, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_1.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_2.pdf, id=8252, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_2.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_3.pdf, id=8253, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_3.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [46 <../myPlots/xB_PMiss_kMiss_C12_4461_0.pdf, page is rotated 90 degrees> <..
+/myPlots/xB_PMiss_kMiss_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots
+/xB_PMiss_kMiss_C12_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_C12_4461_4.pdf, id=8389, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_4.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_5.pdf, id=8390, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_5.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_6.pdf, id=8391, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_6.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_7.pdf, id=8392, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_7.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_8.pdf, id=8393, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_8.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_C12_4461_9.pdf, id=8394, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_C12_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_C12_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_C12_4461_9.pdf  used on input line
+ 173.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [47 <../myPlots/xB_PMiss_C12_4461_0.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_4461_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_4461_3.pdf, 
+page is rotated 90 degrees>] [48 <../myPlots/xB_PMiss_C12_4461_4.pdf, page is r
+otated 90 degrees> <../myPlots/xB_PMiss_C12_4461_5.pdf, page is rotated 90 degr
+ees> <../myPlots/xB_PMiss_C12_4461_6.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_C12_4461_7.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C1
+2_4461_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_C12_4461_9.pdf, 
+page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 176.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 176.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 176.
+
+<../myPlots/xB_LFG_Pn_56Fe_2261_0.pdf, id=8837, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_2261_0.pdf  used on input li
+ne 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_56Fe_2261_1.pdf, id=8838, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_2261_1.pdf  used on input li
+ne 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_56Fe_2261_2.pdf, id=8839, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_2261_2.pdf  used on input li
+ne 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_2261_0.pdf, id=8840, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_2261_0.pdf  used on inp
+ut line 177.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_2261_1.pdf, id=8841, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_2261_1.pdf  used on inp
+ut line 177.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_2261_2.pdf, id=8842, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_2261_2.pdf  used on inp
+ut line 177.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[49
+
+ <../myPlots/xB_LFG_Pn_56Fe_2261_0.pdf, page is rotated 90 degrees> <../myPlots
+/xB_LFG_Pn_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_5
+6Fe_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_56Fe_2261_0.pdf, id=8978, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_0.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_1.pdf, id=8979, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_1.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_2.pdf, id=8980, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_2.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_3.pdf, id=8981, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_3.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [50 <../myPlots/xB_PMiss_kMiss_56Fe_2261_0.pdf, page is rotated 90 degrees> <.
+./myPlots/xB_PMiss_kMiss_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_kMiss_56Fe_2261_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_56Fe_2261_4.pdf, id=9117, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_4.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_5.pdf, id=9118, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_5.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_6.pdf, id=9119, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_6.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_7.pdf, id=9120, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_7.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_8.pdf, id=9121, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_8.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_2261_9.pdf, id=9122, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_2261_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_2261_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_2261_9.pdf  used on input lin
+e 177.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [51 <../myPlots/xB_PMiss_56Fe_2261_0.pdf, page is rotated 90 degrees> <../myPl
+ots/xB_PMiss_56Fe_2261_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_
+56Fe_2261_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_2261_3.p
+df, page is rotated 90 degrees>] [52 <../myPlots/xB_PMiss_56Fe_2261_4.pdf, page
+ is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_2261_5.pdf, page is rotated 9
+0 degrees> <../myPlots/xB_PMiss_56Fe_2261_6.pdf, page is rotated 90 degrees> <.
+./myPlots/xB_PMiss_56Fe_2261_7.pdf, page is rotated 90 degrees> <../myPlots/xB_
+PMiss_56Fe_2261_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_22
+61_9.pdf, page is rotated 90 degrees>]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 180.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 180.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 180.
+
+<../myPlots/xB_LFG_Pn_56Fe_4461_0.pdf, id=9565, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_4461_0.pdf  used on input li
+ne 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_56Fe_4461_1.pdf, id=9566, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_4461_1.pdf  used on input li
+ne 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_LFG_Pn_56Fe_4461_2.pdf, id=9567, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_LFG_Pn_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_LFG_Pn_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_LFG_Pn_56Fe_4461_2.pdf  used on input li
+ne 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_4461_0.pdf, id=9568, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_4461_0.pdf  used on inp
+ut line 181.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_4461_1.pdf, id=9569, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_4461_1.pdf  used on inp
+ut line 181.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+<../myPlots/xB_PMiss_kMiss_56Fe_4461_2.pdf, id=9570, 569.12625pt x 551.05875pt>
+
+File: ../myPlots/xB_PMiss_kMiss_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_kMiss_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_kMiss_56Fe_4461_2.pdf  used on inp
+ut line 181.
+(pdftex.def)             Requested size: 211.91867pt x 205.19185pt.
+[53
+
+ <../myPlots/xB_LFG_Pn_56Fe_4461_0.pdf, page is rotated 90 degrees> <../myPlots
+/xB_LFG_Pn_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_LFG_Pn_5
+6Fe_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_56Fe_4461_0.pdf, id=9705, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_0.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_0.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_0.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_1.pdf, id=9706, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_1.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_1.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_1.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_2.pdf, id=9707, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_2.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_2.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_2.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_3.pdf, id=9708, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_3.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_3.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_3.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [54 <../myPlots/xB_PMiss_kMiss_56Fe_4461_0.pdf, page is rotated 90 degrees> <.
+./myPlots/xB_PMiss_kMiss_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlo
+ts/xB_PMiss_kMiss_56Fe_4461_2.pdf, page is rotated 90 degrees>]
+<../myPlots/xB_PMiss_56Fe_4461_4.pdf, id=9844, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_4.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_4.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_4.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_5.pdf, id=9845, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_5.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_5.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_5.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_6.pdf, id=9846, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_6.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_6.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_6.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_7.pdf, id=9847, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_7.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_7.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_7.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_8.pdf, id=9848, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_8.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_8.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_8.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+<../myPlots/xB_PMiss_56Fe_4461_9.pdf, id=9849, 569.12625pt x 412.54124pt>
+File: ../myPlots/xB_PMiss_56Fe_4461_9.pdf Graphic file (type pdf)
+<use ../myPlots/xB_PMiss_56Fe_4461_9.pdf>
+Package pdftex.def Info: ../myPlots/xB_PMiss_56Fe_4461_9.pdf  used on input lin
+e 181.
+(pdftex.def)             Requested size: 211.91867pt x 153.61357pt.
+ [55 <../myPlots/xB_PMiss_56Fe_4461_0.pdf, page is rotated 90 degrees> <../myPl
+ots/xB_PMiss_56Fe_4461_1.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_
+56Fe_4461_2.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_4461_3.p
+df, page is rotated 90 degrees>] [56 <../myPlots/xB_PMiss_56Fe_4461_4.pdf, page
+ is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_4461_5.pdf, page is rotated 9
+0 degrees> <../myPlots/xB_PMiss_56Fe_4461_6.pdf, page is rotated 90 degrees> <.
+./myPlots/xB_PMiss_56Fe_4461_7.pdf, page is rotated 90 degrees> <../myPlots/xB_
+PMiss_56Fe_4461_8.pdf, page is rotated 90 degrees> <../myPlots/xB_PMiss_56Fe_44
+61_9.pdf, page is rotated 90 degrees>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 183.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 183.
 
 (./apapadop_LightCone_Neutrinos.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 108.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 108.
-
-
-Package rerunfilecheck Warning: File `apapadop_LightCone_Neutrinos.out' has cha
-nged.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `apapadop_LightCone_Neutrinos.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  04CF5EDD480167C512718D0F7F61EC23;143.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 108.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 183.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 183.
+Package rerunfilecheck Info: File `apapadop_LightCone_Neutrinos.out' has not ch
+anged.
+(rerunfilecheck)             Checksum: 2D1D869DF4B885AB9EB857F276158720;1232.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 183.
  ) 
 Here is how much of TeX's memory you used:
- 21604 strings out of 481239
- 394039 string characters out of 5920377
- 655658 words of memory out of 5000000
- 36401 multiletter control sequences out of 15000+600000
- 547296 words of font info for 54 fonts, out of 8000000 for 9000
+ 23155 strings out of 481239
+ 450019 string characters out of 5920377
+ 667789 words of memory out of 5000000
+ 37595 multiletter control sequences out of 15000+600000
+ 548072 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 68i,14n,83p,909b,670s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,13n,83p,909b,676s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/cbfonts/grmn1000.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/public/cbfonts/grmn1440.pfb></usr/share/texmf/fonts/type1/publ
-ic/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0800
-.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/tex
-mf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/publi
-c/cm-super/sfsl1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfss0500.
-pfb>
-Output written on apapadop_LightCone_Neutrinos.pdf (1 page, 51998 bytes).
+ic/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440
+.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0800.pfb></usr/share/tex
+mf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/publi
+c/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsl1000.
+pfb></usr/share/texmf/fonts/type1/public/cm-super/sfss0500.pfb>
+Output written on apapadop_LightCone_Neutrinos.pdf (56 pages, 4223855 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
- 47 compressed objects within 1 object stream
- 4 named destinations out of 1000 (max. 500000)
- 109 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 10356 PDF objects out of 10688 (max. 8388607)
+ 4404 compressed objects within 45 object streams
+ 129 named destinations out of 1000 (max. 500000)
+ 1357 words of extra memory for PDF output out of 10000 (max. 10000000)
 
