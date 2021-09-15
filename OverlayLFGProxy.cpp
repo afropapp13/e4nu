@@ -120,6 +120,16 @@ void OverlayLFGProxy(TString Id = "") {
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
+	// Plots & colors to be used for PL plotting purposes	
+
+	std::vector<TString> PLPlotName; std::vector<int> PLColor; std::vector<TString> PLPlotLatex;
+	PLPlotName.push_back("PLFromPMiss"); PLColor.push_back(kOrange+7); PLPlotLatex.push_back("P_{Miss} projection");
+	PLPlotName.push_back("PL"); PLColor.push_back(kBlue+2); PLPlotLatex.push_back("P_{L}");
+
+	const int NPLPlots = PLPlotName.size();		
+
+	// -----------------------------------------------------------------------------------------------------------------------------------------
+
 	// Slices (all events, PT < 0.3 GeV/c, PT > 0.3 GeV/c)
 
 	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
@@ -155,6 +165,7 @@ void OverlayLFGProxy(TString Id = "") {
 	TH1D* Plots[NEnergy][NNuclei][NPlots][NSlices];
 	TH2D* PMisskMissPlots[NEnergy][NNuclei][NSlices];
 	TH1D* PMissPlots[NEnergy][NNuclei][NPlots][NSlices];			
+	TH1D* PLPlots[NEnergy][NNuclei][NPlots][NSlices];
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------	
 
@@ -188,6 +199,11 @@ void OverlayLFGProxy(TString Id = "") {
 				leg->SetTextSize(size);
 				leg->SetBorderSize(0);	
 
+				TLegend* PLleg = new TLegend(0.6,0.7,0.75,0.89);
+				PLleg->SetTextFont(font);
+				PLleg->SetTextSize(size);
+				PLleg->SetBorderSize(0);				
+
 				TLatex *text = new TLatex();
 				text->SetTextFont(font);
 				text->SetTextSize(size);
@@ -205,7 +221,7 @@ void OverlayLFGProxy(TString Id = "") {
 					Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+Slice[WhichSlice]));
 					PrettyPlot(font,size,Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],Color[WhichPlot]);
 					leg->AddEntry(Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PlotLatex[WhichPlot],"p");
-					Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("p0 hist same");
+					Plots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
 
 				}	
 
@@ -249,8 +265,8 @@ void OverlayLFGProxy(TString Id = "") {
 
 				kMissClone->GetYaxis()->SetTickSize(0.02);			
 
-				kMissClone->Draw("p0 hist same");					 
-				PnProxyClone->Draw("p0 hist same");
+				kMissClone->Draw("e1x0 same");					 
+				PnProxyClone->Draw("e1x0 same");
 
 				// --------------------------------------------------------------------------------------------------------
 
@@ -282,7 +298,69 @@ void OverlayLFGProxy(TString Id = "") {
 				can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
 				delete can2D;				
 
+				// -----------------------------------------------------------------------------------------------	
+
+				// Loop over the PL plots of interest
+
+				TString PLCanvasName= Id+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TCanvas* PLcan = new TCanvas(PLCanvasName,PLCanvasName,205,34,1024,768);	
+				PLcan->SetBottomMargin(0.42);
+
+				for (int WhichPlot = 0; WhichPlot < NPLPlots; WhichPlot++) {
+
+					PLPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PLPlotName[WhichPlot]+Slice[WhichSlice]));
+					PrettyPlot(font,size,PLPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PLColor[WhichPlot]);
+					PLleg->AddEntry(PLPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PLPlotLatex[WhichPlot],"p");
+					PLPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
+
+				}	
+
+				PLleg->Draw();
+				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				textRegion->DrawLatexNDC(0.49,0.85,SliceLabel[WhichSlice]);				
+
+				// --------------------------------------------------------------------------------------------------------
+
+				// Residual plots with respect to PMiss
+
+				TPad* PLpad = new TPad("PLpad","PLpad",0.,0.,1.,0.3,21);
+				PLpad->SetFillColor(kWhite);
+				PLpad->SetTopMargin(0.);
+				PLpad->Draw();
+				PLpad->cd();
+				PLpad->SetGridx();
+				PLpad->SetGridy();						
+
+				TH1D* PLFromPMissClone = (TH1D*)(PLPlots[WhichEnergy][WhichNucleus][1][WhichSlice]->Clone());
+				PLFromPMissClone->Add(PLPlots[WhichEnergy][WhichNucleus][0][WhichSlice],-1);
+				PLFromPMissClone->Divide(PLPlots[WhichEnergy][WhichNucleus][0][WhichSlice]);
+
+				PLFromPMissClone->GetXaxis()->SetTitleSize(0.);
+				PLFromPMissClone->GetXaxis()->SetLabelSize(0.);
+				PLFromPMissClone->GetXaxis()->SetTickSize(0.1);				
+
+				PLFromPMissClone->GetYaxis()->SetTitle("Residual");
+				PLFromPMissClone->GetYaxis()->SetTitleSize(0.17);
+				PLFromPMissClone->GetYaxis()->SetLabelSize(0.17);			
+				PLFromPMissClone->GetYaxis()->SetTitleOffset(0.3);
+				PLFromPMissClone->GetYaxis()->SetNdivisions(8);		
+
+				double PLMin = PLFromPMissClone->GetMinimum();
+				double PLMax = PLFromPMissClone->GetMaximum();
+				PLFromPMissClone->GetYaxis()->SetRangeUser(1.1*PLMin,1.1*PLMax);
+
+				PLFromPMissClone->GetYaxis()->SetTickSize(0.02);			
+
+				PLFromPMissClone->Draw("e1x0 same");					 
+				
+				// --------------------------------------------------------------------------------------------------------
+
+				PLcan->SaveAs("myPlots/"+PLCanvasName+".pdf");			
+				delete PLcan;
+			
 			} // End of the loop over the slices 
+
+			// -----------------------------------------------------------------------------------------------			
 
 			// -----------------------------------------------------------------------------------------------
 
@@ -320,7 +398,7 @@ void OverlayLFGProxy(TString Id = "") {
 					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+"_Slice"+PMissSlice[WhichSlice]));
 					PrettyPlot(font,size,PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],Color[WhichPlot]);
 					leg->AddEntry(PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PlotLatex[WhichPlot],"p");
-					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("p0 hist same");
+					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
 
 				}	
 
@@ -364,8 +442,8 @@ void OverlayLFGProxy(TString Id = "") {
 
 				kMissClone->GetYaxis()->SetTickSize(0.02);			
 
-				kMissClone->Draw("p0 hist same");					 
-				PnProxyClone->Draw("p0 hist same");
+				kMissClone->Draw("e1x0 hist same");					 
+				PnProxyClone->Draw("e1x0 hist same");
 
 				// --------------------------------------------------------------------------------------------------------
 
