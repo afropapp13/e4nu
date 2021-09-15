@@ -615,6 +615,17 @@ void genie_analysis::Loop(Int_t choice) {
 	TH1F *h1_PL[Regions];
 	TH1F *h1_PLFromPMiss[Regions];		
 
+	// For these 2D plots: 0 = all events, 1 = within 15% of beam energy, 2 = more than 15% away from beam energy
+
+	double MinDiff = -0.5;
+	double MaxDiff = -0.5;	
+	double ResoThres = 0.15;
+
+	TH2F *h2_PPerp_PMinus[Regions];
+	TH2F *h2_PLMinusPLFromPMiss_PMiss[Regions];
+	TH2F *h2_kMissMinusPMiss_PMiss[Regions];
+	TH2F *h2_PnProxyMinusPMiss_PMiss[Regions];				
+
 	for (int region = 0; region < Regions; region ++) {
 
 		h1_PMiss[region] = new TH1F("PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);
@@ -623,7 +634,13 @@ void genie_analysis::Loop(Int_t choice) {
 		h2_PMiss_kMiss[region] = new TH2F("PMiss_kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);	
 		h1_PL[region] = new TH1F("PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);
 		h1_PLFromPMiss[region] = new TH1F("PLFromPMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);				
-		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);			
+		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);			
+
+		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);
+		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
+		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);
+		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
+
 	}		
 
 	// ------------------------------------------------------------------------------
@@ -646,8 +663,8 @@ void genie_analysis::Loop(Int_t choice) {
 		h1_PMiss_Slice[slice] = new TH1F("PMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
 		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
 		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_PLFromPMiss_Slice[slice] = new TH1F("PLFromPMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);		
+		h1_PLFromPMiss_Slice[slice] = new TH1F("PLFromPMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
+		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);		
 
 	}	
 
@@ -2330,6 +2347,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_perp_tot_2p[f];
+					double Ecal = E_tot_2p[f];
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -2354,6 +2374,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[f] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}
 					
+					double PT = p_perp_tot_2p[f];
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);	
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}
+
 
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[f]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[f]);
@@ -2365,13 +2408,10 @@ void genie_analysis::Loop(Int_t choice) {
 			
 					// ---------------------------------------------------------------------------------------------------------------------	
 
-					double PTmiss = p_perp_tot_2p[f];
-					double Ecal = E_tot_2p[f];
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------
@@ -2591,6 +2631,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_miss_perp_2p1pi_to2p0pi[z];
+					double Ecal = Ecal_2p1pi_to2p0pi[z];
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -2615,6 +2658,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_miss_perp_2p1pi_to2p0pi[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
+					double PT = p_miss_perp_2p1pi_to2p0pi[z];
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}					
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
 
@@ -2625,13 +2691,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------	
 
-					double PTmiss = p_miss_perp_2p1pi_to2p0pi[z];
-					double Ecal = Ecal_2p1pi_to2p0pi[z];
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------				
@@ -2806,6 +2869,27 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}															
 					
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}					
+
 					deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);	
 
@@ -2993,6 +3077,27 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					deltaphiT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);					
 					deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
 
@@ -3244,6 +3349,10 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_perp_tot_2p[z];
+					double Ecal = E_tot_2p[z];
+
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -3268,6 +3377,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
+					double PT = p_perp_tot_2p[z];
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_2prot_corr[z]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_2prot_corr[z]);
 
@@ -3278,13 +3410,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------	
 
-					double PTmiss = p_perp_tot_2p[z];
-					double Ecal = E_tot_2p[z];
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------				
@@ -3527,6 +3656,9 @@ void genie_analysis::Loop(Int_t choice) {
 						Nu_BreakDown[0]->Fill(nu,LocalWeight);
 						Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+						double PTmiss = p_miss_perp_3pto2p[count][j];
+						double Ecal = E_cal_3pto2p[count][j];
+						double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 						double STLV[20] = {};
 						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 						double Pmiss = STLV[7];
@@ -3551,6 +3683,29 @@ void genie_analysis::Loop(Int_t choice) {
 						if (p_miss_perp_3pto2p[count][j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 						else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																							
 						
+						double PT = p_miss_perp_3pto2p[count][j];
+						double PMissMinus = STLV[8];
+						h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+						if ( TMath::Abs(EcalReso) < ResoThres) {
+
+							h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+							h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+							h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+							h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+						} else {
+
+							h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+							h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+							h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+							h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+						}							
+
 						double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 						double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
 
@@ -3561,13 +3716,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 						// ---------------------------------------------------------------------------------------------------------------------	
 
-						double PTmiss = p_miss_perp_3pto2p[count][j];
-						double Ecal = E_cal_3pto2p[count][j];
 						if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 						if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 						if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-						double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 						h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 						// ---------------------------------------------------------------------------------------------------------------------	
@@ -3729,6 +3881,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_miss_perp[j];
+					double Ecal = E_cal[j];
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -3753,6 +3908,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_miss_perp[j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
+					double PT = p_miss_perp[j];
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
 
@@ -3763,13 +3941,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------	
 
-					double PTmiss = p_miss_perp[j];
-					double Ecal = E_cal[j];
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------			
@@ -3992,6 +4167,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_miss_perp[j];
+					double Ecal = E_cal[j];
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -4016,6 +4194,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_miss_perp[j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																															
 					
+					double PT = p_miss_perp[j];
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr[j]);					
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr[j]);
 
@@ -4026,13 +4227,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------	
 
-					double PTmiss = p_miss_perp[j];
-					double Ecal = E_cal[j];
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------				
@@ -4791,6 +4989,9 @@ void genie_analysis::Loop(Int_t choice) {
 				Nu_BreakDown[0]->Fill(nu,LocalWeight);
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+				double PTmiss = p_perp_tot;
+				double Ecal = E_tot;
+				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
 				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
@@ -4815,6 +5016,29 @@ void genie_analysis::Loop(Int_t choice) {
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																																											
 				
+				double PT = p_perp_tot;
+				double PMissMinus = STLV[8];
+				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				if ( TMath::Abs(EcalReso) < ResoThres) {
+
+					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				} else {
+
+					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				}					
+
 				double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
 
@@ -4825,13 +5049,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// ---------------------------------------------------------------------------------------------------------------------
 
-				double PTmiss = p_perp_tot;
-				double Ecal = E_tot;
 				if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 				if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 				if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 				// ---------------------------------------------------------------------------------------------------------------------
@@ -5062,6 +5283,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_perp_tot;
+					double Ecal = E_tot;
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -5086,6 +5310,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
+					double PT = p_perp_tot;
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
 
@@ -5096,13 +5343,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------
 
-					double PTmiss = p_perp_tot;
-					double Ecal = E_tot;
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------
@@ -5342,6 +5586,9 @@ void genie_analysis::Loop(Int_t choice) {
 					Nu_BreakDown[0]->Fill(nu,LocalWeight);
 					Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+					double PTmiss = p_perp_tot;
+					double Ecal = E_tot;
+					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 					double Pmiss = STLV[7];
@@ -5366,6 +5613,29 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
+					double PT = p_perp_tot;
+					double PMissMinus = STLV[8];
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					if ( TMath::Abs(EcalReso) < ResoThres) {
+
+						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					} else {
+
+						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+					}						
+
 					double deltaphiT = DeltaPhiTFunction(V3_el,V3_prot_corr);		
 					double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
 
@@ -5376,13 +5646,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// ---------------------------------------------------------------------------------------------------------------------
 
-					double PTmiss = p_perp_tot;
-					double Ecal = E_tot;
 					if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 					if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 					if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 					// ---------------------------------------------------------------------------------------------------------------------
@@ -5554,6 +5821,9 @@ void genie_analysis::Loop(Int_t choice) {
 				Nu_BreakDown[0]->Fill(nu,LocalWeight);
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+				double PTmiss = p_perp_tot;
+				double Ecal = E_tot;
+				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
 				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
@@ -5578,6 +5848,29 @@ void genie_analysis::Loop(Int_t choice) {
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}													
 				
+				double PT = p_perp_tot;
+				double PMissMinus = STLV[8];
+				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				if ( TMath::Abs(EcalReso) < ResoThres) {
+
+					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				} else {
+
+					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				}					
+
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);	
 
@@ -5588,13 +5881,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// ---------------------------------------------------------------------------------------------------------------------
 
-				double PTmiss = p_perp_tot;
-				double Ecal = E_tot;
 				if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 				if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 				if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 				// ---------------------------------------------------------------------------------------------------------------------
@@ -5822,6 +6112,9 @@ void genie_analysis::Loop(Int_t choice) {
 				Nu_BreakDown[0]->Fill(nu,LocalWeight);
 				Pe_BreakDown[0]->Fill(V4_el.Rho(),LocalWeight);
 
+				double PTmiss = p_perp_tot;
+				double Ecal = E_tot;
+				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
 				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
 				double Pmiss = STLV[7];
@@ -5846,6 +6139,29 @@ void genie_analysis::Loop(Int_t choice) {
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}														
 				
+				double PT = p_perp_tot;
+				double PMissMinus = STLV[8];
+				h2_PPerp_PMinus[0]->Fill(p_perp_tot,PMissMinus,LocalWeight);
+				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				if ( TMath::Abs(EcalReso) < ResoThres) {
+
+					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				} else {
+
+					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
+					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
+					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+
+				}					
+
 				double deltaphiT = DeltaAlphaTFunction(V3_el,V3_prot_corr);		
 				double deltaalphaT = DeltaAlphaTFunction(V3_el,V3_prot_corr);
 
@@ -5856,13 +6172,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// ---------------------------------------------------------------------------------------------------------------------
 
-				double PTmiss = p_perp_tot;
-				double Ecal = E_tot;
 				if (PTmiss < pperp_max[0]) { h1_ECal_Slice1_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }		
 				if (PTmiss > pperp_min[1] && PTmiss < pperp_max[1]) { h1_ECal_Slice2_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 				if (PTmiss > pperp_min[2] && PTmiss < pperp_max[2]) { h1_ECal_Slice3_InSector[ElectronSector]->Fill(Ecal,LocalWeight); }
 
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				h1_ECalReso_InSector[ElectronSector]->Fill(EcalReso,LocalWeight);
 
 				// ---------------------------------------------------------------------------------------------------------------------	
