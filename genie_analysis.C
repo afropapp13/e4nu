@@ -623,7 +623,6 @@ void genie_analysis::Loop(Int_t choice) {
 		h2_PMiss_kMiss[region] = new TH2F("PMiss_kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);	
 		h1_PL[region] = new TH1F("PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);
 		h1_PLFromPMiss[region] = new TH1F("PLFromPMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);				
-		h2_PMiss_kMiss[region] = new TH2F("PMiss_kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);	
 		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);			
 	}		
 
