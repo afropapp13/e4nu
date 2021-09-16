@@ -31,7 +31,7 @@ using namespace std;
 
 // __________________________________________________________________________________________________________________________________________________
 
-void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, double ProtonEnergy, double STLV[],double P, double N, double BindE, double EE) {
+void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, double ProtonEnergy, double STLV[],double P, double N, double BindE, double EE, double TrueBeamEnergy) {
 
 	// ----------------------------------------------------------------------------------------------------
 
@@ -109,7 +109,8 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 
 	// Reconstructed Q2
 
-	TLorentzVector nuLorentzVector(0.,0.,STLV[3],STLV[3]);
+	// TLorentzVector nuLorentzVector(0.,0.,STLV[3],STLV[3]); // neutrinos
+	TLorentzVector nuLorentzVector(0.,0.,TrueBeamEnergy,TrueBeamEnergy); // electrons	
 	TLorentzVector qLorentzVector = nuLorentzVector - MuonLorentzVector;
 	STLV[5] = - qLorentzVector.Mag2(); // Q2, GeV^{2}/c^{2}
 	
@@ -117,11 +118,12 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	
 	// Light Cone Variables
 	
-	TLorentzVector MissLorentzVector = MuonLorentzVector + ProtonLorentzVector - nuLorentzVector;
+	// TLorentzVector MissLorentzVector = MuonLorentzVector + ProtonLorentzVector - nuLorentzVector;
+	TLorentzVector MissLorentzVector = ProtonLorentzVector - qLorentzVector;	
 	
 	STLV[6] = TMath::Abs(MissLorentzVector.E());  // Emiss
 	STLV[7] = (MissLorentzVector.Vect()).Mag();   // Pmiss
-	STLV[15] = STLV[7] * MissLorentzVector.CosTheta(); // PL using PMiss projection
+	STLV[15] = MissLorentzVector.Z(); // PL using PMiss projection along z direction
 	
 //	fPMissMinus = fEMiss - MissLorentzVector.Z();
 
@@ -2351,7 +2353,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = E_tot_2p[f];
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -2635,7 +2637,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = Ecal_2p1pi_to2p0pi[z];
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -3354,7 +3356,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -3660,7 +3662,7 @@ void genie_analysis::Loop(Int_t choice) {
 						double Ecal = E_cal_3pto2p[count][j];
 						double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 						double STLV[20] = {};
-						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 						double Pmiss = STLV[7];
 						double kMiss = STLV[9];
 						double PnProxy = STLV[12];
@@ -3885,7 +3887,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = E_cal[j];
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -4171,7 +4173,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = E_cal[j];
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -4993,7 +4995,7 @@ void genie_analysis::Loop(Int_t choice) {
 				double Ecal = E_tot;
 				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
@@ -5287,7 +5289,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = E_tot;
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -5590,7 +5592,7 @@ void genie_analysis::Loop(Int_t choice) {
 					double Ecal = E_tot;
 					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 					double Pmiss = STLV[7];
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
@@ -5825,7 +5827,7 @@ void genie_analysis::Loop(Int_t choice) {
 				double Ecal = E_tot;
 				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
@@ -6116,7 +6118,7 @@ void genie_analysis::Loop(Int_t choice) {
 				double Ecal = E_tot;
 				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name]);
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
 				double Pmiss = STLV[7];
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];

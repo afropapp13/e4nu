@@ -79,8 +79,8 @@ void PlotTwoD(TString Id = "") {
 	std::vector<TString> PlotName; std::vector<TString> XaxisLabel;  std::vector<TString> YaxisLabel;
 	PlotName.push_back("PPerp_PMinus"); XaxisLabel.push_back("P_{#perp} [GeV/c]");  YaxisLabel.push_back("P^{-} [GeV/c]");
 	PlotName.push_back("PLMinusPLFromPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("P_{L} - P_{L,Miss} [GeV/c]");
-	PlotName.push_back("kMissMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("k_{Miss} - P_{L,Miss} [GeV/c]");
-	PlotName.push_back("PnProxyMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("P_{n,proxy} - P_{L,Miss} [GeV/c]");		
+	PlotName.push_back("kMissMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("k_{Miss} - P_{Miss} [GeV/c]");
+	PlotName.push_back("PnProxyMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("P_{n,proxy} - P_{Miss} [GeV/c]");		
 
 	const int NPlots = PlotName.size();	
 
@@ -132,7 +132,7 @@ void PlotTwoD(TString Id = "") {
 					TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
 					can2D->SetBottomMargin(0.12);
 					can2D->SetLeftMargin(0.12);
-					can2D->SetRightMargin(0.12);				
+					can2D->SetRightMargin(0.14);				
 
 					// 2D Pmiss vs kMiss plots
 
@@ -145,8 +145,9 @@ void PlotTwoD(TString Id = "") {
 					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->CenterTitle();
 					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetTitle(YaxisLabel[WhichPlot]);
 					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetTitleOffset(1.1);				
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetNdivisions(8);								
+					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetNdivisions(8);	
 
+					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetZaxis()->SetRangeUser(0.,1.1*Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetMaximum());
 
 					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->Draw("coltz");
 
