@@ -179,7 +179,7 @@ void OverlayPL(TString Id = "") {
 
 				// --------------------------------------------------------------------------------------------------------		
 
-				TString CanvasName2D = Id+"PLFromMiss_PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName2D = Id+"PLFromPMiss_PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
 				can2D->SetBottomMargin(0.42);				
 
@@ -237,6 +237,7 @@ void OverlayPL(TString Id = "") {
 					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+"_Slice"+PMissSlice[WhichSlice]));
 					PrettyPlot(font,size,PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],Color[WhichPlot]);
 					leg->AddEntry(PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PlotLatex[WhichPlot],"p");
+					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetXaxis()->SetTitle("P_{L} [GeV/c]");					
 					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
 
 				}	

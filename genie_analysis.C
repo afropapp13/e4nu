@@ -617,8 +617,8 @@ void genie_analysis::Loop(Int_t choice) {
 
 	// For these 2D plots: 0 = all events, 1 = within 15% of beam energy, 2 = more than 15% away from beam energy
 
-	double MinDiff = -0.5;
-	double MaxDiff = -0.5;	
+	double MinDiff = -0.1;
+	double MaxDiff = -0.1;	
 	double ResoThres = 0.15;
 
 	TH2F *h2_PPerp_PMinus[Regions];
@@ -636,7 +636,7 @@ void genie_analysis::Loop(Int_t choice) {
 		h1_PLFromPMiss[region] = new TH1F("PLFromPMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);				
 		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);			
 
-		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);
+		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.4,1.6);
 		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
 		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);
 		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
