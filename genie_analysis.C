@@ -637,9 +637,9 @@ void genie_analysis::Loop(Int_t choice) {
 		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);			
 
 		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.4,1.6);
-		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
-		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);
-		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinDiff,MaxDiff);		
+		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);		
+		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);
+		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);	
 
 	}		
 
