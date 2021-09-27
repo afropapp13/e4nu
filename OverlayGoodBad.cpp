@@ -52,7 +52,7 @@ void PrettyPlot(int font, double size,TH1D* h, int Color) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-void OverlayLFGProxy(TString Id = "") {
+void OverlayGoodBad(TString Id = "") {
 
 	// -----------------------------------------------------------------------------
 
@@ -90,9 +90,9 @@ void OverlayLFGProxy(TString Id = "") {
 	// Energies
 
 	std::vector<TString> EnergyTString;	std::vector<double> EnergyDouble; std::vector<TString> EnergyDoubleString;
-	EnergyTString.push_back("1161"); EnergyDouble.push_back(1.161); EnergyDoubleString.push_back("1.161");
+//	EnergyTString.push_back("1161"); EnergyDouble.push_back(1.161); EnergyDoubleString.push_back("1.161");
 	EnergyTString.push_back("2261"); EnergyDouble.push_back(2.261); EnergyDoubleString.push_back("2.261");	
-	EnergyTString.push_back("4461"); EnergyDouble.push_back(4.461); EnergyDoubleString.push_back("4.461");
+//	EnergyTString.push_back("4461"); EnergyDouble.push_back(4.461); EnergyDoubleString.push_back("4.461");
 
 	const int NEnergy = EnergyTString.size();
 
@@ -101,8 +101,8 @@ void OverlayLFGProxy(TString Id = "") {
 	// Nuclei
 
 	std::vector<TString> Nucleus; std::vector<TString> NucleusLatex;
-	Nucleus.push_back("C12"); NucleusLatex.push_back("^{12}C");
-	Nucleus.push_back("4He"); NucleusLatex.push_back("^{4}He");
+//	Nucleus.push_back("C12"); NucleusLatex.push_back("^{12}C");
+//	Nucleus.push_back("4He"); NucleusLatex.push_back("^{4}He");
 	Nucleus.push_back("56Fe"); NucleusLatex.push_back("^{56}Fe");
 
 	const int NNuclei = Nucleus.size();
@@ -112,9 +112,9 @@ void OverlayLFGProxy(TString Id = "") {
 	// Plots & colors to be used for plotting purposes	
 
 	std::vector<TString> PlotName; std::vector<int> Color; std::vector<TString> PlotLatex;
-	PlotName.push_back("PMiss"); Color.push_back(kBlue+2); PlotLatex.push_back("P_{Miss}");
-	PlotName.push_back("kMiss"); Color.push_back(kOrange+7); PlotLatex.push_back("k_{Miss}");
-	PlotName.push_back("PnProxy"); Color.push_back(kGreen+2);PlotLatex.push_back("P_{n,proxy}");		
+	PlotName.push_back("PMiss_GoodBad"); Color.push_back(kBlue+2); PlotLatex.push_back("P_{Miss}");
+	PlotName.push_back("kMiss_GoodBad"); Color.push_back(kOrange+7); PlotLatex.push_back("k_{Miss}");
+	PlotName.push_back("PnProxy_GoodBad"); Color.push_back(kGreen+2);PlotLatex.push_back("P_{n,proxy}");		
 
 	const int NPlots = PlotName.size();	
 
@@ -123,39 +123,20 @@ void OverlayLFGProxy(TString Id = "") {
 	// Plots & colors to be used for PL plotting purposes	
 
 	std::vector<TString> PLPlotName; std::vector<int> PLColor; std::vector<TString> PLPlotLatex;
-	PLPlotName.push_back("PLFromPMiss"); PLColor.push_back(kOrange+7); PLPlotLatex.push_back("P_{Miss} projection");
-	PLPlotName.push_back("PL"); PLColor.push_back(kBlue+2); PLPlotLatex.push_back("P_{L}");
+	PLPlotName.push_back("PLFromPMiss_GoodBad"); PLColor.push_back(kOrange+7); PLPlotLatex.push_back("P_{Miss} projection");
+	PLPlotName.push_back("PL_GoodBad"); PLColor.push_back(kBlue+2); PLPlotLatex.push_back("P_{L}");
 
 	const int NPLPlots = PLPlotName.size();		
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
-	// Slices (all events, PT < 0.3 GeV/c, PT > 0.3 GeV/c)
+	// Slices (ECal reso < 10 %  and > 10%)
 
 	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
-	Slice.push_back("_0"); SliceLabel.push_back("");
-	Slice.push_back("_1"); SliceLabel.push_back("P_{T} < 0.3 GeV/c");	
-	Slice.push_back("_2"); SliceLabel.push_back("P_{T} > 0.3 GeV/c");
+	Slice.push_back("_0"); SliceLabel.push_back("E_{Cal}^{Reso} < 10 %");
+	Slice.push_back("_1"); SliceLabel.push_back("E_{Cal}^{Reso} > 10 %");
 
 	const int NSlices = Slice.size();	
-
-	// -----------------------------------------------------------------------------------------------------------------------------------------
-
-	// PMiss Slices (e.g. 0 < PMiss < 0.1 GeV/c et al)
-
-	std::vector<TString> PMissSlice; std::vector<TString> PMissSliceLabel; 
-	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{Miss} < 0.1 GeV");
-	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("0.1 < P_{Miss} < 0.2 GeV");
-	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("0.2 < P_{Miss} < 0.3 GeV");
-	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("0.3 < P_{Miss} < 0.4 GeV");			
-	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("0.4 < P_{Miss} < 0.5 GeV");
-	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("0.5 < P_{Miss} < 0.6 GeV");
-	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("0.6 < P_{Miss} < 0.7 GeV");
-	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.7 < P_{Miss} < 0.8 GeV");
-	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.8 < P_{Miss} < 0.9 GeV");
-	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("P_{Miss} > 0.9 GeV");
-
-	const int NPMissSlices = PMissSlice.size();	
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -164,6 +145,7 @@ void OverlayLFGProxy(TString Id = "") {
 	TFile* Files[NEnergy][NNuclei];
 	TH1D* Plots[NEnergy][NNuclei][NPlots][NSlices];
 	TH2D* PMisskMissPlots[NEnergy][NNuclei][NSlices];
+	TH2D* PLFromMissPLPlots[NEnergy][NNuclei][NSlices];	
 	TH1D* PMissPlots[NEnergy][NNuclei][NPlots][NSlices];			
 	TH1D* PLPlots[NEnergy][NNuclei][NPlots][NSlices];
 
@@ -190,7 +172,7 @@ void OverlayLFGProxy(TString Id = "") {
 
 				// Create the relevant canvas & Legend
 
-				TString CanvasName= Id+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName= Id+"LFG_Pn_GoodBad_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
 				can->SetBottomMargin(0.42);
 
@@ -280,14 +262,14 @@ void OverlayLFGProxy(TString Id = "") {
 				// --------------------------------------------------------------------------------------------------------
 				// --------------------------------------------------------------------------------------------------------		
 
-				TString CanvasName2D = Id+"PMiss_kMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName2D = Id+"PMiss_kMiss_GoodBad_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
 				can2D->SetBottomMargin(0.12);
 				can2D->SetRightMargin(0.12);								
 
 				// 2D Pmiss vs kMiss plots
 
-				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice] = (TH2D*)(Files[WhichEnergy][WhichNucleus]->Get("PMiss_kMiss"+Slice[WhichSlice]));
+				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice] = (TH2D*)(Files[WhichEnergy][WhichNucleus]->Get("PMiss_kMiss_GoodBad"+Slice[WhichSlice]));
 
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->CenterTitle();
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->SetTitle("P_{Miss} [GeV/c]");
@@ -301,13 +283,39 @@ void OverlayLFGProxy(TString Id = "") {
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0.,1.1*PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
 				can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
-				delete can2D;				
+				delete can2D;	
+
+				// --------------------------------------------------------------------------------------------------------
+				// --------------------------------------------------------------------------------------------------------		
+
+				TString CanvasName2DPL = Id+"PLFromPMiss_PL_GoodBad_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TCanvas* can2DPL = new TCanvas(CanvasName2DPL,CanvasName2DPL,205,34,768,768);	
+				can2DPL->SetBottomMargin(0.12);
+				can2DPL->SetRightMargin(0.13);								
+
+				// 2D Pmiss vs kMiss plots
+
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice] = (TH2D*)(Files[WhichEnergy][WhichNucleus]->Get("PLFromPMiss_PL_GoodBad"+Slice[WhichSlice]));
+
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->CenterTitle();
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->SetTitle("P_{L,Miss} [GeV/c]");
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->SetNdivisions(8);				
+
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->CenterTitle();
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetTitle("P_{L} [GeV/c]");
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetTitleOffset(1.1);				
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetNdivisions(8);								
+
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0.,1.1*PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
+				PLFromMissPLPlots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
+				can2D->SaveAs("myPlots/"+CanvasName2DPL+".pdf");			
+				delete can2D;							
 
 				// -----------------------------------------------------------------------------------------------	
 
 				// Loop over the PL plots of interest
 
-				TString PLCanvasName= Id+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString PLCanvasName= Id+"PL_GoodBad_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* PLcan = new TCanvas(PLCanvasName,PLCanvasName,205,34,1024,768);	
 				PLcan->SetBottomMargin(0.42);
 
@@ -371,100 +379,6 @@ void OverlayLFGProxy(TString Id = "") {
 			} // End of the loop over the slices 
 
 			// -----------------------------------------------------------------------------------------------			
-
-			// -----------------------------------------------------------------------------------------------
-
-			// PMiss Slices (10 slices)
-
-			// -----------------------------------------------------------------------------------------------	
-
-			for (int WhichSlice = 0; WhichSlice < NPMissSlices; WhichSlice++) {
-
-				// Create the relevant canvas & Legend
-
-				TString CanvasName= Id+"PMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+PMissSlice[WhichSlice];
-				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
-				can->SetBottomMargin(0.42);
-
-				TLegend* leg = new TLegend(0.7,0.7,0.85,0.89);
-				leg->SetTextFont(font);
-				leg->SetTextSize(size);
-				leg->SetBorderSize(0);	
-
-				TLatex *text = new TLatex();
-				text->SetTextFont(font);
-				text->SetTextSize(size);
-
-				TLatex *textRegion = new TLatex();
-				textRegion->SetTextFont(font);
-				textRegion->SetTextSize(size);								
-
-				// -----------------------------------------------------------------------------------------------	
-
-				// Loop over the plots of interest
-
-				for (int WhichPlot = 0; WhichPlot < NPlots; WhichPlot++) {
-
-					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+"_Slice"+PMissSlice[WhichSlice]));
-					PrettyPlot(font,size,PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],Color[WhichPlot]);
-					leg->AddEntry(PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],PlotLatex[WhichPlot],"p");
-					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");	
-					
-					double max = TMath::Max(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->GetMaximum(),PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetMaximum());
-					PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->GetYaxis()->SetRangeUser(0.,1.1*max);
-					PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->Draw("e1x0 same");								
-
-				}	
-
-				leg->Draw();
-				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
-				textRegion->DrawLatexNDC(0.42,0.85,PMissSliceLabel[WhichSlice]);				
-
-				// --------------------------------------------------------------------------------------------------------
-
-				// Residual plots with respect to PMiss
-
-				TPad* pad = new TPad("pad","pad",0.,0.,1.,0.3,21);
-				pad->SetFillColor(kWhite);
-				pad->SetTopMargin(0.);
-				pad->Draw();
-				pad->cd();
-				pad->SetGridx();
-				pad->SetGridy();						
-
-				TH1D* kMissClone = (TH1D*)(PMissPlots[WhichEnergy][WhichNucleus][1][WhichSlice]->Clone());
-				kMissClone->Add(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice],-1);
-				kMissClone->Divide(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]);
-
-				kMissClone->GetXaxis()->SetTitleSize(0.);
-				kMissClone->GetXaxis()->SetLabelSize(0.);
-				kMissClone->GetXaxis()->SetTickSize(0.1);				
-
-				kMissClone->GetYaxis()->SetTitle("Residual");
-				kMissClone->GetYaxis()->SetTitleSize(0.17);
-				kMissClone->GetYaxis()->SetLabelSize(0.17);			
-				kMissClone->GetYaxis()->SetTitleOffset(0.3);
-				kMissClone->GetYaxis()->SetNdivisions(8);
-
-				TH1D* PnProxyClone = (TH1D*)(PMissPlots[WhichEnergy][WhichNucleus][2][WhichSlice]->Clone());	
-				PnProxyClone->Add(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice],-1);
-				PnProxyClone->Divide(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]);			
-
-				double Min = TMath::Min(kMissClone->GetMinimum(),PnProxyClone->GetMinimum());
-				double Max = TMath::Max(kMissClone->GetMaximum(),PnProxyClone->GetMaximum());;
-				kMissClone->GetYaxis()->SetRangeUser( 1.1*TMath::Max(-0.5,Min),1.1*TMath::Min(0.5,Max));
-
-				kMissClone->GetYaxis()->SetTickSize(0.02);			
-
-				kMissClone->Draw("e1x0 hist same");					 
-				PnProxyClone->Draw("e1x0 hist same");
-
-				// --------------------------------------------------------------------------------------------------------
-
-				can->SaveAs("myPlots/"+CanvasName+".pdf");			
-				delete can;
-
-			} // End of the PMiss slices
 
 		} // End of the loop over the nuclei
 

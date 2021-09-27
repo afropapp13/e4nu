@@ -133,16 +133,16 @@ void OverlayPL(TString Id = "") {
 	// PMiss Slices (e.g. 0 < PMiss < 0.1 GeV/c et al)
 
 	std::vector<TString> PMissSlice; std::vector<TString> PMissSliceLabel; 
-	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{L,Miss} < 0.1 GeV");
-	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("0.1 < P_{L,Miss} < 0.2 GeV");
-	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("0.2 < P_{L,Miss} < 0.3 GeV");
-	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("0.3 < P_{L,Miss} < 0.4 GeV");			
-	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("0.4 < P_{L,Miss} < 0.5 GeV");
-	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("0.5 < P_{L,Miss} < 0.6 GeV");
-	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("0.6 < P_{L,Miss} < 0.7 GeV");
-	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.7 < P_{L,Miss} < 0.8 GeV");
-	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.8 < P_{L,Miss} < 0.9 GeV");
-	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("0.9 < P_{L,Miss} < 1 GeV");
+	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{L,Miss} < -1.1 GeV");
+	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("-1.1 < P_{L,Miss} < -0.9 GeV");
+	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("-0.9 < P_{L,Miss} < -0.7 GeV");
+	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("-0.7 < P_{L,Miss} < -0.5 GeV");			
+	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("-0.5 < P_{L,Miss} < -0.3 GeV");
+	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("-0.3 < P_{L,Miss} < -0.1 GeV");
+	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("-0.1 < P_{L,Miss} < 0.1 GeV");
+	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.1 < P_{L,Miss} < 0.3 GeV");
+	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.3 < P_{L,Miss} < 0.5 GeV");
+	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("P_{L,Miss} > 0.5 GeV");
 
 	const int NPMissSlices = PMissSlice.size();	
 
@@ -181,7 +181,8 @@ void OverlayPL(TString Id = "") {
 
 				TString CanvasName2D = Id+"PLFromPMiss_PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
-				can2D->SetBottomMargin(0.42);				
+				can2D->SetBottomMargin(0.12);
+				can2D->SetRightMargin(0.13);								
 
 				// 2D PLFromPMiss vs PL plots
 
@@ -196,7 +197,7 @@ void OverlayPL(TString Id = "") {
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetTitleOffset(1.1);				
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetNdivisions(8);								
 
-
+				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0.,1.1*PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
 				can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
 				delete can2D;								 
@@ -240,11 +241,15 @@ void OverlayPL(TString Id = "") {
 					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetXaxis()->SetTitle("P_{L} [GeV/c]");					
 					PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
 
+					double max = TMath::Max(PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->GetMaximum(),PMissPlots[WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetMaximum());
+					PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->GetYaxis()->SetRangeUser(0.,1.1*max);
+					PMissPlots[WhichEnergy][WhichNucleus][0][WhichSlice]->Draw("e1x0 same");						
+
 				}	
 
 				leg->Draw();
 				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
-				textRegion->DrawLatexNDC(0.42,0.85,PMissSliceLabel[WhichSlice]);				
+				textRegion->DrawLatexNDC(0.32,0.85,PMissSliceLabel[WhichSlice]);				
 
 				// --------------------------------------------------------------------------------------------------------
 

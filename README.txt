@@ -8,4 +8,7 @@ root -b
 OverlayPL()
 OverlayPL("xB_")
 
-
+root -b
+.L PlotTwoD.cpp
+PlotTwoD()
+PlotTwoD("xB_")

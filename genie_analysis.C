@@ -564,7 +564,8 @@ void genie_analysis::Loop(Int_t choice) {
 	TFile *file_out;
 	TString FileName = ""; 
 
-	if (choice == 0) { FileName = Form("/w/hallb-scifs17exp/clas/claseg2/apapadop/LFNeutrinos_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
+//	if (choice == 0) { FileName = Form("/w/hallb-scifs17exp/clas/claseg2/apapadop/LFNeutrinos_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 0) { FileName = Form("LFNeutrinos_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 1){ FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 2) { FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_G18_10a_02_11a.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 3) { FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
@@ -600,11 +601,11 @@ void genie_analysis::Loop(Int_t choice) {
 
 	// ------------------------------------------------------------------------------
 
-	int NBinsNucMom = 80;
+	int NBinsNucMom = 100;
 	double MinNucMom = 0.;
-	double MaxNucMom = 1.;	
+	double MaxNucMom = 2.;	
 
-	double MinPL = -0.5;
+	double MinPL = -2.;
 	double MaxPL = 0.5;	
 
 	const int Regions = 3;
@@ -617,11 +618,15 @@ void genie_analysis::Loop(Int_t choice) {
 	TH1F *h1_PL[Regions];
 	TH1F *h1_PLFromPMiss[Regions];		
 
-	// For these 2D plots: 0 = all events, 1 = within 15% of beam energy, 2 = more than 15% away from beam energy
+	// For these 2D plots: 0 = all events, 1 = within 10% of beam energy, 2 = more than 10% away from beam energy
 
-	double MinDiff = -0.1;
-	double MaxDiff = -0.1;	
-	double ResoThres = 0.15;
+	int TwoDBins = 100;
+	double MinDiffPL = -0.1;
+	double MaxDiffPL = 0.6;	
+	double ResoThres = 0.10;
+
+	double MinDiffPMiss = -0.6;
+	double MaxDiffPMiss = 0.4;	
 
 	TH2F *h2_PPerp_PMinus[Regions];
 	TH2F *h2_PLMinusPLFromPMiss_PMiss[Regions];
@@ -638,16 +643,16 @@ void genie_analysis::Loop(Int_t choice) {
 		h1_PLFromPMiss[region] = new TH1F("PLFromPMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);				
 		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);			
 
-		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.4,1.6);
-		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);		
-		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);
-		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",50,0.,1.,50,-0.1,0.1);	
+		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.3,1.8);
+		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPL,MaxDiffPL);		
+		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);
+		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);	
 
 	}		
 
 	// ------------------------------------------------------------------------------
 
-	std::vector<double> PLFromPMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,10.};
+	std::vector<double> PLFromPMissRange{-10.,-1.1,-0.9,-0.7,-0.5,-0.3,-0.1,0.1,0.3,0.4,10.};
 	const int NPLRanges = PLFromPMissRange.size() - 1;
 
 	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,10.};
@@ -669,6 +674,29 @@ void genie_analysis::Loop(Int_t choice) {
 		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);		
 
 	}	
+
+	int GoodBadResoRegions = 2;	
+	TH1F* h1_PMiss_GoodBad[GoodBadResoRegions];
+	TH1F* h1_kMiss_GoodBad[GoodBadResoRegions];		
+	TH1F* h1_PnProxy_GoodBad[GoodBadResoRegions];
+	TH1F* h1_PLFromPMiss_GoodBad[GoodBadResoRegions];
+	TH1F* h1_PL_GoodBad[GoodBadResoRegions];
+	TH2F *h2_PMiss_kMiss_GoodBad[GoodBadResoRegions];	
+	TH2F *h2_PLFromPMiss_PL_GoodBad[GoodBadResoRegions];		
+
+	for (int slice = 0; slice < GoodBadResoRegions; slice ++) {
+
+		h1_PMiss_GoodBad[slice] = new TH1F("PMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+		h1_kMiss_GoodBad[slice] = new TH1F("kMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);				
+		h1_PnProxy_GoodBad[slice] = new TH1F("PnProxy_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
+
+		h1_PLFromPMiss_GoodBad[slice] = new TH1F("PLFromPMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
+		h1_PL_GoodBad[slice] = new TH1F("PL_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
+
+		h2_PMiss_kMiss_GoodBad[slice] = new TH2F("PMiss_kMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);
+		h2_PLFromPMiss_PL_GoodBad[slice] = new TH2F("PLFromPMiss_PL_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);
+
+	}			
 
 	// ------------------------------------------------------------------------------	
 
@@ -2371,8 +2399,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);													
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);													
 					if (p_perp_tot_2p[f] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}
 					
@@ -2385,12 +2413,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -2655,8 +2703,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_miss_perp_2p1pi_to2p0pi[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
@@ -2669,12 +2717,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -2866,8 +2934,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}															
 					
@@ -2878,12 +2946,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -3074,8 +3162,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
@@ -3086,12 +3174,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -3374,8 +3482,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																
 					
@@ -3388,12 +3496,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -3680,8 +3808,8 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 						h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);
 						int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-						h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_Slice[Index]->Fill(PL,LocalWeight);						
+						h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);						
 						if (p_miss_perp_3pto2p[count][j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 						else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																							
 						
@@ -3694,12 +3822,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 						if ( TMath::Abs(EcalReso) < ResoThres) {
 
+							h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+							h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);							
+
+							h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+							h1_PL_GoodBad[0]->Fill(PL,LocalWeight);							
+
+							h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+							h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+							h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);							
+
 							h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 							h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 							h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 							h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 						} else {
+
+							h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+							h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);							
+
+							h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+							h1_PL_GoodBad[1]->Fill(PL,LocalWeight);							
+
+							h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+							h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+							h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);							
 
 							h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 							h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -3905,8 +4053,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_miss_perp[j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
@@ -3919,12 +4067,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -4191,8 +4359,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_miss_perp[j] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																															
 					
@@ -4205,12 +4373,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -5013,8 +5201,8 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[Index]->Fill(PL,LocalWeight);				
+				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);				
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																																											
 				
@@ -5027,12 +5215,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 				if ( TMath::Abs(EcalReso) < ResoThres) {
 
+					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);					
+
+					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
+
 					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 				} else {
+
+					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);					
+
+					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);
 
 					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -5307,8 +5515,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
@@ -5321,12 +5529,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -5610,8 +5838,8 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[Index]->Fill(PL,LocalWeight);					
+					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);					
 					if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																			
 					
@@ -5624,12 +5852,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 					if ( TMath::Abs(EcalReso) < ResoThres) {
 
+						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);
+
+						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+
 						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 					} else {
+
+						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
+
+						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
+
+						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
 
 						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -5845,8 +6093,8 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[Index]->Fill(PL,LocalWeight);				
+				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);				
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}													
 				
@@ -5859,12 +6107,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 				if ( TMath::Abs(EcalReso) < ResoThres) {
 
+					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);					
+
+					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
+
 					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 				} else {
+
+					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);					
+
+					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);					
 
 					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
@@ -6136,8 +6404,8 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[Index]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[Index]->Fill(PL,LocalWeight);
+				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
+				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);
 				if (p_perp_tot < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 				else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}														
 				
@@ -6150,12 +6418,32 @@ void genie_analysis::Loop(Int_t choice) {
 
 				if ( TMath::Abs(EcalReso) < ResoThres) {
 
+					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
+
+					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
+
 					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
 				} else {
+
+					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
+					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
+
+					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
+					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);
+
+					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
+					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
+					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);					
 
 					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
