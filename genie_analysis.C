@@ -663,7 +663,12 @@ void genie_analysis::Loop(Int_t choice) {
 	TH1F* h1_kMiss_Slice[NRanges];	
 	TH1F* h1_PnProxy_Slice[NRanges];
 	TH1F* h1_PLFromPMiss_Slice[NRanges];
-	TH1F* h1_PL_Slice[NRanges];			
+	TH1F* h1_PL_Slice[NRanges];	
+
+	// Jackson's suggestion
+	// P- vs Pperp in Pmiss slices	
+
+	TH2F *h2_PPerp_PMinus_Slice[NRanges];			
 
 	for (int slice = 0; slice < NRanges; slice ++) {
 
@@ -671,9 +676,13 @@ void genie_analysis::Loop(Int_t choice) {
 		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
 		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
 		h1_PLFromPMiss_Slice[slice] = new TH1F("PLFromPMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
-		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);		
+		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);	
+
+		h2_PPerp_PMinus_Slice[slice] = new TH2F("PPerp_PMinus_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.3,1.8);			
 
 	}	
+
+	// ------------------------------------------------------------------------------		
 
 	int GoodBadResoRegions = 2;	
 	TH1F* h1_PMiss_GoodBad[GoodBadResoRegions];
@@ -2406,7 +2415,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_perp_tot_2p[f];
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);	
@@ -2710,7 +2719,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_miss_perp_2p1pi_to2p0pi[z];
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -2939,7 +2948,7 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}															
 					
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -3167,7 +3176,7 @@ void genie_analysis::Loop(Int_t choice) {
 					if (p_perp_tot_2p[z] < SplitPoint) { h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); }																								
 					else {  h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);}																		
 					
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -3489,7 +3498,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_perp_tot_2p[z];
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -3815,7 +3824,7 @@ void genie_analysis::Loop(Int_t choice) {
 						
 						double PT = p_miss_perp_3pto2p[count][j];
 						double PMissMinus = STLV[8];
-						h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+						h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 						h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 						h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -4060,7 +4069,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_miss_perp[j];
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -4366,7 +4375,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_miss_perp[j];
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -5208,7 +5217,7 @@ void genie_analysis::Loop(Int_t choice) {
 				
 				double PT = p_perp_tot;
 				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -5522,7 +5531,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_perp_tot;
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -5845,7 +5854,7 @@ void genie_analysis::Loop(Int_t choice) {
 					
 					double PT = p_perp_tot;
 					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -6100,7 +6109,7 @@ void genie_analysis::Loop(Int_t choice) {
 				
 				double PT = p_perp_tot;
 				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);
+				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
@@ -6411,7 +6420,7 @@ void genie_analysis::Loop(Int_t choice) {
 				
 				double PT = p_perp_tot;
 				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(p_perp_tot,PMissMinus,LocalWeight);
+				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);  h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
 				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
 				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);

@@ -90,9 +90,9 @@ void OverlayGoodBad(TString Id = "") {
 	// Energies
 
 	std::vector<TString> EnergyTString;	std::vector<double> EnergyDouble; std::vector<TString> EnergyDoubleString;
-//	EnergyTString.push_back("1161"); EnergyDouble.push_back(1.161); EnergyDoubleString.push_back("1.161");
+	EnergyTString.push_back("1161"); EnergyDouble.push_back(1.161); EnergyDoubleString.push_back("1.161");
 	EnergyTString.push_back("2261"); EnergyDouble.push_back(2.261); EnergyDoubleString.push_back("2.261");	
-//	EnergyTString.push_back("4461"); EnergyDouble.push_back(4.461); EnergyDoubleString.push_back("4.461");
+	EnergyTString.push_back("4461"); EnergyDouble.push_back(4.461); EnergyDoubleString.push_back("4.461");
 
 	const int NEnergy = EnergyTString.size();
 
@@ -101,8 +101,8 @@ void OverlayGoodBad(TString Id = "") {
 	// Nuclei
 
 	std::vector<TString> Nucleus; std::vector<TString> NucleusLatex;
-//	Nucleus.push_back("C12"); NucleusLatex.push_back("^{12}C");
-//	Nucleus.push_back("4He"); NucleusLatex.push_back("^{4}He");
+	Nucleus.push_back("C12"); NucleusLatex.push_back("^{12}C");
+	Nucleus.push_back("4He"); NucleusLatex.push_back("^{4}He");
 	Nucleus.push_back("56Fe"); NucleusLatex.push_back("^{56}Fe");
 
 	const int NNuclei = Nucleus.size();

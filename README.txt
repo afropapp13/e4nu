@@ -12,3 +12,8 @@ root -b
 .L PlotTwoD.cpp
 PlotTwoD()
 PlotTwoD("xB_")
+
+root -b
+.L OverlayGoodBad.cpp
+OverlayGoodBad()
+OverlayGoodBad("xB_")
