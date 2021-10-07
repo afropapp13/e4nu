@@ -52,12 +52,15 @@ void PrettyPlot(int font, double size,TH1D* h, int Color) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-void OverlayPL(TString Id = "") {
+void OverlayPL(TString Id = "", TString MC = "") {
 
 	// -----------------------------------------------------------------------------
 
 	int font = 132;
 	double size = 0.05;
+
+	TString Label = "Data ";
+	if (MC != "") { Label = MC + " "; }	
 
 	// -----------------------------------------------------------------------------
 
@@ -122,7 +125,7 @@ void OverlayPL(TString Id = "") {
 	// Slices (all events, PT < 0.3 GeV/c, PT > 0.3 GeV/c)
 
 	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
-	Slice.push_back("_0"); SliceLabel.push_back("");
+	Slice.push_back("_0"); SliceLabel.push_back("All events");
 	Slice.push_back("_1"); SliceLabel.push_back("P_{T} < 0.3 GeV/c");	
 	Slice.push_back("_2"); SliceLabel.push_back("P_{T} > 0.3 GeV/c");
 
@@ -169,7 +172,8 @@ void OverlayPL(TString Id = "") {
 			// -----------------------------------------------------------------------------------------------
 
 			// Open the relevant file
-			Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly");
+			if (MC != "") { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_genie_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test_SuSav2_Rad.root","readonly"); }
+			else { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly"); }
 
 			// -----------------------------------------------------------------------------------------------	
 
@@ -179,7 +183,7 @@ void OverlayPL(TString Id = "") {
 
 				// --------------------------------------------------------------------------------------------------------		
 
-				TString CanvasName2D = Id+"PLFromPMiss_PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName2D = Id+MC+"PLFromPMiss_PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
 				can2D->SetBottomMargin(0.12);
 				can2D->SetRightMargin(0.13);								
@@ -199,6 +203,7 @@ void OverlayPL(TString Id = "") {
 
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0.,1.1*PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
+				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->SetTitle(Label + " " + NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV, " + SliceLabel[WhichSlice]);
 				can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
 				delete can2D;								 
 			
@@ -212,7 +217,7 @@ void OverlayPL(TString Id = "") {
 
 				// Create the relevant canvas & Legend
 
-				TString CanvasName= Id+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_Slice"+PMissSlice[WhichSlice];
+				TString CanvasName= Id+MC+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_Slice"+PMissSlice[WhichSlice];
 				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
 				can->SetBottomMargin(0.42);
 
@@ -248,7 +253,7 @@ void OverlayPL(TString Id = "") {
 				}	
 
 				leg->Draw();
-				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				text->DrawLatexNDC(0.4,0.92,Label + " " + NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
 				textRegion->DrawLatexNDC(0.32,0.85,PMissSliceLabel[WhichSlice]);				
 
 				// --------------------------------------------------------------------------------------------------------

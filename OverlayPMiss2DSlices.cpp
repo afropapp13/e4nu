@@ -17,20 +17,20 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-void PlotTwoD(TString Id = "", TString MC = "") {
+void OverlayPMiss2DSlices(TString Id = "", TString MC = "") {
 
 	// -----------------------------------------------------------------------------
 
 	int font = 132;
 	double size = 0.05;
 
+	TString Label = "Data ";
+	if (MC != "") { Label = MC + " "; }	
+
 	// -----------------------------------------------------------------------------
 
 	TH1D::SetDefaultSumw2();
 	TH2D::SetDefaultSumw2();	
-
-	TString Label = "Data ";
-	if (MC != "") { Label = MC + " "; }		
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,33 +77,28 @@ void PlotTwoD(TString Id = "", TString MC = "") {
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
-	// Plots & colors to be used for plotting purposes	
+	// PMiss Slices (e.g. 0 < PMiss < 0.1 GeV/c et al)
 
-	std::vector<TString> PlotName; std::vector<TString> XaxisLabel;  std::vector<TString> YaxisLabel;
-	PlotName.push_back("PPerp_PMinus"); XaxisLabel.push_back("P_{#perp} [GeV/c]");  YaxisLabel.push_back("P^{-} [GeV/c]");
-	PlotName.push_back("PLMinusPLFromPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("P_{L} - P_{L,Miss} [GeV/c]");
-	PlotName.push_back("kMissMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("k_{Miss} - P_{Miss} [GeV/c]");
-	PlotName.push_back("PnProxyMinusPMiss_PMiss"); XaxisLabel.push_back("P_{Miss} [GeV/c]"); YaxisLabel.push_back("P_{n,proxy} - P_{Miss} [GeV/c]");		
+	std::vector<TString> PMissSlice; std::vector<TString> PMissSliceLabel; 
+	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{Miss} < 0.1 GeV/c");
+	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("0.1 < P_{Miss} < 0.2 GeV/c");
+	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("0.2 < P_{Miss} < 0.3 GeV/c");
+	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("0.3 < P_{Miss} < 0.4 GeV/c");			
+	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("0.4 < P_{Miss} < 0.5 GeV/c");
+	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("0.5 < P_{Miss} < 0.6 GeV/c");
+	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("0.6 < P_{Miss} < 0.7 GeV/c");
+	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.7 < P_{Miss} < 0.8 GeV/c");
+	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.8 < P_{Miss} < 0.9 GeV/c");
+	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("P_{Miss} > 0.9 GeV/c");
 
-	const int NPlots = PlotName.size();	
-
-	// -----------------------------------------------------------------------------------------------------------------------------------------
-
-	// Slices (all events, ECal reso < 15%, ECal reso > 15%)
-
-	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
-	Slice.push_back("_0"); SliceLabel.push_back("All events");
-	Slice.push_back("_1"); SliceLabel.push_back("ECal Reso < 10%");	
-	Slice.push_back("_2"); SliceLabel.push_back("ECal Reso > 10%");
-
-	const int NSlices = Slice.size();	
+	const int NPMissSlices = PMissSlice.size();	
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------
 
 	// TFiles to be opened & plots to be used
 
 	TFile* Files[NEnergy][NNuclei];
-	TH2D* Plots[NEnergy][NNuclei][NSlices][NPlots];
+	TH1D* Plots[NEnergy][NNuclei][NPMissSlices];
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------	
 
@@ -121,47 +116,35 @@ void PlotTwoD(TString Id = "", TString MC = "") {
 			if (MC != "") { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_genie_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test_SuSav2_Rad.root","readonly"); }
 			else { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly"); }
 
-			// -----------------------------------------------------------------------------------------------
+			// -----------------------------------------------------------------------------------------------	
 
-			for (int WhichPlot = 0; WhichPlot < NPlots; WhichPlot++) {
+			for (int WhichSlice = 0; WhichSlice < NPMissSlices; WhichSlice++) {
 
-				// -----------------------------------------------------------------------------------------------	
+				// Create the relevant canvas & Legend
 
-				// Loop over the slices
-				for (int WhichSlice = 0; WhichSlice < NSlices; WhichSlice++) {
+				TString CanvasName= Id+MC+"PMinus_vs_Pperp_InPMissSlices_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+PMissSlice[WhichSlice];
+				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
+				can->SetBottomMargin(0.13);
 
-					// --------------------------------------------------------------------------------------------------------		
+				Plots[WhichEnergy][WhichNucleus][WhichSlice] = (TH1D*)(Files[WhichEnergy][WhichNucleus]->Get("PPerp_PMinus_Slice"+PMissSlice[WhichSlice]));
 
-					TString CanvasName2D = Id+MC+PlotName[WhichPlot]+"_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
-					TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
-					can2D->SetBottomMargin(0.12);
-					can2D->SetLeftMargin(0.12);
-					can2D->SetRightMargin(0.14);				
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->SetTitle("P_{T} [GeV/c]");
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetXaxis()->CenterTitle();				
 
-					// 2D Pmiss vs kMiss plots
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->SetTitle("P^{-} [GeV/c]");				
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetYaxis()->CenterTitle();
 
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot] = (TH2D*)(Files[WhichEnergy][WhichNucleus]->Get(PlotName[WhichPlot]+Slice[WhichSlice]));
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0,1.05*Plots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
 
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetXaxis()->CenterTitle();
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetXaxis()->SetTitle(XaxisLabel[WhichPlot]);
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetXaxis()->SetNdivisions(8);				
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->SetTitle(Label + " " + NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV," + PMissSliceLabel[WhichSlice]);
+				Plots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
 
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->CenterTitle();
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetTitle(YaxisLabel[WhichPlot]);
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetTitleOffset(1.1);				
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetYaxis()->SetNdivisions(8);	
+				// --------------------------------------------------------------------------------------------------------
 
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetZaxis()->SetRangeUser(0.,1.1*Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->GetMaximum());
+				can->SaveAs("myPlots/"+CanvasName+".pdf");			
+				delete can;
 
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->Draw("coltz");
-					Plots[WhichEnergy][WhichNucleus][WhichSlice][WhichPlot]->SetTitle(Label + " " + NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV, " + SliceLabel[WhichSlice]);					
-
-					can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
-					delete can2D;				
-				
-				} // End of the loop over the slices 
-
-			} // End of the loop over the 2D plots	
+			} // End of the PMiss slices
 
 		} // End of the loop over the nuclei
 

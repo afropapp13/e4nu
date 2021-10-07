@@ -52,12 +52,15 @@ void PrettyPlot(int font, double size,TH1D* h, int Color) {
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 
-void OverlayLFGProxy(TString Id = "") {
+void OverlayLFGProxy(TString Id = "", TString MC = "") {
 
 	// -----------------------------------------------------------------------------
 
 	int font = 132;
 	double size = 0.05;
+
+	TString Label = "Data ";
+	if (MC != "") { Label = MC + " "; }
 
 	// -----------------------------------------------------------------------------
 
@@ -133,7 +136,7 @@ void OverlayLFGProxy(TString Id = "") {
 	// Slices (all events, PT < 0.3 GeV/c, PT > 0.3 GeV/c)
 
 	std::vector<TString> Slice; std::vector<TString> SliceLabel; 
-	Slice.push_back("_0"); SliceLabel.push_back("");
+	Slice.push_back("_0"); SliceLabel.push_back("All events");
 	Slice.push_back("_1"); SliceLabel.push_back("P_{T} < 0.3 GeV/c");	
 	Slice.push_back("_2"); SliceLabel.push_back("P_{T} > 0.3 GeV/c");
 
@@ -144,16 +147,16 @@ void OverlayLFGProxy(TString Id = "") {
 	// PMiss Slices (e.g. 0 < PMiss < 0.1 GeV/c et al)
 
 	std::vector<TString> PMissSlice; std::vector<TString> PMissSliceLabel; 
-	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{Miss} < 0.1 GeV");
-	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("0.1 < P_{Miss} < 0.2 GeV");
-	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("0.2 < P_{Miss} < 0.3 GeV");
-	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("0.3 < P_{Miss} < 0.4 GeV");			
-	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("0.4 < P_{Miss} < 0.5 GeV");
-	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("0.5 < P_{Miss} < 0.6 GeV");
-	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("0.6 < P_{Miss} < 0.7 GeV");
-	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.7 < P_{Miss} < 0.8 GeV");
-	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.8 < P_{Miss} < 0.9 GeV");
-	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("P_{Miss} > 0.9 GeV");
+	PMissSlice.push_back("_0"); PMissSliceLabel.push_back("P_{Miss} < 0.1 GeV/c");
+	PMissSlice.push_back("_1"); PMissSliceLabel.push_back("0.1 < P_{Miss} < 0.2 GeV/c");
+	PMissSlice.push_back("_2"); PMissSliceLabel.push_back("0.2 < P_{Miss} < 0.3 GeV/c");
+	PMissSlice.push_back("_3"); PMissSliceLabel.push_back("0.3 < P_{Miss} < 0.4 GeV/c");			
+	PMissSlice.push_back("_4"); PMissSliceLabel.push_back("0.4 < P_{Miss} < 0.5 GeV/c");
+	PMissSlice.push_back("_5"); PMissSliceLabel.push_back("0.5 < P_{Miss} < 0.6 GeV/c");
+	PMissSlice.push_back("_6"); PMissSliceLabel.push_back("0.6 < P_{Miss} < 0.7 GeV/c");
+	PMissSlice.push_back("_7"); PMissSliceLabel.push_back("0.7 < P_{Miss} < 0.8 GeV/c");
+	PMissSlice.push_back("_8"); PMissSliceLabel.push_back("0.8 < P_{Miss} < 0.9 GeV/c");
+	PMissSlice.push_back("_9"); PMissSliceLabel.push_back("P_{Miss} > 0.9 GeV/c");
 
 	const int NPMissSlices = PMissSlice.size();	
 
@@ -180,7 +183,8 @@ void OverlayLFGProxy(TString Id = "") {
 			// -----------------------------------------------------------------------------------------------
 
 			// Open the relevant file
-			Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly");
+			if (MC != "") { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_genie_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test_SuSav2_Rad.root","readonly"); }
+			else { Files[WhichEnergy][WhichNucleus] = TFile::Open("mySamples/"+Id+"LFNeutrinos_data_e2a_ep_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+"_neutrino6_united4_radphot_test.root","readonly"); }
 
 			// -----------------------------------------------------------------------------------------------	
 
@@ -190,7 +194,7 @@ void OverlayLFGProxy(TString Id = "") {
 
 				// Create the relevant canvas & Legend
 
-				TString CanvasName= Id+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName= Id+MC+"LFG_Pn_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
 				can->SetBottomMargin(0.42);
 
@@ -230,7 +234,7 @@ void OverlayLFGProxy(TString Id = "") {
 				}	
 
 				leg->Draw();
-				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				text->DrawLatexNDC(0.37,0.92,Label+NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
 				textRegion->DrawLatexNDC(0.49,0.85,SliceLabel[WhichSlice]);				
 
 				// --------------------------------------------------------------------------------------------------------
@@ -280,7 +284,7 @@ void OverlayLFGProxy(TString Id = "") {
 				// --------------------------------------------------------------------------------------------------------
 				// --------------------------------------------------------------------------------------------------------		
 
-				TString CanvasName2D = Id+"PMiss_kMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString CanvasName2D = Id+MC+"PMiss_kMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* can2D = new TCanvas(CanvasName2D,CanvasName2D,205,34,768,768);	
 				can2D->SetBottomMargin(0.12);
 				can2D->SetRightMargin(0.12);								
@@ -300,6 +304,9 @@ void OverlayLFGProxy(TString Id = "") {
 
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetZaxis()->SetRangeUser(0.,1.1*PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->GetMaximum());
 				PMisskMissPlots[WhichEnergy][WhichNucleus][WhichSlice]->Draw("coltz");
+
+				text->DrawLatexNDC(0.2,0.92,Label+NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV, " + SliceLabel[WhichSlice]);
+
 				can2D->SaveAs("myPlots/"+CanvasName2D+".pdf");			
 				delete can2D;				
 
@@ -307,7 +314,7 @@ void OverlayLFGProxy(TString Id = "") {
 
 				// Loop over the PL plots of interest
 
-				TString PLCanvasName= Id+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
+				TString PLCanvasName= Id+MC+"PL_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+Slice[WhichSlice];
 				TCanvas* PLcan = new TCanvas(PLCanvasName,PLCanvasName,205,34,1024,768);	
 				PLcan->SetBottomMargin(0.42);
 
@@ -326,7 +333,7 @@ void OverlayLFGProxy(TString Id = "") {
 				}	
 
 				PLleg->Draw();
-				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				text->DrawLatexNDC(0.4,0.92,Label+NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
 				textRegion->DrawLatexNDC(0.39,0.85,SliceLabel[WhichSlice]);				
 
 				// --------------------------------------------------------------------------------------------------------
@@ -382,7 +389,7 @@ void OverlayLFGProxy(TString Id = "") {
 
 				// Create the relevant canvas & Legend
 
-				TString CanvasName= Id+"PMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+PMissSlice[WhichSlice];
+				TString CanvasName= Id+MC+"PMiss_"+Nucleus[WhichNucleus]+"_"+EnergyTString[WhichEnergy]+PMissSlice[WhichSlice];
 				TCanvas* can = new TCanvas(CanvasName,CanvasName,205,34,1024,768);	
 				can->SetBottomMargin(0.42);
 
@@ -417,7 +424,7 @@ void OverlayLFGProxy(TString Id = "") {
 				}	
 
 				leg->Draw();
-				text->DrawLatexNDC(0.4,0.92,NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
+				text->DrawLatexNDC(0.4,0.92,Label+NucleusLatex[WhichNucleus] + ", " + EnergyDoubleString[WhichEnergy] + " GeV");
 				textRegion->DrawLatexNDC(0.42,0.85,PMissSliceLabel[WhichSlice]);				
 
 				// --------------------------------------------------------------------------------------------------------
