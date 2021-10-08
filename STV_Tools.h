@@ -20,11 +20,16 @@ class STV_Tools {
 		double fPMissMinus;
 		double fPMiss;		
 		double fPt;
+		double fPL;
+		double fPn;
 		double fDeltaAlphaT;
 		double fDeltaPhiT;
 		double fECal;
 		double fEQE;
-		double fQ2;										
+		double fQ2;
+		double fA;
+		double fPtx;
+		double fPty;										
 
 	public:
 
@@ -39,11 +44,16 @@ class STV_Tools {
 		double ReturnPMissMinus();
 		double ReturnPMiss();
 		double ReturnPt();
+		double ReturnPL();
+		double ReturnPn();
 		double ReturnDeltaAlphaT();
 		double ReturnDeltaPhiT();
 		double ReturnECal();
 		double ReturnEQE();
 		double ReturnQ2();		
+		double ReturnA();
+		double ReturnPtx();
+		double ReturnPty();		
 
 };
 

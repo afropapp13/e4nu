@@ -1,31 +1,44 @@
-# Runs to be used for the 1.1 GeV 12C 1500 samples
 
-18294
-18297
-18298
-18306
-18307
-18335
+###########################################
 
-# ------------------------------------------------------
+root -b
+.L OverlayLFGProxy.cpp
+OverlayLFGProxy()
+OverlayLFGProxy("","MC")
+OverlayLFGProxy("xB_")
+OverlayLFGProxy("xB_","MC")
 
-When Mikhail's cook is gonna be ready
+root -b 
+.L OverlayPL.cpp
+OverlayPL()
+OverlayPL("xB_")
+OverlayPL("","MC")
+OverlayPL("xB_","MC")
 
-1) make runnb private member of the class
-2) declare array with runs for each energy / target
-3) run (GetCharge_)FilterData for each run number 
+root -b
+.L PlotTwoD.cpp
+PlotTwoD()
+PlotTwoD("xB_")
+PlotTwoD("","MC")
+PlotTwoD("xB_","MC")
 
-4) store output under "scratch" area
-   /lustre19/expphy/volatile/clas/clase2/apapadop
+root -b
+.L OverlayGoodBad.cpp
+OverlayGoodBad()
+OverlayGoodBad("xB_")
+OverlayGoodBad("","MC")
+OverlayGoodBad("xB_","MC")
 
-5) merge them under "persistent" area
-   /w/hallb-scifs17exp/clas/claseg2/apapadop
+root -b 
+.L OverlayPMiss2DSlices.cpp
+OverlayPMiss2DSlices()
+OverlayPMiss2DSlices("xB_")
+OverlayPMiss2DSlices("","MC")
+OverlayPMiss2DSlices("xB_","MC")
 
+root -b
+.L Overlay.cpp
+Overlay()
+Overlay("xB_")
 
-export nucleus="56Fe"; export energy="2261"; 
-hadd /w/hallb-scifs17exp/clas/claseg2/apapadop/MikhailCook_genie_filtered_data_e2a_ep_${nucleus}_${energy}_neutrino6_united4_radphot_test_100M.root /lustre19/expphy/volatile/clas/clase2/apapadop/MikhailCook_RunNumber_*_genie_filtered_data_e2a_ep_${nucleus}_${energy}_neutrino6_united4_radphot_test_100M.root
-
-
-# Don't forget to pin the files or they will be deleted from cache 
-
-jcache pin /cache/clas/e2a/production/pass3/v1/4461/C12/HROOT/*.root -D 60
+###########################################

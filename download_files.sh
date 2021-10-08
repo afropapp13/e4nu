@@ -3,46 +3,69 @@
 xB=NoxBCut
 #xB=xBCut
 
-LocalPath=/home/afroditi/Dropbox/PhD/myCode/30th_Refactorization/myFiles
+LocalPath=/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles
 
-#JLabAccount=apapadop@ftp.jlab.org
-#JLabPath=/u/home/apapadop/e4nu
-DataExtension=Data_Final
+GENIEAccount=apapadop@geniegpvm02.fnal.gov
+GENIEPath=/genie/app/users/apapadop/e4v_LightFrontNeutrinos
 
-GENIEAccount=apapadop@geniegpvm01.fnal.gov
-GENIEPath=/genie/app/users/apapadop/e4nu
+## SuSAv2, w/ rotations, w/ radiation, w/ fiducials, w/ smearing, w/o offset
+#GENIEOnlineExtension=SuSav2_Rad
+#GENIELocalExtension=SuSav2_RadCorr_LFGM_UpdatedSchwinger
 
-GENIEOnlineExtension=G18_10a_02_11a
-GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM
+# SuSAv2, w/ rotations, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+GENIEOnlineExtension=SuSav2_NoRad
+GENIELocalExtension=SuSav2_NoRadCorr_LFGM
 
-#GENIEOnlineExtension=SuSav2
-#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc
+## G2018, w/ rotations, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM
 
+## SuSAv2, 1p0pi, w/ radiation, w/ fiducials, w/ smearing, w/o offset
 #GENIEOnlineExtension=SuSav2_Rad
 #GENIELocalExtension=SuSav2_RadCorr_LFGM_Truth_WithFidAcc_UpdatedSchwinger
 
-#Not to be used
-##GENIEOnlineExtension=G18_10a_02_11a_Rad
-##GENIELocalExtension=hA2018_Final_RadCorr_LFGM_Truth_WithFidAcc
+## SuSAv2, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+#GENIEOnlineExtension=SuSav2_NoRad
+#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc
+
+## G2018, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc
+
+## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/o offset
+#GENIEOnlineExtension=SuSav2_NoRad
+#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc
+
+## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/o offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc
+
+## G2018, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/ offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc_Offset
+
+## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/ offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Offset
+
+## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/ smearing, w/o offset
+#GENIEOnlineExtension=SuSav2_NoRad
+#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing
+
+## G2018, 1p0pi, w/o radiation, w/o fiducials, w/ smearing, w/ offset
+#GENIEOnlineExtension=G18_10a_02_11a
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing_Offset
+
+#-----------------------------------------------
 
 ##### Genie Samples
 
 echo "$LocalPath/1_161/${GENIELocalExtension}/$xB/12C_1_161_${GENIELocalExtension}_Plots_FSI_em.root"
 
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_C12_1161_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/1_161/${GENIELocalExtension}/$xB/12C_1_161_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_4He_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/4He_2_261_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_C12_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/12C_2_261_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_56Fe_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/56Fe_2_261_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_4He_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/4He_4_461_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_C12_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/12C_4_461_${GENIELocalExtension}_Plots_FSI_em.root
-scp $GENIEAccount:$GENIEPath/genie_e2a_ep_56Fe_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/56Fe_4_461_${GENIELocalExtension}_Plots_FSI_em.root
-
-##### Data Samples
-
-#scp $JLabAccount:$JLabPath/data_e2a_ep_C12_1161_neutrino6_united4_radphot_test.root $LocalPath/1_161/$DataExtension/$xB/12C_1_161_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_4He_2261_neutrino6_united4_radphot_test.root $LocalPath/2_261/$DataExtension/$xB/4He_2_261_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_C12_2261_neutrino6_united4_radphot_test.root $LocalPath/2_261/$DataExtension/$xB/12C_2_261_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_56Fe_2261_neutrino6_united4_radphot_test.root $LocalPath/2_261/$DataExtension/$xB/56Fe_2_261_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_4He_4461_neutrino6_united4_radphot_test.root $LocalPath/4_461/$DataExtension/$xB/4He_4_461_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_C12_4461_neutrino6_united4_radphot_test.root $LocalPath/4_461/$DataExtension/$xB/12C_4_461_${DataExtension}_Plots_FSI_em.root
-#scp $JLabAccount:$JLabPath/data_e2a_ep_56Fe_4461_neutrino6_united4_radphot_test.root $LocalPath/4_461/$DataExtension/$xB/56Fe_4_461_${DataExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_C12_1161_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/1_161/${GENIELocalExtension}/$xB/12C_1_161_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_4He_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/4He_2_261_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_C12_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/12C_2_261_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_56Fe_2261_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/2_261/${GENIELocalExtension}/$xB/56Fe_2_261_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_4He_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/4He_4_461_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_C12_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/12C_4_461_${GENIELocalExtension}_Plots_FSI_em.root
+scp $GENIEAccount:$GENIEPath/LFNeutrinos_genie_e2a_ep_56Fe_4461_neutrino6_united4_radphot_test_${GENIEOnlineExtension}.root $LocalPath/4_461/${GENIELocalExtension}/$xB/56Fe_4_461_${GENIELocalExtension}_Plots_FSI_em.root

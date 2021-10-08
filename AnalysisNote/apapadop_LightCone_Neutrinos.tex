@@ -1,0 +1,421 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage{adjustbox}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[usenames, dvipsnames]{color}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2.9cm,right=2.9cm,marginparwidth=2.cm]{geometry}
+
+%\hfuzz=length is a parameter that allows hbox's to be overfull by length before an overfull error occurs
+\hfuzz=150pt 
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{cite}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage{lineno}
+%\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{makecell}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\newcommand{\DraftVersion}{\textbf{\Large{Version 0.0.0.1}}}
+\usepackage{import}
+\usepackage{tikz}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=red,
+    linktoc=all
+}
+
+
+\newcommand{\cfootnote}[1]{\footnote{\centering #1}}
+\makeatletter
+\renewcommand\listoffigures{%
+        \@starttoc{lof}%
+}
+\makeatother
+
+\newcommand{\Figures}{../myPlots/}
+\newcommand{\FigSize}{0.49}
+
+
+\renewcommand{\arraystretch}{1.2}
+\usepackage[LGRgreek]{mathastext}
+
+\setlength{\headheight}{23pt}
+
+
+\usepackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% #1 = nucleus
+% #2 = energy
+% #3 = xB_ or empty string
+
+\newcommand{\PrintPlots}[3]{
+
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3LFG_Pn_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCLFG_Pn_#1_#2_0.pdf}\\        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3LFG_Pn_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCLFG_Pn_#1_#2_1.pdf}\\        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3LFG_Pn_#1_#2_2.pdf} 
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCLFG_Pn_#1_#2_2.pdf}        
+        \caption{Comparison between P$_{Miss}$, k$_{Miss}$ and P$_{n,proxy}$ for all events (top), for events with P$_{T}$ < 0.3 GeV/c (bottom left) and P$_{T}$ > 0.3 GeV/c (bottom right).}
+        \label{#3#1_PMiss_#2}
+    \end{figure}
+    
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3LFG_Pn_GoodBad_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCLFG_Pn_GoodBad_#1_#2_0.pdf}        
+         \includegraphics[width=\FigSize\linewidth]{\Figures #3LFG_Pn_GoodBad_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCLFG_Pn_GoodBad_#1_#2_1.pdf}         
+        \caption{Comparison between P$_{Miss}$, k$_{Miss}$ and P$_{n,proxy}$ for events with E$_{Cal}^{Reso}$ < 10\% (left) and E$_{Cal}^{Reso}$ > 10\% (right).}
+        \label{#3#1_PMiss_GoodBad_#2}
+    \end{figure}    
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_0_PMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_0_kMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_0_PnProxy.pdf} 
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_0_PMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_0_kMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_0_PnProxy.pdf} 
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_1_PMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_1_kMiss.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_LFG_Pn_#1_#2_GoodBad_1_PnProxy.pdf}        
+        \caption{Data-MC comparison between P$_{Miss}$ (left), k$_{Miss}$ (middle) and P$_{n,proxy}$ (right) for all events (top), events with E$_{Cal}^{Reso}$ < 10\% (middle) and E$_{Cal}^{Reso}$ > 10\% (bottom).}
+        \label{#3#1_PMiss_Overlay_#2}
+    \end{figure}    
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_0.pdf}\\        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_1.pdf}\\        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_2.pdf}  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_2.pdf}        
+        \caption{Comparison between the P$_{Miss}$ longitudinal projection and P$_{L}$ for all events (top), for events with P$_{T}$ < 0.3 GeV/c (bottom left) and P$_{T}$ > 0.3 GeV/c (bottom right).}
+        \label{#3#1_PL_#2}
+    \end{figure} 
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_GoodBad_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_GoodBad_#1_#2_0.pdf}        
+         \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_GoodBad_#1_#2_1.pdf}  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_GoodBad_#1_#2_1.pdf}         
+        \caption{Comparison between the P$_{Miss}$ longitudinal projection and P$_{L}$ for events with E$_{Cal}^{Reso}$ < 10\% (left) and E$_{Cal}^{Reso}$ > 10\% (right).}
+        \label{#3#1_PL_GoodBad_#2}
+    \end{figure}    
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_0_PL.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_0_PLFromPMiss.pdf}\\
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_GoodBad_0_PL.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_GoodBad_0_PLFromPMiss.pdf}\\
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_GoodBad_1_PL.pdf}
+        \includegraphics[width=0.32\linewidth]{\Figures #3Overlay_PL_#1_#2_GoodBad_1_PLFromPMiss.pdf}\\        
+        \caption{Data-MC comparison between P$_{L}$ (left) and P$_{L,Miss}$ (right) for all events (top), events with E$_{Cal}^{Reso}$ < 10\% (middle) and E$_{Cal}^{Reso}$ > 10\% (bottom).}
+        \label{#3#1_PL_Overlay_#2}
+    \end{figure}    
+    
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_kMiss_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_kMiss_#1_#2_0.pdf}\\       
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_kMiss_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_kMiss_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_kMiss_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_kMiss_#1_#2_2.pdf}        
+        \caption{Correlation between P$_{Miss}$ and k$_{Miss}$ for all events (top), for events with P$_{T}$ < 0.3 GeV/c (middle) and P$_{T}$ > 0.3 GeV/c (bottom).}
+        \label{#3#1_PMiss_kMiss_#2}
+    \end{figure} 
+    
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_kMiss_GoodBad_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_kMiss_GoodBad_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_kMiss_GoodBad_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_kMiss_GoodBad_#1_#2_1.pdf}        
+        \caption{Correlation between P$_{Miss}$ and k$_{Miss}$ for events with E$_{Cal}^{Reso}$ < 10\% (top) and E$_{Cal}^{Reso}$ > 10\% (bottom).}
+        \label{#3#1_PMiss_kMiss_GoodBad_#2}
+    \end{figure}    
+    
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLFromPMiss_PL_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLFromPMiss_PL_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLFromPMiss_PL_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLFromPMiss_PL_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLFromPMiss_PL_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLFromPMiss_PL_#1_#2_2.pdf}        
+        \caption{Correlation between P$_{L,Miss}$ and P$_{L}$ for all events (top), for events with P$_{T}$ < 0.3 GeV/c (middle) and P$_{T}$ > 0.3 GeV/c (bottom).}
+        \label{#3#1_PLFromPMiss_PLs_#2}
+    \end{figure}    
+    
+    \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLFromPMiss_PL_GoodBad_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLFromPMiss_PL_GoodBad_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLFromPMiss_PL_GoodBad_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLFromPMiss_PL_GoodBad_#1_#2_1.pdf}        
+        \caption{Correlation between P$_{L,Miss}$ and P$_{L}$ for events with E$_{Cal}^{Reso}$ < 10\% (left) and E$_{Cal}^{Reso}$ > 10\% (right).}
+        \label{#3#1_PLFromPMiss_PL_GoodBad_#2}
+    \end{figure}     
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_2.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_3.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_3.pdf}        
+        \caption{Comparison between P$_{Miss}$, k$_{Miss}$ and P$_{n,proxy}$ in P$_{Miss}$ slices in the mean field region.}
+        \label{#3#1_PMiss_Slice_#2_Part1}
+    \end{figure}  
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_4.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_4.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_5.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_5.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_6.pdf} 
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_6.pdf}        
+        \caption{Comparison between P$_{Miss}$, k$_{Miss}$ and P$_{n,proxy}$ in P$_{Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PMiss_Slice_#2_Part2}
+    \end{figure}
+    
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_7.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_7.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_8.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_8.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMiss_#1_#2_9.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMiss_#1_#2_9.pdf}        
+        \caption{Comparison between P$_{Miss}$, k$_{Miss}$ and P$_{n,proxy}$ in P$_{Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PMiss_Slice_#2_Part3}
+    \end{figure}    
+    
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_2.pdf}        
+        \caption{Comparison between P$_{L,Miss}$, and P$_{L}$ in the mean field region.}
+        \label{#3#1_PL_Slice_#2_Part1}
+    \end{figure}   
+
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_4.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_4.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_5.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_5.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_6.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_6.pdf}
+        \caption{Comparison between P$_{L,Miss}$, and P$_{L}$ in P$_{L,Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PL_Slice_#2_Part2}
+    \end{figure}    
+    
+     \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_7.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_7.pdf}       
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_8.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_8.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PL_#1_#2_Slice_9.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPL_#1_#2_Slice_9.pdf}
+        \caption{Comparison between P$_{L,Miss}$, and P$_{L}$ in P$_{L,Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PL_Slice_#2_Part3}
+    \end{figure}    
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PPerp_PMinus_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPPerp_PMinus_#1_#2_0.pdf}\\
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PPerp_PMinus_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPPerp_PMinus_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PPerp_PMinus_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPPerp_PMinus_#1_#2_2.pdf}        
+        \caption{$P_{\perp}$ vs $P^{-}$ correlations for all events (top), events reconstructed within 10\% of the true beam energy (bottom left) and events reconstructed with more than 10\% resolution.}
+        \label{#3#1_PPerp_PMinus_#2_Part1}
+    \end{figure}  
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_3.pdf} 
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_3.pdf}
+        \caption{Correlation between $P^{-}$ and $P_{T}$ in $P_{Miss}$ slices in the mean-field region.}
+        \label{#3#1_PMinus_PT_InPMissSlices_#2_Part1}
+    \end{figure}
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_4.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_4.pdf}       
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_5.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_5.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_6.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_6.pdf}       
+        \caption{Correlation between $P^{-}$ and $P_{T}$ in $P_{Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PMinus_PT_InPMissSlices_#2_Part2}
+    \end{figure}    
+      
+      
+       \begin{figure}[H]
+        \centering         
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_7.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_7.pdf}       
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_8.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_8.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PMinus_vs_Pperp_InPMissSlices_#1_#2_9.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPMinus_vs_Pperp_InPMissSlices_#1_#2_9.pdf}        
+        \caption{Correlation between $P^{-}$ and $P_{T}$ in $P_{Miss}$ slices in the high momentum tail.}
+        \label{#3#1_PMinus_PT_InPMissSlices_#2_Part3}
+    \end{figure}      
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLMinusPLFromPMiss_PMiss_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLMinusPLFromPMiss_PMiss_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLMinusPLFromPMiss_PMiss_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLMinusPLFromPMiss_PMiss_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PLMinusPLFromPMiss_PMiss_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPLMinusPLFromPMiss_PMiss_#1_#2_2.pdf}        
+        \caption{$P_{\perp}$ vs $P^{-}$ correlations for all events (top), events reconstructed within 10\% of the true beam energy (middle) and events reconstructed with more than 10\% resolution (bottom).}
+        \label{#3#1_PLMinusPLFromPMiss_PMiss_#2_Part1}
+    \end{figure}     
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3kMissMinusPMiss_PMiss_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCkMissMinusPMiss_PMiss_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3kMissMinusPMiss_PMiss_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCkMissMinusPMiss_PMiss_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3kMissMinusPMiss_PMiss_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCkMissMinusPMiss_PMiss_#1_#2_2.pdf}        
+        \caption{$k_{Miss}$ - $P_{Miss}$ vs $P_{Miss}$ correlations for all events (top), events reconstructed within 10\% of the true beam energy (middle) and events reconstructed with more than 10\% resolution (bottom).}
+        \label{#3#1_kMissMinusPMiss_PMiss_#2_Part1}
+    \end{figure}  
+    
+      \begin{figure}[H]
+        \centering  
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PnProxyMinusPMiss_PMiss_#1_#2_0.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPnProxyMinusPMiss_PMiss_#1_#2_0.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PnProxyMinusPMiss_PMiss_#1_#2_1.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPnProxyMinusPMiss_PMiss_#1_#2_1.pdf}        
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3PnProxyMinusPMiss_PMiss_#1_#2_2.pdf}
+        \includegraphics[width=\FigSize\linewidth]{\Figures #3MCPnProxyMinusPMiss_PMiss_#1_#2_2.pdf}        
+        \caption{$P_{n,proxy}$ - $P_{Miss}$ vs $P_{Miss}$ correlations for all events (top), events reconstructed within 10\% of the true beam energy (middle) and events reconstructed with more than 10\% resolution (bottom).}
+        \label{#3#1_PnProxyMinusPMiss_PMiss_#2_Part1}
+    \end{figure}     
+		
+}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+    \linenumbers
+
+    \justify
+	\section{Events passing e4v selection}
+
+	\subsection{Results for 4He at 2.261 GeV}
+	\PrintPlots{4He}{2261}{}	
+	
+	\clearpage
+	\subsection{Results for 4He at 4.461 GeV}	
+	\PrintPlots{4He}{4461}{}	
+	
+	\clearpage	
+	\subsection{Results for 12C at 1.161 GeV}
+	\PrintPlots{C12}{1161}{}
+	
+	\clearpage	
+	\subsection{Results for 12C at 2.261 GeV}
+	\PrintPlots{C12}{2261}{}	
+	
+	\clearpage	
+    \subsection{Results for 12C at 4.461 GeV}
+	\PrintPlots{C12}{4461}{}
+	
+	\clearpage	
+	\subsection{Results for 56Fe at 2.261 GeV}
+	\PrintPlots{56Fe}{2261}{}	
+	
+	\clearpage	
+    \subsection{Results for 56Fe at 4.461 GeV}
+	\PrintPlots{56Fe}{4461}{}	
+		
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+	
+	\clearpage
+	\section{Events passing e4v selection with |xB -1| < 0.2}
+
+	\subsection{Results for 4He at 2.261 GeV}
+	\PrintPlots{4He}{2261}{xB_}	
+
+	\clearpage
+	\subsection{Results for 4He at 4.461 GeV}	
+	\PrintPlots{4He}{4461}{xB_}	
+	
+	\clearpage	
+	\subsection{Results for 12C at 1.161 GeV}
+	\PrintPlots{C12}{1161}{xB_}
+	
+	\clearpage	
+	\subsection{Results for 12C at 2.261 GeV}
+	\PrintPlots{C12}{2261}{xB_}	
+	
+	\clearpage	
+    \subsection{Results for 12C at 4.461 GeV}
+	\PrintPlots{C12}{4461}{xB_}
+	
+	\clearpage	
+	\subsection{Results for 56Fe at 2.261 GeV}
+	\PrintPlots{56Fe}{2261}{xB_}	
+	
+	\clearpage	
+    \subsection{Results for 56Fe at 4.461 GeV}
+	\PrintPlots{56Fe}{4461}{xB_}
+
+\end{document}

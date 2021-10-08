@@ -379,7 +379,7 @@ genie_analysis::genie_analysis(std::string a_target,std::string a_beam_en, int n
 
 	if (fchoice == 3) { 
 
-      		// Ext_Int Radiation SuSav2
+      		// Ext+Int Radiation SuSav2
 		
 		chain->Add(Form("/pnfs/genie/persistent/users/apapadop/e4v_SuSav2/Exclusive/electrons/%s_%sGeV/apapadop_UpdatedSchwingerRad_SuSav2_%s_%sGeV.root", ftarget.c_str(),fbeam_en.c_str(),ftarget.c_str(),fbeam_en.c_str()));  	
 
