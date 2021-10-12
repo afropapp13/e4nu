@@ -37,7 +37,7 @@
 
 	// ------------------------------------------------------------------------------------
 
-	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/30th_Refactorization/myFiles/";		
+	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles/";		
 	const TString version = "v3_0_6/";	
 /*	const TString DoubleXSecTitle = "#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]";*/
 	const TString DoubleXSecTitle = "Normalized Yield";
@@ -105,7 +105,10 @@
 		{ "ECalReso", "E^{cal} Feeddown" },
 		{ "EQEReso", "E^{QE} Feeddown" },
 		{ "ECal", "(e,e'p)_{1p0#pi} E^{Cal} [GeV]" },
-		{ "DeltaPT", "(e,e'p)_{1p0#pi} P_{T} [GeV/c]" }
+		{ "DeltaPT", "(e,e'p)_{1p0#pi} P_{T} [GeV/c]" },
+		{ "PMiss", "(e,e'p)_{1p0#pi} P_{Miss} [GeV/c]" },
+		{ "kMiss", "(e,e'p)_{1p0#pi} k_{Miss} [GeV/c]" },
+		{ "PnProxy", "(e,e'p)_{1p0#pi} k_{Miss} [GeV/c]" },						
 	};
 
 	// FSI Models to Labels
