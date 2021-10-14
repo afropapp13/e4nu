@@ -3,58 +3,50 @@
 xB=NoxBCut
 #xB=xBCut
 
-LocalPath=/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles
+LocalPath=/home/afroditi/Dropbox/PhD/myCode/44th_e4v_Inclusive/myFiles
 
 GENIEAccount=apapadop@geniegpvm02.fnal.gov
-GENIEPath=/genie/app/users/apapadop/e4v_LightFrontNeutrinos
+GENIEPath=/genie/app/users/apapadop/e4v_Inclusive
 
-## SuSAv2, w/ rotations, w/ radiation, w/ fiducials, w/ smearing, w/o offset
-#GENIEOnlineExtension=SuSav2_Rad
-#GENIELocalExtension=SuSav2_RadCorr_LFGM_UpdatedSchwinger
+## SuSAv2, w/ rotations, w/ radiation, w/ fiducials, w/ smearing               Option 3
+GENIEOnlineExtension=SuSav2_Rad
+GENIELocalExtension=SuSav2_RadCorr_LFGM_UpdatedSchwinger
 
-# SuSAv2, w/ rotations, w/o radiation, w/ fiducials, w/ smearing, w/o offset
-GENIEOnlineExtension=SuSav2_NoRad
-GENIELocalExtension=SuSav2_NoRadCorr_LFGM
+## SuSAv2, w/ rotations, w/o radiation, w/ fiducials, w/ smearing              Option 1
+#GENIEOnlineExtension=SuSav2
+#GENIELocalExtension=SuSav2_NoRadCorr_LFGM
 
-## G2018, w/ rotations, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+## G2018, w/ rotations, w/o radiation, w/ fiducials, w/ smearing               Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
 #GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM
 
-## SuSAv2, 1p0pi, w/ radiation, w/ fiducials, w/ smearing, w/o offset
+## SuSAv2, 1p0pi, w/ radiation, w/ fiducials, w/ smearing                      Option 3
 #GENIEOnlineExtension=SuSav2_Rad
 #GENIELocalExtension=SuSav2_RadCorr_LFGM_Truth_WithFidAcc_UpdatedSchwinger
 
-## SuSAv2, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/o offset
-#GENIEOnlineExtension=SuSav2_NoRad
+## SuSAv2, 1p0pi, w/o radiation, w/ fiducials, w/ smearing                     Option 1
+#GENIEOnlineExtension=SuSav2
 #GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc
 
-## G2018, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/o offset
+## G2018, 1p0pi, w/o radiation, w/ fiducials, w/ smearing                      Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
 #GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc
 
-## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/o offset
-#GENIEOnlineExtension=SuSav2_NoRad
+## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/o smearing                   Option 1
+#GENIEOnlineExtension=SuSav2
 #GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc
 
-## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/o offset
+## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing                    Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
 #GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc
 
-## G2018, 1p0pi, w/o radiation, w/ fiducials, w/ smearing, w/ offset
-#GENIEOnlineExtension=G18_10a_02_11a
-#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc_Offset
-
-## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing, w/ offset
-#GENIEOnlineExtension=G18_10a_02_11a
-#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Offset
-
-## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/ smearing, w/o offset
-#GENIEOnlineExtension=SuSav2_NoRad
+## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/ smearing                    Option 1
+#GENIEOnlineExtension=SuSav2
 #GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing
 
-## G2018, 1p0pi, w/o radiation, w/o fiducials, w/ smearing, w/ offset
+## G2018, 1p0pi, w/o radiation, w/o fiducials, w/ smearing                     Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
-#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing_Offset
+#GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing
 
 #-----------------------------------------------
 

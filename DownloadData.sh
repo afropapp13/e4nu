@@ -1,15 +1,12 @@
-#scp apapadop@ftp.jlab.org:/w/hallb-scifs17exp/clas/claseg2/apapadop/*LFNeutrinos_data_e2a_ep_*_neutrino6_united4_radphot_test.root ./mySamples
-scp apapadop@ftp.jlab.org:/u/home/apapadop/e4v_LCNeutrinos/*LFNeutrinos_data_e2a_ep_*_neutrino6_united4_radphot_test.root ./mySamples
-
 ################################################
 
 xB=NoxBCut
 #xB=xBCut
 
 JLabAccount=apapadop@ftp.jlab.org
-JLabPath=/u/home/apapadop/e4v_LCNeutrinos
+JLabPath=/u/home/apapadop/e4v_Inclusive
 DataExtension=Pinned_Data_Final
-LocalPath=/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles
+LocalPath=/home/afroditi/Dropbox/PhD/myCode/44th_e4v_Inclusive/myFiles
 
 ##### Data Samples
 

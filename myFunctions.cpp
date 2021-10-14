@@ -702,9 +702,11 @@ void ApplyRebinningTProfile(TProfile* h, TString Energy, TString PlotVar) {
 
 		for (int i = 0; i < 1; i++) { h->Rebin();} 
 
-	}
+	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
 
-	else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot in ApplyRebinningTProfile ?" << endl; }
+		for (int i = 0; i < 1; i++) { h->Rebin();} 
+
+	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot in ApplyRebinningTProfile ?" << endl; }
 
 	return;	
 
@@ -761,9 +763,11 @@ void ApplyRebinning(TH1D* h, TString Energy, TString PlotVar) {
 
 		for (int i = 0; i < 2; i++) { h->Rebin();} 
 
-	}
+	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
 
-	else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot ?" << endl; }
+		for (int i = 0; i < 1; i++) { h->Rebin();} 
+
+	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot ?" << endl; }
 
 	return;	
 
@@ -836,8 +840,11 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 
 		h->GetXaxis()->SetRangeUser(0.6,1.5);
 
-	}
+	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
 
+		h->GetXaxis()->SetRangeUser(0.,2.);
+
+	} 
 
 	else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
 
@@ -962,9 +969,9 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 	
 	FSIModel.push_back("SuSav2_RadCorr_LFGM_Truth_WithFidAcc_UpdatedSchwinger"+Extension); // 0: SuSav2 Rad for radiation correction
 	FSIModel.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // 1: Reco 1p0pi SuSav2 NoRad plot for average & for radiation correction
-	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc_Offset"+Extension); // 2: Reco 1p0pi G2018 NoRad Offset plot for average
+	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // 2: Reco 1p0pi G2018 NoRad Offset plot for average
 	FSIModel.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // 3: True 1p0pi SuSav2 NoRad plot for average
-	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Offset"+Extension); // 4: True 1p0pi G2018 NoRad plot Offset for average
+	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // 4: True 1p0pi G2018 NoRad plot Offset for average
 
 	if (
 		string(name).find("T2KEQEReso") != std::string::npos ||
@@ -1100,31 +1107,15 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	// Obtain acceptance correction uncertainy using non radiative samples
 
-	// First, grab the files with smearing at truth level (_Truth_WithoutFidAcc_Offset), otherwise infinities at the edges 
-	// Second, grab the G2018 true 1p0pi files with offset (_Truth_WithFidAcc_Offset), otherwise infinities at the double ratio
-
 	std::vector<TH1D*> PlotsOffset; PlotsOffset.clear();
 	std::vector<TString> FSIModelOffset; FSIModelOffset.clear();
 
 	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // main reco plots for unfolding uncertainty with smearing
 	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // main plots for unfolding uncertainty with smearing
-	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc_Offset"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset 
-	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing_Offset"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset
-
-	if (
-		string(name).find("T2KEQEReso") != std::string::npos ||
-		name == "h_Erec_subtruct_piplpimi_noprot_3pi" || 
-		name == "h_Erec_subtruct_piplpimi_noprot_frac_feed" ||
-		name == "h_Erec_subtruct_piplpimi_noprot_frac_feed3pi"
-
-	) {
-
-		FSIModelOffset[0] = "SuSav2_NoRadCorr_LFGM_Truth0pi_WithFidAcc";
-		FSIModelOffset[1] = "SuSav2_NoRadCorr_LFGM_Truth0pi_WithoutFidAcc_Smearing";
-		FSIModelOffset[2] = "hA2018_Final_NoRadCorr_LFGM_Truth0pi_WithFidAcc";
-		FSIModelOffset[3] = "hA2018_Final_NoRadCorr_LFGM_Truth0pi_WithoutFidAcc_Smearing";
-
-	}
+//	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // main plots for unfolding uncertainty
+	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset 
+	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset
+//	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset	
 
 	// --------------------------------------------------------------------------------------	
 

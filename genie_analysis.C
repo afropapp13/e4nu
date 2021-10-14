@@ -39,7 +39,6 @@ void genie_analysis::Loop(Int_t choice) {
 	TH2D::SetDefaultSumw2();
 
 	int NSectors = 6;
-
 	const int NInt = 6; // All Interactions = 0, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
 
 	// ---------------------------------------------------------------------------------------------------------------
@@ -51,14 +50,8 @@ void genie_analysis::Loop(Int_t choice) {
 	bool ApplyFiducials = true;
 	bool ApplyAccWeights = true;
 	bool ApplyReso = true;
-
-	bool TruthLevel1p0piSignalStudy = false;
-	bool TruthLevel0piSignalStudy = false;
-
-	bool ApplyPhiOpeningAngle = false;
-	bool UsePhiThetaBand = false;
-	bool ApplyThetaSlice = false; double MinThetaSlice = 36, MaxThetaSlice = 39;
-	bool ApplyGoodSectorPhiSlice = false;
+	bool ApplyPhiOpeningAngle = true;
+	bool ApplyThetaSlice = true;
 
 	// ---------------------------------------------------------------------------------------------------------------
 
@@ -124,6 +117,21 @@ void genie_analysis::Loop(Int_t choice) {
 	en_beam_Eqe["1161"]=1.161;
 	en_beam_Eqe["2261"]=2.261;
 	en_beam_Eqe["4461"]=4.461;
+
+	// ---------------------------------
+
+	std::map<std::string,double> MinThetaSlice;
+	std::map<std::string,double> MaxThetaSlice;	
+
+	MinThetaSlice["1161"]=36;
+	MinThetaSlice["2261"]=25.5;
+	MinThetaSlice["4461"]=19.5;
+
+	MaxThetaSlice["1161"]=39;
+	MaxThetaSlice["2261"]=28.5;
+	MaxThetaSlice["4461"]=22.5;			
+
+	// ---------------------------------
 
 	if (fChain == 0) return;
 
@@ -249,8 +257,7 @@ void genie_analysis::Loop(Int_t choice) {
 	TFile *file_out;
 	TString FileName = ""; 
 
-//	if (choice == 0) { FileName = Form("/w/hallb-scifs17exp/clas/claseg2/apapadop/Inclusive_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
-	if (choice == 0) { FileName = Form("Inclusive_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 0) { FileName = Form("/work/clas/claseg2/apapadop/Inclusive_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 1){ FileName = Form("Inclusive_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 2) { FileName = Form("Inclusive_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_G18_10a_02_11a.root",ftarget.c_str(),fbeam_en.c_str()); }
 	if (choice == 3) { FileName = Form("Inclusive_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
@@ -340,7 +347,6 @@ void genie_analysis::Loop(Int_t choice) {
 		// ---------------------------------------------------------------------------------------------------------------
 
 		std::string StoreEnergy = fbeam_en;
-		if (UsePhiThetaBand) { StoreEnergy = ""; }
 
 		// -------------------------------------------------------------------------------------------------------------------------
 
@@ -382,12 +388,6 @@ void genie_analysis::Loop(Int_t choice) {
 
 		//Resets q vector to (0,0,0)
 		rotation->ResetQVector();
-
-		// -----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		// Counters for truth level studies
-
-		int TrueElectronsAboveThreshold = 0;
 
 		// -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -438,13 +438,6 @@ void genie_analysis::Loop(Int_t choice) {
 		double theta_min = myElectronFit->Eval(el_momentum); // in deg
 		if (el_theta*180./TMath::Pi() < theta_min) { continue; }
 
-		if (ApplyThetaSlice) {  // hard coded range for now
-
-			if ( el_theta*180./TMath::Pi() < MinThetaSlice) { continue; }
-			if ( el_theta*180./TMath::Pi() > MaxThetaSlice) { continue; }
-
-		}
-
 		// ----------------------------------------------------------------------------------------------------------------------
 
 		// Explicit cuts on electron momentum
@@ -458,9 +451,6 @@ void genie_analysis::Loop(Int_t choice) {
 		if(el_phi_mod<0)  el_phi_mod  = el_phi_mod+360; //Add 360 so that electron phi is between 0 and 360 degree
 
 		if (ApplyPhiOpeningAngle) { if ( !(TMath::Abs(el_phi_mod - 30)  < PhiOpeningAngle || TMath::Abs(el_phi_mod - 90)  < PhiOpeningAngle || TMath::Abs(el_phi_mod - 150)  < PhiOpeningAngle || TMath::Abs(el_phi_mod - 210)  < PhiOpeningAngle || TMath::Abs(el_phi_mod - 270)  < PhiOpeningAngle || TMath::Abs(el_phi_mod - 330)  < PhiOpeningAngle ) ) { continue; } }
-
-
-		if (ApplyGoodSectorPhiSlice) { if ( !( TMath::Abs(el_phi_mod - CenterFirstSector)  < PhiOpeningAngle ) ) { continue; } }
 
 		//Calculated Mott Cross Section and Weights for Inclusive Histograms
 		//Wght and e_acc_ratio is 1 for CLAS data
@@ -497,9 +487,6 @@ void genie_analysis::Loop(Int_t choice) {
 
 		// ---------------------------------------------------------------------------------------------------------------------
 
-		// apapadop Nov 4 2020: true electron counter for truth level studies
-		TrueElectronsAboveThreshold++;
-
 		if (choice > 0) { 			
 
 			//Fiducial Cuts with the smeared values
@@ -530,22 +517,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 		// Fully inclusive energy transfer plots & breakdown
 
-		if (el_theta > MinThetaSlice && el_theta < MaxThetaSlice) {
+		if (el_theta > MinThetaSlice[fbeam_en] && el_theta < MaxThetaSlice[fbeam_en]) {
 
 			h1_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector[ElectronSector]->Fill(nu,WeightIncl/Q4);
 			if (Interaction > -1) { h1_InteractionBreakDown_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector[Interaction][ElectronSector]->Fill(nu,WeightIncl/Q4); }
-
-		}
-
-		// ----------------------------------------------------------------------------------------------------------------------------
-
-		// Truth level studies
-		// Requiring true level signal 1e 1p 0pi+/- 0 gammas
-		// With smearing / fiducial cuts / acceptance maps
-
-		if (TruthLevel1p0piSignalStudy || TruthLevel0piSignalStudy) {
-
-			if (TrueElectronsAboveThreshold != 1) { continue; }
 
 		}
 
