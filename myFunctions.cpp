@@ -1111,11 +1111,11 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 	std::vector<TString> FSIModelOffset; FSIModelOffset.clear();
 
 	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // main reco plots for unfolding uncertainty with smearing
-//	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // main plots for unfolding uncertainty with smearing
-	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // main plots for unfolding uncertainty
+	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // main plots for unfolding uncertainty with smearing
+//	FSIModelOffset.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // main plots for unfolding uncertainty
 	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset 
-//	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset
-	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset	
+	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset
+//	FSIModelOffset.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // alternative model plots for acceptance correction uncertainty with smearing & offset	
 
 	// --------------------------------------------------------------------------------------	
 
