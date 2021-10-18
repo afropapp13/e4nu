@@ -706,6 +706,10 @@ void ApplyRebinningTProfile(TProfile* h, TString Energy, TString PlotVar) {
 
 		for (int i = 0; i < 1; i++) { h->Rebin();} 
 
+	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
+
+		for (int i = 0; i < 1; i++) { h->Rebin();} 
+
 	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot in ApplyRebinningTProfile ?" << endl; }
 
 	return;	
@@ -764,6 +768,10 @@ void ApplyRebinning(TH1D* h, TString Energy, TString PlotVar) {
 		for (int i = 0; i < 2; i++) { h->Rebin();} 
 
 	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
+
+		for (int i = 0; i < 1; i++) { h->Rebin();} 
+
+	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
 
 		for (int i = 0; i < 1; i++) { h->Rebin();} 
 
@@ -840,13 +848,15 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 
 		h->GetXaxis()->SetRangeUser(0.6,1.5);
 
-	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
+	} else if (PlotVar == "PMiss_0" || PlotVar == "PMiss_1" || PlotVar == "PMiss_2" || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
 
 		h->GetXaxis()->SetRangeUser(0.,2.);
 
-	} 
+	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
 
-	else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
+		h->GetXaxis()->SetRangeUser(-2.,0.5);
+
+	} else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
 
 	return;	
 

@@ -49,6 +49,7 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	// 13: Pt,x
 	// 14: Pt,y 	
 	// 15: PL using PMiss projection
+	// 16: Enu with QE assumption
 
 	// ----------------------------------------------------------------------------------------------------
 
@@ -161,6 +162,8 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	TVector3 UnitZ(0,0,1);
 	STLV[13] = ( UnitZ.Cross(MuonVectorTrans) ).Dot(PtVector) / MuonVectorTransMag;// Pt,x
 	STLV[14] = - (MuonVectorTrans).Dot(PtVector) / MuonVectorTransMag;// Pt,y
+
+	STLV[16] = MuonVectorLongMag + ProtonVectorLongMag- STLV[11]; // Enu using the calorimetric assumption
 
 	// -------------------------------------------------------------------------------------------------------------------------
 
@@ -426,7 +429,15 @@ void genie_analysis::Loop(Int_t choice) {
 	TH2F *h2_PPerp_PMinus[Regions];
 	TH2F *h2_PLMinusPLFromPMiss_PMiss[Regions];
 	TH2F *h2_kMissMinusPMiss_PMiss[Regions];
-	TH2F *h2_PnProxyMinusPMiss_PMiss[Regions];				
+	TH2F *h2_PnProxyMinusPMiss_PMiss[Regions];	
+
+	TH1F *h1_PTx[Regions];
+	TH1F *h1_PTy[Regions];
+	TH1F *h1_EnuQE[Regions];
+
+	TH1F *h1_PTx_BreakDown[Regions][NInt];
+	TH1F *h1_PTy_BreakDown[Regions][NInt];
+	TH1F *h1_EnuQE_BreakDown[Regions][NInt];									
 
 	for (int region = 0; region < Regions; region ++) {
 
@@ -443,6 +454,11 @@ void genie_analysis::Loop(Int_t choice) {
 		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);
 		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);
 
+		// all events, good, bad
+		h1_PTx[region] = new TH1F("PTx_"+TString(std::to_string(region)),"",100,-1.2,1.2);
+		h1_PTy[region] = new TH1F("PTy_"+TString(std::to_string(region)),"",130,-1.6,1.);
+		h1_EnuQE[region] = new TH1F("EnuQE_"+TString(std::to_string(region)),"",500,0.,5.);						
+
 		for (int WhichInt = 1; WhichInt < NInt; WhichInt++) {
 
 			h1_PMiss_BreakDown[region][WhichInt] = new TH1F("PMiss_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);
@@ -451,6 +467,10 @@ void genie_analysis::Loop(Int_t choice) {
 
 			h1_PL_BreakDown[region][WhichInt] = new TH1F("PL_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
 			h1_PLFromPMiss_BreakDown[region][WhichInt] = new TH1F("PLFromPMiss_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
+
+			h1_PTx_BreakDown[region][WhichInt] = new TH1F("PTx_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",100,-1.2,1.2);
+			h1_PTy_BreakDown[region][WhichInt] = new TH1F("PTy_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",100,-1.5,1.);
+			h1_EnuQE_BreakDown[region][WhichInt] = new TH1F("EnuQE_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",500,0.,5.);							
 
 		}	
 
@@ -1142,6 +1162,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];
+					double EnuQE = STLV[16];
+					double Ptx = STLV[13];
+					double Pty = STLV[14];										
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -1158,13 +1181,21 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);														
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
 						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);		
+						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
 
 					}							
 
@@ -1222,6 +1253,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1229,6 +1264,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -1249,6 +1288,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1256,6 +1299,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -1334,7 +1381,11 @@ void genie_analysis::Loop(Int_t choice) {
 					double kMiss = STLV[9];
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];					
+					double PLFromPMiss = STLV[15];
+					double EnuQE = STLV[16];
+					double Ptx = STLV[13];
+					double Pty = STLV[14];										
+
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
 					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
@@ -1350,6 +1401,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -1357,6 +1412,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}
 
@@ -1414,6 +1473,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1421,6 +1484,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -1441,6 +1508,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1448,6 +1519,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -1470,7 +1545,11 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
 
 					if (choice > 0) {
 
@@ -1479,6 +1558,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}				
 
@@ -1534,6 +1617,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1541,6 +1628,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -1561,6 +1652,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1568,6 +1663,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -1590,7 +1689,11 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
 					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
+					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
 
 					if (choice > 0) {
 
@@ -1599,6 +1702,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}				
 
@@ -1654,6 +1761,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1661,6 +1772,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}
 												
@@ -1681,6 +1796,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1688,6 +1807,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -1769,6 +1892,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];
+					double EnuQE = STLV[16];	
+					double Ptx = STLV[13];
+					double Pty = STLV[14];									
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -1785,6 +1911,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -1792,6 +1922,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}				
 
@@ -1849,6 +1983,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1856,6 +1994,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -1876,6 +2018,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -1883,6 +2029,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -1991,7 +2141,10 @@ void genie_analysis::Loop(Int_t choice) {
 						double kMiss = STLV[9];
 						double PnProxy = STLV[12];
 						double PL = STLV[11];
-						double PLFromPMiss = STLV[15];		
+						double PLFromPMiss = STLV[15];	
+						double EnuQE = STLV[16];	
+						double Ptx = STLV[13];
+						double Pty = STLV[14];												
 
 						h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 						h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -2008,6 +2161,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 						h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);
 
+						h1_PTx[0]->Fill(Ptx,LocalWeight);
+						h1_PTy[0]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -2015,6 +2172,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 							h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 							h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+
+							h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}
 
@@ -2072,13 +2233,21 @@ void genie_analysis::Loop(Int_t choice) {
 							h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 							h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+							h1_PTx[1]->Fill(Ptx,LocalWeight);
+							h1_PTy[1]->Fill(Pty,LocalWeight);	
+							h1_EnuQE[1]->Fill(EnuQE,LocalWeight);							
+
 							if (choice > 0) {
 
 								h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
 								h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
 								h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 								h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+								h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+
+								h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+								h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+								h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);									
 
 							}						
 
@@ -2099,13 +2268,21 @@ void genie_analysis::Loop(Int_t choice) {
 							h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 							h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+							h1_PTx[2]->Fill(Ptx,LocalWeight);
+							h1_PTy[2]->Fill(Pty,LocalWeight);	
+							h1_EnuQE[2]->Fill(EnuQE,LocalWeight);							
+
 							if (choice > 0) {
 
 								h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
 								h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
 								h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 								h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+								h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);
+
+								h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+								h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+								h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);									
 
 							}							
 
@@ -2132,6 +2309,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];	
+					double EnuQE = STLV[16];
+					double Ptx = STLV[13];
+					double Pty = STLV[14];										
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -2148,6 +2328,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -2155,6 +2339,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}					
 
@@ -2212,6 +2400,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2219,6 +2411,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -2239,6 +2435,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2246,6 +2446,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -2323,6 +2527,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];	
+					double EnuQE = STLV[16];
+					double Ptx = STLV[13];
+					double Pty = STLV[14];										
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -2339,6 +2546,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -2346,6 +2557,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);		
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}			
 
@@ -2403,6 +2618,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2410,6 +2629,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -2430,6 +2653,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2437,6 +2664,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -2528,7 +2759,11 @@ void genie_analysis::Loop(Int_t choice) {
 				double kMiss = STLV[9];
 				double PnProxy = STLV[12];	
 				double PL = STLV[11];
-				double PLFromPMiss = STLV[15];				
+				double PLFromPMiss = STLV[15];			
+				double EnuQE = STLV[16];	
+				double Ptx = STLV[13];
+				double Pty = STLV[14];							
+
 				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 				h1_kMiss[0]->Fill(kMiss,LocalWeight);
 				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
@@ -2544,6 +2779,10 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
 
+				h1_PTx[0]->Fill(Ptx,LocalWeight);
+				h1_PTy[0]->Fill(Pty,LocalWeight);	
+				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+
 				if (choice > 0) {
 
 					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -2551,6 +2790,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);		
+
+					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
 
 				}		
 
@@ -2608,6 +2851,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[1]->Fill(Ptx,LocalWeight);
+					h1_PTy[1]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2615,6 +2862,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);
 
 					}				
 
@@ -2635,6 +2886,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[2]->Fill(Ptx,LocalWeight);
+					h1_PTy[2]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2642,6 +2897,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}					
 
@@ -2715,6 +2974,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];	
+					double EnuQE = STLV[16];	
+					double Ptx = STLV[13];
+					double Pty = STLV[14];									
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -2731,13 +2993,21 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
 						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
 
 					}				
 
@@ -2795,6 +3065,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2802,6 +3076,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -2822,6 +3100,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -2829,6 +3111,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -2913,6 +3199,9 @@ void genie_analysis::Loop(Int_t choice) {
 					double PnProxy = STLV[12];	
 					double PL = STLV[11];
 					double PLFromPMiss = STLV[15];	
+					double EnuQE = STLV[16];	
+					double Ptx = STLV[13];
+					double Pty = STLV[14];									
 
 					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 					h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -2929,13 +3218,21 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+					h1_PTx[0]->Fill(Ptx,LocalWeight);
+					h1_PTy[0]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
 						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
 						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+
+						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
 
 					}				
 
@@ -2993,6 +3290,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[1]->Fill(Ptx,LocalWeight);
+						h1_PTy[1]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3000,6 +3301,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}					
 
@@ -3020,6 +3325,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+						h1_PTx[2]->Fill(Ptx,LocalWeight);
+						h1_PTy[2]->Fill(Pty,LocalWeight);	
+						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
+
 						if (choice > 0) {
 
 							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3027,6 +3336,10 @@ void genie_analysis::Loop(Int_t choice) {
 							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
 
 						}						
 
@@ -3049,6 +3362,9 @@ void genie_analysis::Loop(Int_t choice) {
 				double PnProxy = STLV[12];	
 				double PL = STLV[11];
 				double PLFromPMiss = STLV[15];
+				double EnuQE = STLV[16];
+				double Ptx = STLV[13];
+				double Pty = STLV[14];								
 
 				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 				h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -3065,6 +3381,10 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
 
+				h1_PTx[0]->Fill(Ptx,LocalWeight);
+				h1_PTy[0]->Fill(Pty,LocalWeight);	
+				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+
 				if (choice > 0) {
 
 					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -3072,6 +3392,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+
+					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
 
 				}			
 
@@ -3130,6 +3454,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[1]->Fill(Ptx,LocalWeight);
+					h1_PTy[1]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3137,6 +3465,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}				
 
@@ -3157,6 +3489,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[2]->Fill(Ptx,LocalWeight);
+					h1_PTy[2]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3164,6 +3500,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}					
 
@@ -3238,6 +3578,9 @@ void genie_analysis::Loop(Int_t choice) {
 				double PnProxy = STLV[12];
 				double PL = STLV[11];
 				double PLFromPMiss = STLV[15];	
+				double EnuQE = STLV[16];
+				double Ptx = STLV[13];
+				double Pty = STLV[14];				
 
 				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
 				h1_kMiss[0]->Fill(kMiss,LocalWeight);
@@ -3254,6 +3597,10 @@ void genie_analysis::Loop(Int_t choice) {
 				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
 				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);
 
+				h1_PTx[0]->Fill(Ptx,LocalWeight);
+				h1_PTy[0]->Fill(Pty,LocalWeight);	
+				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+
 				if (choice > 0) {
 
 					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
@@ -3261,6 +3608,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
 					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
 					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+
+					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
+					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
+					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
 
 				}
 
@@ -3318,6 +3669,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[1]->Fill(Ptx,LocalWeight);
+					h1_PTy[1]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3325,6 +3680,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}				
 
@@ -3345,6 +3704,10 @@ void genie_analysis::Loop(Int_t choice) {
 					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
 					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
 
+					h1_PTx[2]->Fill(Ptx,LocalWeight);
+					h1_PTy[2]->Fill(Pty,LocalWeight);	
+					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);					
+
 					if (choice > 0) {
 
 						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
@@ -3352,6 +3715,10 @@ void genie_analysis::Loop(Int_t choice) {
 						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
 						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
 						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+
+						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
+						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
+						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
 
 					}					
 

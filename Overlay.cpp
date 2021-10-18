@@ -216,7 +216,14 @@ void Overlay(TString Id = "") {
 
 						if (WhichSample == 1) {
 							leg->AddEntry(Plots[WhichSample][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice],"MC","l");
+
+							double max = TMath::Max(Plots[0][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetMaximum(),Plots[1][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetMaximum());
+
 							Plots[WhichSample][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("c hist same");
+							Plots[0][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->GetYaxis()->SetRangeUser(0,1.1*max);
+							Plots[0][WhichEnergy][WhichNucleus][WhichPlot][WhichSlice]->Draw("e1x0 same");
+
+
 						}						
 
 					}	

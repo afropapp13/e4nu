@@ -25,13 +25,13 @@ PlotTwoD("xB_","MC")
 root -b
 .L OverlayGoodBad.cpp
 OverlayGoodBad()
-OverlayGoodBad("xB_")                     // WTF ?????
+OverlayGoodBad("xB_")    
 OverlayGoodBad("","MC")
 OverlayGoodBad("xB_","MC")
 
 root -b 
 .L OverlayPMiss2DSlices.cpp
-OverlayPMiss2DSlices()                     // WTF ?????
+OverlayPMiss2DSlices() 
 OverlayPMiss2DSlices("xB_")
 OverlayPMiss2DSlices("","MC")
 OverlayPMiss2DSlices("xB_","MC")

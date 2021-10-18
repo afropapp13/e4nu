@@ -37,6 +37,7 @@ void XSecs() {
 	std::vector<TString> nucleus; 
 	std::vector<TString> JustNucleus;
 	std::vector<TString> E;
+	std::vector<TString> LabelE;	
 	std::vector<double> DoubleE;
 	std::vector<TString> FSIModel;
 	std::vector<TString> FSILabel; 
@@ -54,9 +55,9 @@ void XSecs() {
 
 	// ------------------------------------------------------------------------
 
-	E.push_back("1_161"); DoubleE.push_back(1.161);
-	E.push_back("2_261"); DoubleE.push_back(2.261);	
-	E.push_back("4_461"); DoubleE.push_back(4.461);	
+	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");	
+	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");	
 
 	// ------------------------------------------------------------------------
 
@@ -75,7 +76,19 @@ void XSecs() {
 	NameOfPlots.push_back("PnProxy_0"); OutputPlotNames.push_back("PnProxy_AllEvents"); 
 	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{n,proxy} [GeV/c]"); 
 	Yaxis.push_back("#frac{d#sigma}{dP_{n,proxy}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("PnProxy_0_BreakDown_");	
+	BreakDown.push_back("PnProxy_0_BreakDown_");
+
+	NameOfPlots.push_back("PL_0"); OutputPlotNames.push_back("PL_AllEvents"); 
+	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L} [GeV/c]"); 
+	Yaxis.push_back("#frac{d#sigma}{dP_{L}} [#frac{#mub}{GeV nucleus}]");
+	BreakDown.push_back("PL_0_BreakDown_");	
+
+	NameOfPlots.push_back("PLFromPMiss_0"); OutputPlotNames.push_back("PLFromPMiss_AllEvents"); 
+	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L,Miss} [GeV/c]"); 
+	Yaxis.push_back("#frac{d#sigma}{dP_{L,Miss}} [#frac{#mub}{GeV nucleus}]");
+	BreakDown.push_back("PLFromPMiss_0_BreakDown_");		
+
+	// ------------------------------------------------------------------------
 
 	FSIModel.push_back("Pinned_Data_Final"); FSILabel.push_back("Pinned Data");
 
@@ -155,18 +168,25 @@ void XSecs() {
 					Plots.clear();
 
 					TLegend* legGenie = new TLegend(0.71,0.45,0.86,0.7);
-					legGenie->SetNColumns(1);
-
 					TLegend* legGenieBlackLine = new TLegend(0.71,0.74,0.86,0.88);
+					TLegend* legGenieBreak = new TLegend(0.74,0.63,0.91,0.75);					
+					TLegend* legG2018 = new TLegend(0.71,0.57,0.89,0.63);					
+
+					if (string(NameOfPlots[WhichPlot]).find("PL") != std::string::npos) { 
+
+						legGenie = new TLegend(0.21,0.45,0.36,0.7);
+						legGenieBlackLine = new TLegend(0.21,0.74,0.36,0.88);
+						legGenieBreak = new TLegend(0.24,0.63,0.41,0.75);					
+						legG2018 = new TLegend(0.21,0.57,0.39,0.63);						
+
+					}
+
+					legGenie->SetNColumns(1);
 					legGenieBlackLine->SetNColumns(1);
-
-					TLegend* legGenieBreak = new TLegend(0.74,0.63,0.81,0.75);					
 					legGenieBreak->SetNColumns(2);
-					legGenieBreak->SetMargin(0.35);
-
-					TLegend* legG2018 = new TLegend(0.71,0.57,0.79,0.63);					
+					legGenieBreak->SetMargin(0.35);	
 					legG2018->SetNColumns(2);
-					legG2018->SetMargin(0.39);
+					legG2018->SetMargin(0.39);									
 
 					double max = -99.;
 					double min = 1E12;
@@ -252,7 +272,7 @@ void XSecs() {
 								//cout << "Interaction " << j << " fraction = " << fraction << endl; 
 
 								f->cd();
-								Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]+"_"+ToStringInt(j));	
+								BreakDownPlots[j-1]->Write(FSILabel[WhichFSIModel]+"_"+BreakDown[WhichPlot]+ToStringInt(j));	
 
 
 							} // end of the look over the GENIE break down
@@ -279,10 +299,13 @@ void XSecs() {
 							DataPlot->SetMarkerColor(kBlack);
 							max = DataPlot->GetMaximum();
 							DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.1*max);	
+
+							DataPlot->SetTitle( LabelE[WhichEnergy] + " GeV");
+
 							DataPlot->Draw("e same"); 
 
 							f->cd();
-							DataPlot->Write("Data");
+							DataPlot->Write("Data_"+NameOfPlots[WhichPlot]);
 
 							// --------------------------------------------------------------------------------------------------				
 
@@ -299,7 +322,7 @@ void XSecs() {
 							DataPlot->Draw("e same"); 
 
 							f->cd();
-							Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]);							
+							Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]+"_"+NameOfPlots[WhichPlot]);							
 
 						}
 
@@ -324,16 +347,15 @@ void XSecs() {
 					legGenieBlackLine->SetTextSize(TextSize-0.03); 
 
 					legGenieBreak->SetTextSize(TextSize-0.03);
-					//legGenieBreak->AddEntry(Plots[2],"G2018","l");					
 
 					legG2018->SetBorderSize(0);
 					legG2018->SetTextFont(FontStyle);
 					legG2018->SetTextSize(TextSize-0.03);
 					legG2018->AddEntry(Plots[2],"G2018","l");	
 
-//					legGenie->Draw();
 					legGenieBlackLine->Draw();
-//					legG2018->Draw();
+					legGenieBreak->Draw();
+					legG2018->Draw();
 
 					// -------------------------------------------------------------------------------------------
 

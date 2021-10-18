@@ -33,16 +33,16 @@ GENIEPath=/genie/app/users/apapadop/e4v_LightFrontNeutrinos
 #GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc
 
 ## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/o smearing                   Option 1
-#GENIEOnlineExtension=SuSav2
-#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc
+GENIEOnlineExtension=SuSav2
+GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc
 
 ## G2018, 1p0pi, w/o radiation, w/o fiducials, w/o smearing                    Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
 #GENIELocalExtension=hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc
 
 ## SuSAv2, 1p0pi, w/o radiation, w/o fiducials, w/ smearing                    Option 1
-GENIEOnlineExtension=SuSav2
-GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing
+#GENIEOnlineExtension=SuSav2
+#GENIELocalExtension=SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc_Smearing
 
 ## G2018, 1p0pi, w/o radiation, w/o fiducials, w/ smearing                     Option 2
 #GENIEOnlineExtension=G18_10a_02_11a
