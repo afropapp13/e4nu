@@ -37,7 +37,7 @@
 
 	// ------------------------------------------------------------------------------------
 
-	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/30th_Refactorization/myFiles/";		
+	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/44th_e4v_Inclusive/myFiles/";		
 	const TString version = "v3_0_6/";	
 /*	const TString DoubleXSecTitle = "#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]";*/
 	const TString DoubleXSecTitle = "Normalized Yield";
@@ -76,7 +76,8 @@
 	// Clas dOmega 
 
 //	const double dOmega = 0.02; // sr
-	const double dOmega = 0.015; // sr
+//	const double dOmega = 0.015; // sr
+	const double dOmega = 0.0067; // sr: solid angle for 24 < phi < 36 && 36 < theta < 39
 
 	// 1e -> 1.6x10^-19 C
 	// 1C -> 6.25x10^18 e
@@ -486,7 +487,8 @@
 		{ std::make_pair("12C", "2_261"),  174600000 }, // Q2 > 0.4
 		{ std::make_pair("12C", "4_461"),  164300000 }, // Q2 > 0.8
 		{ std::make_pair("56Fe", "2_261"), 167000000 }, // Q2 > 0.4
-		{ std::make_pair("56Fe", "4_461"), 190600000 } // Q2 > 0.8
+//		{ std::make_pair("56Fe", "4_461"), 190600000 } // Q2 > 0.8
+		{ std::make_pair("56Fe", "4_461"), 49900000 } // Q2 > 0.8
 	};
 
 	// Rad SuSav2 GENIE number events 

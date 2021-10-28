@@ -356,10 +356,11 @@ void genie_analysis::Loop(Int_t choice) {
 
 		if (choice > 0) {
 
-			if (qel) { Interaction = 1; }
-			if (mec) { Interaction = 2; }
-			if (res) { Interaction = 3; }
-			if (dis) { Interaction = 4; }
+			SignalEvents++;
+			if (qel) { Interaction = 1; QESignalEvents++; }
+			if (mec) { Interaction = 2; MECignalEvents++; }
+			if (res) { Interaction = 3; RESignalEvents++; }
+			if (dis) { Interaction = 4; DISignalEvents++; }
 
 		}
 

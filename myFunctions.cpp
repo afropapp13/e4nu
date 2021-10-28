@@ -721,6 +721,8 @@ void ApplyRebinning(TH1D* h, TString Energy, TString PlotVar) {
 	if (string(PlotVar).find("Omega_FullyInclusive") != std::string::npos) {
 
 		if (Energy == "1_161") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
+		if (Energy == "2_261") { for (int i = 0; i < 6; i++) { h->Rebin(); } }
+		if (Energy == "4_461") { for (int i = 0; i < 7; i++) { h->Rebin(); } }				
 
 	} else if (string(PlotVar).find("Omega") != std::string::npos) {
 
@@ -782,8 +784,8 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 	if (string(PlotVar).find("Omega") != std::string::npos) {
 
 		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.,0.7); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.,1.5); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(0.5,3.); }
+		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.2,1.45); }
+		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(0.6,2.45); }
 
 	} else if (
 		string(PlotVar).find("EcalReso") != std::string::npos || string(PlotVar).find("ECalReso") != std::string::npos || 
@@ -966,31 +968,19 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	// Unfolding using SuSav2
 	// keep in mind that the Rad G2018 sample is questionable
-	
+
 	FSIModel.push_back("SuSav2_RadCorr_LFGM_Truth_WithFidAcc_UpdatedSchwinger"+Extension); // 0: SuSav2 Rad for radiation correction
 	FSIModel.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // 1: Reco 1p0pi SuSav2 NoRad plot for average & for radiation correction
-	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // 2: Reco 1p0pi G2018 NoRad Offset plot for average
+	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithFidAcc"+Extension); // 2: Reco 1p0pi G2018 NoRad plot for average
 	FSIModel.push_back("SuSav2_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // 3: True 1p0pi SuSav2 NoRad plot for average
-	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // 4: True 1p0pi G2018 NoRad plot Offset for average
-
-	if (
-		string(name).find("T2KEQEReso") != std::string::npos ||
-		name == "h_Erec_subtruct_piplpimi_noprot_3pi" || 
-		name == "h_Erec_subtruct_piplpimi_noprot_frac_feed" ||
-		name == "h_Erec_subtruct_piplpimi_noprot_frac_feed3pi"
-	) {
-
-		FSIModel[0] = "SuSav2_RadCorr_LFGM_Truth0pi_WithFidAcc_UpdatedSchwinger"+Extension;
-		FSIModel[1] = "SuSav2_NoRadCorr_LFGM_Truth0pi_WithFidAcc"+Extension;
-		FSIModel[2] = "hA2018_Final_NoRadCorr_LFGM_Truth0pi_WithFidAcc"+Extension;
-		FSIModel[3] = "SuSav2_NoRadCorr_LFGM_Truth0pi_WithoutFidAcc"+Extension;
-		FSIModel[4] = "hA2018_Final_NoRadCorr_LFGM_Truth0pi_WithoutFidAcc"+Extension;
-
-	}
+	FSIModel.push_back("hA2018_Final_NoRadCorr_LFGM_Truth_WithoutFidAcc"+Extension); // 4: True 1p0pi G2018 NoRad plot for average
 
 	// --------------------------------------------------------------------------------------	
 
 	int NFSIModels = FSIModel.size();
+
+	//TString OverlayCanvasName = "OverlayCanvas";
+	//TCanvas* OverlayPlotCanvas = new TCanvas(OverlayCanvasName,OverlayCanvasName,205,34,1024,768);	
 
 	for (int WhichFSIModel = 0; WhichFSIModel < NFSIModels; WhichFSIModel ++) {
 
@@ -1003,6 +993,10 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 		Plots.push_back( (TH1D*)( FileSample->Get(name) ) );
 
 		UniversalE4vFunction(Plots[WhichFSIModel],FSIModelsToLabels[FSIModel[WhichFSIModel]],nucleus,E,name);
+
+		//OverlayPlotCanvas->cd();
+		//Plots[WhichFSIModel]->SetLineColor(WhichFSIModel + 1);
+		//Plots[WhichFSIModel]->Draw("e1 hist same");
 
 		// --------------------------------------------------------------------------------------
 
@@ -1026,12 +1020,23 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	TH1D* CorrectionSuSav2 = (TH1D*)Plots[3]->Clone();	
 	CorrectionSuSav2->Divide(Plots[1]);
+
+//	TString SuSav2CorrCanvasName = "SuSav2CorrCanvas";
+//	TCanvas* SuSav2CorrPlotCanvas = new TCanvas(SuSav2CorrCanvasName,SuSav2CorrCanvasName,205,34,1024,768);
+//	CorrectionSuSav2->GetYaxis()->SetTitle("Correction SuSav2");
+//	CorrectionSuSav2->Draw("e hist");
+
 	TH1D* CorrectionG2018 = (TH1D*)Plots[4]->Clone();	
 	CorrectionG2018->Divide(Plots[2]);
 
+//	TString G2018CorrCanvasName = "G2018CorrCanvas";
+//	TCanvas* G2018CorrPlotCanvas = new TCanvas(G2018CorrCanvasName,G2018CorrCanvasName,205,34,1024,768);
+//	CorrectionG2018->GetYaxis()->SetTitle("Correction G2018");
+//	CorrectionG2018->Draw("e hist");	
+
 	TH1D* Average = (TH1D*)(CorrectionSuSav2->Clone());
 	Average->Add(CorrectionG2018);
-	Average->Scale(0.5);
+	Average->Scale(0.5);	
 
 	// Radiation Correction	// Use SuSav2
 
@@ -1040,14 +1045,16 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	// --------------------------------------------------------------------------------------	
 
+	// Radiation & Acceptance correction
+
 	int NBins = OverallClone->GetXaxis()->GetNbins();
 
 	double AccCorrTolerance = 30;
 
 	for (int WhichBin = 0; WhichBin < NBins; WhichBin++) {
 
-		double AccCorr = 0.;
-		double RadCorr = 0.;
+		double AccCorr = 1.;
+		double RadCorr = 1.;
 
 		double NewBinContent = 0.;
 		double NewBinError = 0.;		
@@ -1055,24 +1062,38 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 		//if (Plots[0]->GetBinContent(WhichBin + 1) > 0) { 
 
 			AccCorr = Average->GetBinContent(WhichBin + 1);
+			//cout << "acceptance average = " << AccCorr << endl;
 
 			// Sanity checks for acceptance corrections 
-			if (AccCorr < 0 || AccCorr > AccCorrTolerance) { 
+			if (AccCorr <= 0 || AccCorr > AccCorrTolerance) { 
 
 				double CorrectionSuSav2Bin = CorrectionSuSav2->GetBinContent(WhichBin + 1); 
 				double CorrectionG2018Bin = CorrectionG2018->GetBinContent(WhichBin + 1); 
 				
 				if (CorrectionSuSav2Bin > 0 && CorrectionSuSav2Bin < AccCorrTolerance) { AccCorr = CorrectionSuSav2Bin; } 
 				else if (CorrectionG2018Bin > 0 && CorrectionG2018Bin < AccCorrTolerance) { AccCorr = CorrectionG2018Bin; }
-				else { AccCorr = 0.; } 
+				else { AccCorr = 1.; } 
 
 			}
 
+			// Sanity checks for radiation corrections
 			RadCorr = RadCorrection->GetBinContent(WhichBin + 1);
 
-			NewBinContent = h->GetBinContent(WhichBin + 1) * AccCorr * RadCorr;
-			NewBinError = h->GetBinError(WhichBin + 1) * AccCorr * RadCorr;
+			if (RadCorr <= 0 || RadCorr > AccCorrTolerance) { 
 
+				RadCorr = 1.;
+
+			}
+
+//			double CorrFactor = AccCorr * RadCorr;
+//			double CorrFactor = AccCorr;
+//			double CorrFactor = RadCorr;
+			double CorrFactor = 1.;
+
+			NewBinContent = h->GetBinContent(WhichBin + 1) * CorrFactor;
+			NewBinError = h->GetBinError(WhichBin + 1) * CorrFactor;
+
+//cout << "CorrFactor = " << CorrFactor << endl;
 //cout << "AccCorr = " << AccCorr << endl;
 //cout << "RadCorr = " << RadCorr << endl;
 //cout << "h->GetBinContent(WhichBin + 1) = " << h->GetBinContent(WhichBin + 1) << "   NewBinContent = " << NewBinContent << endl;
@@ -1083,15 +1104,15 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 		OverallClone->SetBinContent(WhichBin + 1, NewBinContent);
 		OverallClone->SetBinError(WhichBin + 1, NewBinError);
 
-	}
+	} // end of the loop over the bins
 
 	// --------------------------------------------------------------------------------------	
 
-//	// To quickly plot the acceptance correction
+	// To quickly plot the acceptance correction
 
 //	TString CanvasName = "AccCorrCanvas";
 //	TCanvas* PlotCanvas = new TCanvas(CanvasName,CanvasName,205,34,1024,768);
-//	Average->GetXaxis()->SetRangeUser(0.1,0.7);
+////	Average->GetXaxis()->SetRangeUser(0.1,0.7);
 //	Average->GetYaxis()->SetTitle("Detector Acceptance Correction");
 //	Average->Draw("e hist");
 
@@ -1099,7 +1120,7 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 //	TString RadCanvasName = "RadCorrCanvas";
 //	TCanvas* RadPlotCanvas = new TCanvas(RadCanvasName,RadCanvasName,205,34,1024,768);
-//	RadCorrection->GetXaxis()->SetRangeUser(0.1,0.7);
+////	RadCorrection->GetXaxis()->SetRangeUser(0.1,0.7);
 //	RadCorrection->GetYaxis()->SetTitle("Radiative Correction");
 //	RadCorrection->Draw("e hist");
 
@@ -1139,7 +1160,6 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	// --------------------------------------------------------------------------------------
 		
-
 	// Test mode for acceptance correction uncertainty
 
 	TH1D* NominalModelRatio = (TH1D*)PlotsOffset[1]->Clone();
@@ -1163,59 +1183,14 @@ TH1D* AcceptanceCorrection(TH1D* h, TString ScaleToDataSet, TString nucleus, TSt
 
 	for (int WhichBin = 0; WhichBin < NBinsSpread; WhichBin++) {
 
+		double DataEntry = OverallClone->GetBinContent(WhichBin+1);
 		double BinContent = Spread->GetBinContent(WhichBin+1);
 		if (BinContent < 0) { Spread->SetBinContent(WhichBin+1,-BinContent); }
+		if (TMath::Abs(BinContent/DataEntry) > 0.20) { Spread->SetBinContent(WhichBin+1,0.); }		
 
 	}
 
 	// --------------------------------------------------------------------------------------	
-
-	// Special case for Ecal
-	// To avoid the infinities around the peak
-	// We merge the (4) bins around the peak
-
-	double DoubleE = -99., reso = 0.;
-	if (E == "1_161") { DoubleE = 1.161; reso = 0.07; }
-	if (E == "2_261") { DoubleE = 2.261; reso = 0.08; }
-	if (E == "4_461") { DoubleE = 4.461; reso = 0.06; }
-
-	double sum = 0; int nbins = 0;
-
-	if (string(name).find("epRecoEnergy_slice") != std::string::npos || name == "h1_Ecal_Reso" || name == "h_Etot_subtruct_piplpimi_2p1pi_1p0pi_fracfeed" ) {
-
-		// Loop over the bins and take the average of the bins around the peak
-
-		for (int WhichBin = 1; WhichBin <= NBinsSpread; WhichBin++) {
-
-			double BinCenter = Spread->GetBinCenter(WhichBin);
-			double BinContent = TMath::Abs(Spread->GetBinContent(WhichBin));
-
-			if (BinCenter > (1-reso) * DoubleE && BinCenter < (1+reso) * DoubleE ) {
-
-				sum += BinContent; nbins++;
-
-			}
-
-		}
-
-		sum = sum / double(nbins);
-
-		// -----------------------------------------------------------------------------
-
-		for (int WhichBin = 1; WhichBin <= NBinsSpread; WhichBin++) {
-
-			double BinCenter = Spread->GetBinCenter(WhichBin);
-			double BinContent = Spread->GetBinContent(WhichBin);
-
-			if (BinCenter > (1-reso) * DoubleE && BinCenter < (1+reso) * DoubleE ) {
-
-				Spread->SetBinContent(WhichBin,sum);
-
-			}
-
-		}
-
-	}
 
 	// now back to the main plot
 	// add the acceptance correction errors in quadrature 

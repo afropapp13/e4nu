@@ -28,8 +28,6 @@ void XSecs() {
 
 	GlobalSettings();
 	//TGaxis::SetMaxDigits(3);
-//	double EnhaceTail = 1./4.;
-	double EnhaceTail = 1./1.;
 
 	// ------------------------------------------------------------------------
 
@@ -37,6 +35,7 @@ void XSecs() {
 	std::vector<TString> nucleus; 
 	std::vector<TString> JustNucleus;
 	std::vector<TString> E;
+	std::vector<TString> LabelE;	
 	std::vector<double> DoubleE;
 	std::vector<TString> FSIModel;
 	std::vector<TString> FSILabel; 
@@ -45,37 +44,30 @@ void XSecs() {
 	std::vector<TString> Yaxis;
 	std::vector<TString> BreakDown;	
 	std::vector<TString> OutputPlotNames;
+	std::vector<TString> Theta;	
 
 	// ------------------------------------------------------------------------
 
-	nucleus.push_back("4He"); JustNucleus.push_back("He");
+	//nucleus.push_back("4He"); JustNucleus.push_back("He");
 	nucleus.push_back("12C"); JustNucleus.push_back("C");
 	nucleus.push_back("56Fe"); JustNucleus.push_back("Fe");		
 
 	// ------------------------------------------------------------------------
 
-	E.push_back("1_161"); DoubleE.push_back(1.161);
-	E.push_back("2_261"); DoubleE.push_back(2.261);	
-	E.push_back("4_461"); DoubleE.push_back(4.461);	
+	//E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161"); Theta.push_back("37.5");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261"); Theta.push_back("27");	
+	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461"); Theta.push_back("21");	
 
 	// ------------------------------------------------------------------------
 
 	xBCut.push_back("NoxBCut");
 
-	NameOfPlots.push_back("PMiss_0"); OutputPlotNames.push_back("PMiss_AllEvents"); 
-	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{Miss} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{Miss}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("PMiss_0_BreakDown_");
+	NameOfPlots.push_back("h1_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector_0"); OutputPlotNames.push_back("Omega_AllEvents"); 
+	LabelOfPlots.push_back("Energy Transfer [GeV]"); 
+	Yaxis.push_back("#frac{d#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]");
+	BreakDown.push_back("_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector_0");		
 
-	NameOfPlots.push_back("kMiss_0"); OutputPlotNames.push_back("kMiss_AllEvents"); 
-	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} k_{Miss} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dk_{Miss}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("kMiss_0_BreakDown_");	
-
-	NameOfPlots.push_back("PnProxy_0"); OutputPlotNames.push_back("PnProxy_AllEvents"); 
-	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{n,proxy} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{n,proxy}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("PnProxy_0_BreakDown_");	
+	// ------------------------------------------------------------------------
 
 	FSIModel.push_back("Pinned_Data_Final"); FSILabel.push_back("Pinned Data");
 
@@ -134,39 +126,24 @@ void XSecs() {
 
 					TString CanvasName = nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_"+NameOfPlots[WhichPlot]+"_"+xBCut[WhichxBCut];
 					TCanvas* PlotCanvas = new TCanvas(CanvasName,CanvasName,205,34,1024,768);
-					PlotCanvas->SetLogy();
-
-					// ---------------------------------------------------------------------------
-
-					// Dimensions of TPad
-
-					double XMinPadOne = 0., XMaxPadOne = 1., YMinPadOne = 0., YMaxPadOne = 1.;
-
-					TPad* pad1 = new TPad(NameOfPlots[WhichPlot],NameOfPlots[WhichPlot],XMinPadOne,YMinPadOne,XMaxPadOne,YMaxPadOne, 21); 
-					pad1->SetFillColor(kWhite); pad1->Draw();
-					pad1->SetTopMargin(0.1);
-					pad1->SetBottomMargin(0.18);
-					pad1->SetLeftMargin(0.18); 
-					pad1->SetRightMargin(0.04);
-					pad1->cd();
+					PlotCanvas->SetBottomMargin(0.15);
+					PlotCanvas->SetLeftMargin(0.17);					
 
 					// ---------------------------------------------------------------------------------------
 
 					Plots.clear();
 
-					TLegend* legGenie = new TLegend(0.71,0.45,0.86,0.7);
+					TLegend* legGenie = new TLegend(0.18,0.45,0.33,0.7);
+					TLegend* legGenieBlackLine = new TLegend(0.18,0.74,0.33,0.88);
+					TLegend* legGenieBreak = new TLegend(0.21,0.63,0.38,0.75);					
+					TLegend* legG2018 = new TLegend(0.18,0.57,0.36,0.63);					
+
 					legGenie->SetNColumns(1);
-
-					TLegend* legGenieBlackLine = new TLegend(0.71,0.74,0.86,0.88);
 					legGenieBlackLine->SetNColumns(1);
-
-					TLegend* legGenieBreak = new TLegend(0.74,0.63,0.81,0.75);					
 					legGenieBreak->SetNColumns(2);
-					legGenieBreak->SetMargin(0.35);
-
-					TLegend* legG2018 = new TLegend(0.71,0.57,0.79,0.63);					
+					legGenieBreak->SetMargin(0.35);	
 					legG2018->SetNColumns(2);
-					legG2018->SetMargin(0.39);
+					legG2018->SetMargin(0.39);									
 
 					double max = -99.;
 					double min = 1E12;
@@ -190,7 +167,7 @@ void XSecs() {
 						Plots[WhichFSIModel]->SetLineColor(DataSetColors[WhichFSIModel]);
 						PrettyDoubleXSecPlot(Plots[WhichFSIModel]);
 
-						Plots[WhichFSIModel]->GetXaxis()->SetTitle(JustNucleus[WhichNucleus]+LabelOfPlots[WhichPlot]);
+						Plots[WhichFSIModel]->GetXaxis()->SetTitle(JustNucleus[WhichNucleus] + " " + LabelOfPlots[WhichPlot]);
 						Plots[WhichFSIModel]->GetXaxis()->CenterTitle(0);
 
 						Plots[WhichFSIModel]->GetYaxis()->SetTitleOffset(1.1);
@@ -209,6 +186,9 @@ void XSecs() {
 						//	apply acceptance correction uncertainties	
 
 						UniversalE4vFunction(Plots[WhichFSIModel],FSIModelsToLabels[FSIModel[WhichFSIModel]],nucleus[WhichNucleus],E[WhichEnergy],NameOfPlots[WhichPlot]);
+
+						// Solid angle division
+						Plots[WhichFSIModel]->Scale(1./dOmega);
 
 						// ----------------------------------------------------------------------------------
 
@@ -230,10 +210,13 @@ void XSecs() {
 							for (int j = 1; j < 5; j++) {
 
 
-								BreakDownPlots.push_back( (TH1D*)( FileSample->Get(BreakDown[WhichPlot]+ToStringInt(j)) ) );
+								BreakDownPlots.push_back( (TH1D*)( FileSample->Get("h1_"+ToStringInt(j)+BreakDown[WhichPlot]) ) );
 
 								UniversalE4vFunction(BreakDownPlots[j-1],FSIModelsToLabels[FSIModel[WhichFSIModel]],\
 										     nucleus[WhichNucleus],E[WhichEnergy],NameOfPlots[WhichPlot]);
+
+								// Solid angle division
+								BreakDownPlots[j-1]->Scale(1./dOmega);											 
 
 								//-----------------------------------------------------------------------------------------------
 
@@ -246,13 +229,14 @@ void XSecs() {
 								TLegendEntry* l1Break = legGenieBreak->AddEntry(BreakDownPlots[j-1],GenieFSILabel[j-1], "l");
 								l1Break->SetTextColor(BreakDownColors[j-1]);
 
+								PlotCanvas->cd();
 								BreakDownPlots[j-1]->Draw("C hist same");
 
 								int fraction = (int)(BreakDownPlots[j-1]->Integral() / Plots[WhichFSIModel]->Integral() * 100.);
 								//cout << "Interaction " << j << " fraction = " << fraction << endl; 
 
 								f->cd();
-								Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]+"_"+ToStringInt(j));	
+								BreakDownPlots[j-1]->Write(FSILabel[WhichFSIModel]+"_"+BreakDown[WhichPlot]+ToStringInt(j));	
 
 
 							} // end of the look over the GENIE break down
@@ -269,8 +253,7 @@ void XSecs() {
 
 							gStyle->SetErrorX(0); // Removing the horizontal errors
 
-							DataPlot = Plots[WhichFSIModel];
-
+							//DataPlot = Plots[WhichFSIModel];
 							DataPlot = AcceptanceCorrection(Plots[WhichFSIModel],"SuSav2", nucleus[WhichNucleus],E[WhichEnergy],NameOfPlots[WhichPlot],xBCut[WhichxBCut]);
 
 							DataPlot->SetMarkerStyle(20); 
@@ -278,28 +261,34 @@ void XSecs() {
 							DataPlot->SetLineColor(kBlack);	
 							DataPlot->SetMarkerColor(kBlack);
 							max = DataPlot->GetMaximum();
-							DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.1*max);	
+							min = DataPlot->GetMinimum();							
+							DataPlot->GetYaxis()->SetRangeUser(min,1.1*max);	
+
+							DataPlot->SetTitle( LabelE[WhichEnergy] + " GeV, #theta = " + Theta[WhichEnergy] + "^{o}");
+
+							PlotCanvas->cd();
 							DataPlot->Draw("e same"); 
 
 							f->cd();
-							DataPlot->Write("Data");
+							DataPlot->Write("Data_"+NameOfPlots[WhichPlot]);
 
 							// --------------------------------------------------------------------------------------------------				
 
 						} else { 
 
 							if (FSILabel[WhichFSIModel] == "G2018") { Plots[WhichFSIModel]->SetLineStyle(kDashed); }
+							PlotCanvas->cd();
 							Plots[WhichFSIModel]->Draw("C hist same");  // draw them as lines
 							if (FSILabel[WhichFSIModel] == "G2018") { BreakDownPlots[3]->Draw("C hist same"); }						
 
 							if (FSILabel[WhichFSIModel] == "SuSav2") { legGenieBlackLine->AddEntry(Plots[WhichFSIModel],"SuSav2 (Total)", "l"); }
 
 							max = TMath::Max(max,Plots[WhichFSIModel]->GetMaximum());
-							DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.1*max);	
+							DataPlot->GetYaxis()->SetRangeUser(0.,1.1*max);	
 							DataPlot->Draw("e same"); 
 
 							f->cd();
-							Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]);							
+							Plots[WhichFSIModel]->Write(FSILabel[WhichFSIModel]+"_"+NameOfPlots[WhichPlot]);							
 
 						}
 
@@ -324,16 +313,15 @@ void XSecs() {
 					legGenieBlackLine->SetTextSize(TextSize-0.03); 
 
 					legGenieBreak->SetTextSize(TextSize-0.03);
-					//legGenieBreak->AddEntry(Plots[2],"G2018","l");					
 
 					legG2018->SetBorderSize(0);
 					legG2018->SetTextFont(FontStyle);
 					legG2018->SetTextSize(TextSize-0.03);
 					legG2018->AddEntry(Plots[2],"G2018","l");	
 
-//					legGenie->Draw();
 					legGenieBlackLine->Draw();
-//					legG2018->Draw();
+					legGenieBreak->Draw();
+					legG2018->Draw();
 
 					// -------------------------------------------------------------------------------------------
 
@@ -344,7 +332,7 @@ void XSecs() {
 					PlotCanvas->SaveAs(CanvasSaveName+".pdf");
 					PlotCanvas->SaveAs(CanvasSaveName+".eps");
 
-					delete PlotCanvas;
+					//delete PlotCanvas;
 
 					// --------------------------------------------------------------------------------------
 
