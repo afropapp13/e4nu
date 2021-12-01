@@ -77,7 +77,8 @@
 
 //	const double dOmega = 0.02; // sr
 //	const double dOmega = 0.015; // sr
-	const double dOmega = 0.0067; // sr: solid angle for 24 < phi < 36 && 36 < theta < 39
+//	const double dOmega = 0.0067; // sr: solid angle for 24 < phi < 36 && 36 < theta < 39
+	const double dOmega = 0.0075; // sr: solid angle for 20 < phi < 30 && 36 < theta < 40
 
 	// 1e -> 1.6x10^-19 C
 	// 1C -> 6.25x10^18 e
@@ -740,7 +741,6 @@
 		{ std::make_pair("56Fe", "2_261"),0  }, // Q2 > 0.02
 		{ std::make_pair("56Fe", "4_461"), 0 } // Q2 > 0.02
 	};
-
 
 	//  ------------------------------------------------------------------------------
 	//  ------------------------------------------------------------------------------
