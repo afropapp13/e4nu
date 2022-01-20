@@ -10,7 +10,6 @@
 #include <TLine.h>
 #include <TPad.h>
 #include <TGaxis.h>
-#include <TGraphAsymmErrors.h>
 
 #include <iostream>
 #include <vector>
@@ -18,11 +17,46 @@
 using namespace std;
 
 #include "../myFunctions.cpp"
-#include "../AfroConstants.h"
+#include "../Constants.h"
+
+//------------------------------//
+
+void UpdateXRange(TString Energy, int ThetaBin, TH1D* h) {
+
+	if (Energy == "2_261" && ThetaBin == 1) { h->GetXaxis()->SetRangeUser(0.45,1.75); }
+	if (Energy == "2_261" && ThetaBin == 2) { h->GetXaxis()->SetRangeUser(0.55,1.75); }
+	if (Energy == "2_261" && ThetaBin == 3) { h->GetXaxis()->SetRangeUser(0.8,1.75); }
+	if (Energy == "2_261" && ThetaBin == 4) { h->GetXaxis()->SetRangeUser(0.55,1.75); }			
+	if (Energy == "2_261" && ThetaBin == 5) { h->GetXaxis()->SetRangeUser(0.55,1.75); }
+
+}
 
 // ----------------------------------------------------------------------------------------------------------------
 
 void XSecs() {
+
+	//------------------------------//
+
+	std::map<TString,double> MinThetaSlice =
+	{
+		{ "1161", 27 }, // 36
+		{ "2261", 26 }, // 25.5
+		{ "4461", 20 } // 19.5
+	};
+	
+	std::map<TString,double> MaxThetaSlice =
+	{
+		{ "1161", 51 }, // 39
+		{ "2261", 50 }, // 28.5
+		{ "4461", 44 } // 22.5
+	};
+	
+	std::map<TString,int> ThetaSlices =
+	{
+		{ "1161", 6 },
+		{ "2261", 6 },
+		{ "4461", 6 }
+	};		
 
 	// ------------------------------------------------------------------------
 
@@ -40,8 +74,6 @@ void XSecs() {
 	std::vector<TString> FSIModel;
 	std::vector<TString> FSILabel; 
 	std::vector<TString> NameOfPlots; 
-	std::vector<TString> LabelOfPlots;  	
-	std::vector<TString> Yaxis;
 	std::vector<TString> BreakDown;	
 	std::vector<TString> OutputPlotNames;
 	std::vector<TString> Theta;	
@@ -49,25 +81,22 @@ void XSecs() {
 	// ------------------------------------------------------------------------
 
 	//nucleus.push_back("4He"); JustNucleus.push_back("He");
-	nucleus.push_back("12C"); JustNucleus.push_back("C");
-	nucleus.push_back("56Fe"); JustNucleus.push_back("Fe");		
+	nucleus.push_back("12C"); JustNucleus.push_back("^{12}C");
+	//nucleus.push_back("56Fe"); JustNucleus.push_back("Fe");		
 
 	// ------------------------------------------------------------------------
 
-	//E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161"); Theta.push_back("37.5");
-	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261"); Theta.push_back("27");	
-	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461"); Theta.push_back("21");	
+	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
+	//E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");
+	//E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");
 
 	// ------------------------------------------------------------------------
 
-	xBCut.push_back("NoxBCut");
-
-	NameOfPlots.push_back("h1_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector_0"); OutputPlotNames.push_back("Omega_AllEvents"); 
-	LabelOfPlots.push_back("Energy Transfer [GeV]"); 
-	Yaxis.push_back("#frac{d#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]");
-	BreakDown.push_back("_Omega_FullyInclusive_NoQ4Weight_Theta_Slice_InSector_0");		
+	xBCut.push_back("NoxBCut");	
 
 	// ------------------------------------------------------------------------
+
+	// Samples
 
 	FSIModel.push_back("Pinned_Data_Final"); FSILabel.push_back("Pinned Data");
 
@@ -83,7 +112,6 @@ void XSecs() {
 	int NNuclei = nucleus.size();
 	int NEnergies = E.size();
 	int NFSIModels = FSIModel.size();
-	int NPlots = NameOfPlots.size();
 
 	// ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -119,6 +147,30 @@ void XSecs() {
 				TFile* f = TFile::Open("myXSec/XSec_"+nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_GeV_"+xBCut[WhichxBCut]+".root","recreate");	
 
 				// ---------------------------------------------------------------------------------------------------------------------------------------------							
+
+				NameOfPlots.clear();
+				OutputPlotNames.clear();
+				BreakDown.clear();	
+
+				TString CopyBeam = E[WhichEnergy];
+				CopyBeam.ReplaceAll("_","");
+
+				for (int WhichTheta = 0; WhichTheta < ThetaSlices[CopyBeam]; WhichTheta++) {
+
+					double ThetaStep = (MaxThetaSlice[CopyBeam] - MinThetaSlice[CopyBeam] ) / ThetaSlices[CopyBeam];
+					double MinTheta = MinThetaSlice[CopyBeam] + WhichTheta*ThetaStep;
+					double MaxTheta = MinThetaSlice[CopyBeam] + (WhichTheta+1)*ThetaStep;
+					int AveTheta = (MaxTheta + MinTheta) / 2.;		
+					TString StringAveTheta = TString(std::to_string(AveTheta));	
+
+					NameOfPlots.push_back("h1_Omega_Theta_"+StringAveTheta+"_Sector_0"); 
+					OutputPlotNames.push_back("Omega_Theta_"+StringAveTheta+"_Sector_0"); 
+					BreakDown.push_back("_Omega_Theta_"+StringAveTheta+"_Sector_0");
+					Theta.push_back(StringAveTheta);					
+
+				}				
+
+				int NPlots = NameOfPlots.size();				
 
 				// Loop over the plots				
 
@@ -167,11 +219,11 @@ void XSecs() {
 						Plots[WhichFSIModel]->SetLineColor(DataSetColors[WhichFSIModel]);
 						PrettyDoubleXSecPlot(Plots[WhichFSIModel]);
 
-						Plots[WhichFSIModel]->GetXaxis()->SetTitle(JustNucleus[WhichNucleus] + " " + LabelOfPlots[WhichPlot]);
+						Plots[WhichFSIModel]->GetXaxis()->SetTitle("Energy Transfer [GeV]");
 						Plots[WhichFSIModel]->GetXaxis()->CenterTitle(0);
 
 						Plots[WhichFSIModel]->GetYaxis()->SetTitleOffset(1.1);
-						Plots[WhichFSIModel]->GetYaxis()->SetTitle(Yaxis[WhichPlot]);						
+						Plots[WhichFSIModel]->GetYaxis()->SetTitle("#frac{d#sigma}{d#Omega dE} [#frac{#mub}{sr GeV " + JustNucleus[WhichNucleus] + "}]");						
 
 						// -----------------------------------------------------------------------------------
 
@@ -230,6 +282,13 @@ void XSecs() {
 								l1Break->SetTextColor(BreakDownColors[j-1]);
 
 								PlotCanvas->cd();
+
+								//----------------------------------------//
+
+								UpdateXRange(E[WhichEnergy],WhichPlot,BreakDownPlots[j-1]);						
+
+								//----------------------------------------//
+
 								BreakDownPlots[j-1]->Draw("C hist same");
 
 								int fraction = (int)(BreakDownPlots[j-1]->Integral() / Plots[WhichFSIModel]->Integral() * 100.);
@@ -262,9 +321,15 @@ void XSecs() {
 							DataPlot->SetMarkerColor(kBlack);
 							max = DataPlot->GetMaximum();
 							min = DataPlot->GetMinimum();							
-							DataPlot->GetYaxis()->SetRangeUser(min,1.1*max);	
+							DataPlot->GetYaxis()->SetRangeUser(min,1.1*max);
 
-							DataPlot->SetTitle( LabelE[WhichEnergy] + " GeV, #theta = " + Theta[WhichEnergy] + "^{o}");
+							//----------------------------------------//
+
+							UpdateXRange(E[WhichEnergy],WhichPlot,DataPlot);						
+
+							//----------------------------------------//
+
+							DataPlot->SetTitle( LabelE[WhichEnergy] + " GeV, #theta = " + Theta[WhichPlot] + "^{o}");
 
 							PlotCanvas->cd();
 							DataPlot->Draw("e same"); 
@@ -278,6 +343,13 @@ void XSecs() {
 
 							if (FSILabel[WhichFSIModel] == "G2018") { Plots[WhichFSIModel]->SetLineStyle(kDashed); }
 							PlotCanvas->cd();
+
+							//----------------------------------------//
+
+							UpdateXRange(E[WhichEnergy],WhichPlot,Plots[WhichFSIModel]);						
+
+							//----------------------------------------//
+
 							Plots[WhichFSIModel]->Draw("C hist same");  // draw them as lines
 							if (FSILabel[WhichFSIModel] == "G2018") { BreakDownPlots[3]->Draw("C hist same"); }						
 
@@ -285,6 +357,7 @@ void XSecs() {
 
 							max = TMath::Max(max,Plots[WhichFSIModel]->GetMaximum());
 							DataPlot->GetYaxis()->SetRangeUser(0.,1.1*max);	
+
 							DataPlot->Draw("e same"); 
 
 							f->cd();

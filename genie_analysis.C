@@ -53,6 +53,7 @@ void genie_analysis::Loop(Int_t choice) {
 	bool ApplyFiducials = true;
 	bool ApplyAccWeights = true;
 	bool ApplyReso = true;
+	
 	bool ApplyPhiOpeningAngle = true;
 	bool ApplyThetaSlice = true;
 

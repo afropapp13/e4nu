@@ -13,21 +13,21 @@
 
 	// ---------------------------------
 
-	static std::map<TString,double> MinThetaSlice =
+	const std::map<TString,double> MinThetaSlice =
 	{
 		{ "1161", 27 }, // 36
 		{ "2261", 26 }, // 25.5
 		{ "4461", 20 } // 19.5
 	};
 	
-	static std::map<TString,double> MaxThetaSlice =
+	const std::map<TString,double> MaxThetaSlice =
 	{
 		{ "1161", 51 }, // 39
 		{ "2261", 50 }, // 28.5
 		{ "4461", 44 } // 22.5
 	};
 	
-	static std::map<TString,int> ThetaSlices =
+	const std::map<TString,int> ThetaSlices =
 	{
 		{ "1161", 6 },
 		{ "2261", 6 },
@@ -51,7 +51,7 @@
 
 	static const Float_t par_EcUVW[6][3] = {{60, 360, 400}, {55, 360, 400}, {50, 363, 400}, {52, 365, 396}, {60, 360, 398}, {50, 362, 398}};
 
-	const double PhiOpeningAngle = 10; // 6
+	const double PhiOpeningAngle = 6;
 
 	const double MinThetaProton = 12.;
 	const double MinThetaPiPlus = 12.;

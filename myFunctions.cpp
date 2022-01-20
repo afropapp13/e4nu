@@ -784,7 +784,7 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 	if (string(PlotVar).find("Omega") != std::string::npos) {
 
 		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.,0.7); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.2,1.45); }
+		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.25,1.63); }
 		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(0.6,2.45); }
 
 	} else if (

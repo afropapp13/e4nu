@@ -10,7 +10,7 @@ CXXFLAGS  += -std=c++11 -Wall -Wshadow -Warray-bounds -Wmissing-field-initialize
 LD        := g++
 LDFLAGS   := $(ROOTLDFLAGS)
 
-OBJECTS1   := Subtraction.o run_genie_analysis.o Fiducial.o genie_analysis.o 
+OBJECTS1   := run_genie_analysis.o Fiducial.o genie_analysis.o 
 
 
 all: genie_analysis
