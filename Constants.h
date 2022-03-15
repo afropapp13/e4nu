@@ -11,7 +11,7 @@
 #include <map>
 #include <string>
 
-	// ------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	// All units are in GeV
 
@@ -42,5 +42,70 @@
 	const double CenterSixthSector = 330;
 
 	const int RotCounterLimit = 100;
+	
+	//----------------------------------------//
+	
+	// Interaction labels
+	
+	const std::vector<int> InteBreakColors{kBlack,kBlue-5,kYellow+1,kOrange+7,kRed+1,kBlue};	
+	const std::vector<TString> InteractionLabels = {"","QE","MEC","RES","DIS","COH"};
+	const int NInte = InteractionLabels.size();	
+	
+	//----------------------------------------//
+	
+	const int NInt = 6; // All Interactions = 0, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
+	
+	const std::vector<double> TwoDArrayNBinsDeltaPT{0.0,0.2,0.4,1.0};	
+	const std::vector<double> TwoDArrayNBinsDeltaAlphaT{0.0,45.0,90.0,135.0,180.0};
+	const std::vector<double> TwoDArrayNBinsDeltaPtx{-1.,-0.15,0.15,1.};
+	const std::vector<double> TwoDArrayNBinsDeltaPty{-1.5,-0.15,0.15,0.5};
+	
+	//----------------------------------------//
+	
+	const std::vector< std::vector<double> > TwoDArrayNBinsDeltaAlphaTInDeltaPTSlices{ 
+												// DeltaPT < 0.2 GeV/c
+												{0.,10.,20.,30.,40.,50.,60.,70.,80.,90.,100.,110.,120.,130.,140.,150.,160.,170.,180.},
+												// 0.2 < DeltaPT < 0.4 GeV/c
+												{0.,10.,20.,30.,40.,50.,60.,70.,80.,90.,100.,110.,120.,130.,140.,150.,160.,170.,180.},
+												// DeltaPT > 0.4 GeV/c
+												{0.,10.,20.,30.,40.,50.,60.,70.,80.,90.,100.,110.,120.,130.,140.,150.,160.,170.,180.}		
+											};
+
+	//----------------------------------------//
+	
+	const std::vector< std::vector<double> > TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices{ 
+												// DeltaAlphaT < 45 deg
+												{0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.47,0.55,1.},
+												// 45 < DeltaAlphaT < 90 deg
+												{0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.47,0.55,0.65,1.},
+												// 90 < DeltaAlphaT < 135 deg
+												{0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.47,0.55,0.65,0.75,1.},
+												// DeltaAlphaT > 135 deg
+												{0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.47,0.55,0.65,0.75,1.}		
+											};	
+											
+	//----------------------------------------//
+	
+	const std::vector< std::vector<double> > TwoDArrayNBinsDeltaPtyInDeltaPtxSlices{ 
+											// DeltaPtx < -0.15 GeV/c
+											{-0.75,-0.65,-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45},
+											// -0.15 < DeltaPtx < 0.15 GeV/c
+											{-0.75,-0.65,-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45},
+											// DeltaPtx > 0.15 GeV/c
+											{-0.75,-0.65,-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45}
+										};
+
+	//----------------------------------------//
+	
+	const std::vector< std::vector<double> > TwoDArrayNBinsDeltaPtxInDeltaPtySlices{ 
+											// DeltaPty < -0.15 GeV/c
+											{-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45,0.55},
+											// -0.15 < DeltaPty < 0.15 GeV/c
+											{-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45,0.55},
+											// DeltaPty > 0.15 GeV/c
+											{-0.55,-0.45,-0.35,-0.25,-0.15,-0.05,0.05,0.15,0.25,0.35,0.45,0.55}
+										};																																		
+	
+	//----------------------------------------//		
 
 #endif

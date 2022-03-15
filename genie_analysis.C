@@ -1,37 +1,67 @@
 #define GENIE_ANALYSIS_C
-
 #include "genie_analysis.h"
 #include "Constants.h"
-#include <TH2.h>
 #include <TStyle.h>
-#include <TCanvas.h>
-#include <TProfile.h>
 #include <TH1D.h>
-#include <TMatrixD.h>
 #include <TFile.h>
 #include <TMath.h>
-#include <exception>
-#include <iostream>
-#include <fstream>
 #include <TLorentzVector.h>
-#include <TVectorT.h>
 #include <TRandom3.h>
 #include <TF1.h>
 #include <TH3.h>
-#include <TGraph.h>
 
+#include <exception>
+#include <iostream>
+#include <fstream>
 #include <vector>
 #include <iomanip>
 #include <sstream>
-#include <iostream>
 
 using namespace std;
 
-// __________________________________________________________________________________________________________________________________________________
+//----------------------------------------//
+
+int ReturnIndex(double value, std::vector<double> vec) {
+
+	int length = vec.size();
+	int index = -1;
+
+	for (int i = 0; i < length-1; i ++) {
+
+		if (value > vec.at(i) && value < vec.at(i+1)) { return i; }
+
+	}	
+
+	return index;
+
+}
+
+//----------------------------------------//
+
+TString to_string_with_precision(double a_value, const int n = 2) {
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return TString(out.str());
+}
+
+//----------------------------------------//
+
+TString ConvertToString(double value) {
+
+	TString StringValue = to_string_with_precision(value, 2);
+	StringValue.ReplaceAll(".","_");
+	StringValue.ReplaceAll("-","Minus");	
+
+	return StringValue;
+
+}
+
+//----------------------------------------//
 
 void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, double ProtonEnergy, double STLV[],double P, double N, double BindE, double EE, double TrueBeamEnergy) {
 
-	// ----------------------------------------------------------------------------------------------------
+//----------------------------------------//
 
 	// 0: Pt
 	// 1: DeltaAlphaT
@@ -51,7 +81,7 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	// 15: PL using PMiss projection
 	// 16: Enu with QE assumption
 
-	// ----------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	double MuonMass_GeV = 0.106, ProtonMass_GeV = 0.938272, NeutronMass_GeV = 0.939565; // GeV
 	double DeltaM2 = TMath::Power(NeutronMass_GeV,2.) - TMath::Power(ProtonMass_GeV,2.);	
@@ -68,7 +98,6 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	double MuonVectorLongMag = MuonVectorLong.Mag();
 	
 	TLorentzVector MuonLorentzVector(MuonVector,MuonEnergy);
-//	double MuonKE = MuonEnergy - MuonMass_GeV;	
 			
 	TVector3 ProtonVectorTrans;
 	ProtonVectorTrans.SetXYZ(ProtonVector.X(),ProtonVector.Y(),0.);
@@ -94,7 +123,7 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	if (STLV[2] > 180.) { STLV[2] -= 180.; }
 	if (STLV[2] < 0.) { STLV[2] += 180.; }
 
-	// -------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	// Calorimetric Energy Reconstruction
 
@@ -109,16 +138,16 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 	// Reconstructed Q2
 
 	// TLorentzVector nuLorentzVector(0.,0.,STLV[3],STLV[3]); // neutrinos
-	TLorentzVector nuLorentzVector(0.,0.,TrueBeamEnergy,TrueBeamEnergy); // electrons	
+	TLorentzVector nuLorentzVector(0.,0.,TrueBeamEnergy,TrueBeamEnergy); // electrons, known incoming energy
 	TLorentzVector qLorentzVector = nuLorentzVector - MuonLorentzVector;
 	STLV[5] = - qLorentzVector.Mag2(); // Q2, GeV^{2}/c^{2}
 	
-	// -------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 	
 	// Light Cone Variables
 	
-	// TLorentzVector MissLorentzVector = MuonLorentzVector + ProtonLorentzVector - nuLorentzVector;
-	TLorentzVector MissLorentzVector = ProtonLorentzVector - qLorentzVector;	
+	// TLorentzVector MissLorentzVector = MuonLorentzVector + ProtonLorentzVector - nuLorentzVector; // neutrinos
+	TLorentzVector MissLorentzVector = ProtonLorentzVector - qLorentzVector; // electrons
 	
 	STLV[6] = TMath::Abs(MissLorentzVector.E());  // Emiss
 	STLV[7] = (MissLorentzVector.Vect()).Mag();   // Pmiss
@@ -138,7 +167,7 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 
 	STLV[10] = STLV[8] / ProtonMass_GeV; // alpha
 
-	// -------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	// Minerva longitudinal & total variables
 
@@ -165,11 +194,11 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 
 	STLV[16] = MuonVectorLongMag + ProtonVectorLongMag- STLV[11]; // Enu using the calorimetric assumption
 
-	// -------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 }
 
-// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------//
 
 // Loading all the constants from Constant.h (e_mass, m_prot, m_pimi, m_pipl, m_pion, m_neut = 0.939565,
 // H3_bind_en, He4_bind_en, C12_bind_en, B_bind_en, He3_bind_en, D2_bind_en, Fe_bind_en, Mn_bind_en
@@ -177,12 +206,8 @@ void STV_Tools(TVector3 MuonVector,TVector3 ProtonVector, double MuonEnergy, dou
 void genie_analysis::Loop(Int_t choice) {
 
 	TH1D::SetDefaultSumw2();
-	TH2D::SetDefaultSumw2();
 
-	int NSectors = 6;
-	const int NInt = 6; // All Interactions = 0, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
-
-	// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	// Do we want to apply fiducials & the acceptance map weights
 	// Do we want a truth level study ? if so, stop ditching sectors
@@ -193,7 +218,7 @@ void genie_analysis::Loop(Int_t choice) {
 	bool ApplyReso = true;
 	bool TruthLevel1p0piSignalStudy = false;
 
-	// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	//Choice = 0 is for analysis of CLAS data while choice = 1 is for the analysis of GENIE Simulation
 	if (choice != 4 && choice != 3 && choice != 2 && choice != 1 && choice != 0) {
@@ -211,7 +236,7 @@ void genie_analysis::Loop(Int_t choice) {
 	en_beam["2261"]=2.261;
 	en_beam["4461"]=4.461;
 
-	// ----------------------------------
+	//----------------------------------------//
 
 	// Protons in target
 
@@ -248,7 +273,7 @@ void genie_analysis::Loop(Int_t choice) {
 	EE["C12"]  = 0.0261;
 	EE["56Fe"]  = 0.0191;
 
-	// ---------------------------------
+	//----------------------------------------//
 
 	en_beam_Ecal["1161"]=1.161;
 	en_beam_Ecal["2261"]=2.261;
@@ -261,7 +286,6 @@ void genie_analysis::Loop(Int_t choice) {
 	if (fChain == 0) return;
 
 	Long64_t nentries = fChain->GetEntriesFast();
-	//nentries =8000000;
 
 	//Resolutions for Smearing for GENIE simulation data
 	double reso_p = 0.01; // smearing for the proton
@@ -281,10 +305,6 @@ void genie_analysis::Loop(Int_t choice) {
 
 	double Wcut = 2; //cut for all beam energies < 2
 	double Q2cut = 0; // cut for 1.1 GeV > 0.1, for 2.2 GeV > 0.4 and 4.4 GeV > 0.8
-
-	const int n_slice=3; // Stick to the 3 slices
-	const double pperp_min[n_slice]={0.,0.2,0.4};
-	const double pperp_max[n_slice]={0.2,0.4,10.};
 
 	TVector3 V3_rotprot1,V3_rotprot2,V3_rotprot3,V3_rot_pi,V3_rotprot;
 
@@ -334,13 +354,7 @@ void genie_analysis::Loop(Int_t choice) {
 	residual_target_mass["56Fe"]= 25*m_prot+30*m_neut-Mn_bind_en;
 	residual_target_mass["CH2"] = 25*m_prot+30*m_neut-Mn_bind_en;
 
-	// ----------------------------------------------------------------------------------------
-
-	// Offset for oscillation studies
-
-	double offset = 0.;
-
-	// ----------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	gRandom = new TRandom3();
 	gRandom->SetSeed(10);
@@ -351,14 +365,14 @@ void genie_analysis::Loop(Int_t choice) {
 	//Acceptance Maps
 
 	TString WhichMap = "e2a_maps";
-	TFile* file_acceptance;
-	TFile* file_acceptance_p;
-	TFile* file_acceptance_pip;
-	TFile* file_acceptance_pim;
+	TFile* file_acceptance = nullptr;
+	TFile* file_acceptance_p = nullptr;
+	TFile* file_acceptance_pip = nullptr;
+	TFile* file_acceptance_pim = nullptr;
 
 	TString Target = "12C";
-	if (ftarget.c_str() == "3He") { Target = "3He"; }
-	if (ftarget.c_str() == "4He") { Target = "4He"; }
+	if ( TString(ftarget.c_str()) == "3He") { Target = "3He"; }
+	if ( TString(ftarget.c_str()) == "4He") { Target = "4He"; }
 
 	if ( choice > 0 ) { // Only need acceptance maps for GENIE simulation
 
@@ -368,22 +382,20 @@ void genie_analysis::Loop(Int_t choice) {
 		file_acceptance_pim = TFile::Open(WhichMap+"/"+WhichMap+"_"+Target+"_E_"+E_acc_file+"_pim.root");
 	}
 
-	// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	//Output file definition
-
-	TFile *file_out;
 	TString FileName = ""; 
 
-	if (choice == 0) { FileName = Form("/work/clas/claseg2/apapadop/LFNeutrinos_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test.root",ftarget.c_str(),fbeam_en.c_str()); }
-	if (choice == 1){ FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2.root",ftarget.c_str(),fbeam_en.c_str()); }
-	if (choice == 2) { FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_G18_10a_02_11a.root",ftarget.c_str(),fbeam_en.c_str()); }
-	if (choice == 3) { FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_SuSav2_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
-	if (choice == 4) { FileName = Form("LFNeutrinos_genie_e2a_ep_%s_%s_neutrino6_united4_radphot_test_G18_10a_02_11a_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 0) { FileName = Form("/work/clas/claseg2/apapadop/MultiDim_data_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 1){ FileName = Form("MultiDim_genie_e2a_ep_%s_%s_SuSav2.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 2) { FileName = Form("MultiDim_genie_e2a_ep_%s_%s_G18_10a_02_11a.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 3) { FileName = Form("MultiDim_genie_e2a_ep_%s_%s_SuSav2_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
+	if (choice == 4) { FileName = Form("MultiDim_genie_e2a_ep_%s_%s_G18_10a_02_11a_Rad.root",ftarget.c_str(),fbeam_en.c_str()); }
 
-	file_out = new TFile(FileName, "Recreate");
+	TFile* file_out = new TFile(FileName, "recreate");
 
-	// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	fiducialcut->InitPiMinusFit(fbeam_en);
 
@@ -391,169 +403,58 @@ void genie_analysis::Loop(Int_t choice) {
 	fiducialcut->InitEClimits();
 	std::cout << " Test InitEClimits Loop " << fiducialcut->up_lim1_ec->Eval(60) << std::endl;
 
-	// ------------------------------------------------------------------------------
+	//----------------------------------------//
 
-	int NBinsNucMom = 100;
-	double MinNucMom = 0.;
-	double MaxNucMom = 2.;	
+	// KI multi dim plots
+	// 1st index: 0 = all events, 1,2... = slices
+	// 2nd index: 0 = all events, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
 
-	double MinPL = -2.;
-	double MaxPL = 0.5;	
+	TH1D* DeltaPT_InDeltaAlphaTPlot[int(TwoDArrayNBinsDeltaAlphaT.size()) + 1][NInt];
+	TH1D* DeltaAlphaT_InDeltaPTPlot[int(TwoDArrayNBinsDeltaPT.size()) + 1][NInt];
+	TH1D* DeltaPtx_InDeltaPtyPlot[int(TwoDArrayNBinsDeltaPty.size()) + 1][NInt];
+	TH1D* DeltaPty_InDeltaPtxPlot[int(TwoDArrayNBinsDeltaPtx.size()) + 1][NInt];			
 
-	const int Regions = 3;
+	// Loop over the interactions
+	for (int iinte = 0; iinte < NInt; iinte++) {
 
-	TH1F *h1_PMiss[Regions];
-	TH1F *h1_kMiss[Regions];	
-	TH1F *h1_PnProxy[Regions];
-	TH2F *h2_PMiss_kMiss[Regions];
-	TH2F *h2_PLFromPMiss_PL[Regions];	
-	TH1F *h1_PL[Regions];
-	TH1F *h1_PLFromPMiss[Regions];
+		// Loop over the DeltaAlphaT slices
+		for (int ideltaalphat = 0; ideltaalphat < int(TwoDArrayNBinsDeltaAlphaT.size()) + 1;ideltaalphat++ ) {
 
-	TH1F *h1_PMiss_BreakDown[Regions][NInt];
-	TH1F *h1_kMiss_BreakDown[Regions][NInt];
-	TH1F *h1_PnProxy_BreakDown[Regions][NInt];				
-	TH1F *h1_PL_BreakDown[Regions][NInt];
-	TH1F *h1_PLFromPMiss_BreakDown[Regions][NInt];
+			TString DeltaPTTwoDInDeltaAlphaTLabel = InteractionLabels[iinte]+"DeltaPT_DeltaAlphaT_"+ConvertToString(TwoDArrayNBinsDeltaAlphaT[ideltaalphat])+"To"+ConvertToString(TwoDArrayNBinsDeltaAlphaT[ideltaalphat+1])+"Plot";			
+			DeltaPT_InDeltaAlphaTPlot[ideltaalphat][iinte] = new TH1D(DeltaPTTwoDInDeltaAlphaTLabel,";#delta p_{T} [GeV/c]",TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat].size()-1,&TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat][0]);			
 
-	// For these 2D plots: 0 = all events, 1 = within 10% of beam energy, 2 = more than 10% away from beam energy
+		}
 
-	int TwoDBins = 100;
-	double MinDiffPL = -0.1;
-	double MaxDiffPL = 0.6;	
-	double ResoThres = 0.10;
+		// Loop over the DeltaPT slices
+		for (int ideltapt = 0; ideltapt < int(TwoDArrayNBinsDeltaPT.size()) + 1;ideltapt++ ) {
 
-	double MinDiffPMiss = -0.6;
-	double MaxDiffPMiss = 0.4;	
-
-	TH2F *h2_PPerp_PMinus[Regions];
-	TH2F *h2_PLMinusPLFromPMiss_PMiss[Regions];
-	TH2F *h2_kMissMinusPMiss_PMiss[Regions];
-	TH2F *h2_PnProxyMinusPMiss_PMiss[Regions];	
-
-	TH1F *h1_PTx[Regions];
-	TH1F *h1_PTy[Regions];
-	TH1F *h1_EnuQE[Regions];
-
-	TH1F *h1_PTx_BreakDown[Regions][NInt];
-	TH1F *h1_PTy_BreakDown[Regions][NInt];
-	TH1F *h1_EnuQE_BreakDown[Regions][NInt];									
-
-	for (int region = 0; region < Regions; region ++) {
-
-		h1_PMiss[region] = new TH1F("PMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_kMiss[region] = new TH1F("kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_PnProxy[region] = new TH1F("PnProxy_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom);	
-		h2_PMiss_kMiss[region] = new TH2F("PMiss_kMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);	
-		h1_PL[region] = new TH1F("PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);
-		h1_PLFromPMiss[region] = new TH1F("PLFromPMiss_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL);				
-		h2_PLFromPMiss_PL[region] = new TH2F("PLFromPMiss_PL_"+TString(std::to_string(region)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);			
-
-		h2_PPerp_PMinus[region] = new TH2F("PPerp_PMinus_"+TString(std::to_string(region)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.3,1.8);
-		h2_PLMinusPLFromPMiss_PMiss[region] = new TH2F("PLMinusPLFromPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPL,MaxDiffPL);		
-		h2_kMissMinusPMiss_PMiss[region] = new TH2F("kMissMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);
-		h2_PnProxyMinusPMiss_PMiss[region] = new TH2F("PnProxyMinusPMiss_PMiss_"+TString(std::to_string(region)),"",TwoDBins,MinNucMom,MaxNucMom,TwoDBins,MinDiffPMiss,MaxDiffPMiss);
-
-		// all events, good, bad
-		h1_PTx[region] = new TH1F("PTx_"+TString(std::to_string(region)),"",100,-1.2,1.2);
-		h1_PTy[region] = new TH1F("PTy_"+TString(std::to_string(region)),"",130,-1.6,1.);
-		h1_EnuQE[region] = new TH1F("EnuQE_"+TString(std::to_string(region)),"",500,0.,5.);						
-
-		for (int WhichInt = 1; WhichInt < NInt; WhichInt++) {
-
-			h1_PMiss_BreakDown[region][WhichInt] = new TH1F("PMiss_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-			h1_kMiss_BreakDown[region][WhichInt] = new TH1F("kMiss_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);			
-			h1_PnProxy_BreakDown[region][WhichInt] = new TH1F("PnProxy_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-
-			h1_PL_BreakDown[region][WhichInt] = new TH1F("PL_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
-			h1_PLFromPMiss_BreakDown[region][WhichInt] = new TH1F("PLFromPMiss_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
-
-			h1_PTx_BreakDown[region][WhichInt] = new TH1F("PTx_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",100,-1.2,1.2);
-			h1_PTy_BreakDown[region][WhichInt] = new TH1F("PTy_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",100,-1.5,1.);
-			h1_EnuQE_BreakDown[region][WhichInt] = new TH1F("EnuQE_"+TString(std::to_string(region))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",500,0.,5.);							
+			TString DeltaAlphaTTwoDInDeltaPTLabel = InteractionLabels[iinte]+"DeltaAlphaT_DeltaPT_"+ConvertToString(TwoDArrayNBinsDeltaPT[ideltapt])+"To"+ConvertToString(TwoDArrayNBinsDeltaPT[ideltapt+1])+"Plot";			
+			DeltaAlphaT_InDeltaPTPlot[ideltapt][iinte] = new TH1D(DeltaAlphaTTwoDInDeltaPTLabel,";#delta#alpha_{T} [deg]",TwoDArrayNBinsDeltaAlphaTInDeltaPTSlices[ideltapt].size()-1,&TwoDArrayNBinsDeltaAlphaTInDeltaPTSlices[ideltapt][0]);			
 
 		}	
 
-	}		
+		// Loop over the DeltaPty slices
+		for (int ideltapty = 0; ideltapty < int(TwoDArrayNBinsDeltaPty.size()) + 1;ideltapty++ ) {
 
-	// ------------------------------------------------------------------------------
+			TString DeltaPtxTwoDInDeltaPtyLabel = InteractionLabels[iinte]+"DeltaPtx_DeltaPty_"+ConvertToString(TwoDArrayNBinsDeltaPtx[ideltapty])+"To"+ConvertToString(TwoDArrayNBinsDeltaPtx[ideltapty+1])+"Plot";			
+			DeltaPtx_InDeltaPtyPlot[ideltapty][iinte] = new TH1D(DeltaPtxTwoDInDeltaPtyLabel,";#delta#alpha_{T,x} [GeV/c]",TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty].size()-1,&TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty][0]);			
 
-	std::vector<double> PLFromPMissRange{-10.,-1.1,-0.9,-0.7,-0.5,-0.3,-0.1,0.1,0.3,0.4,10.};
-	const int NPLRanges = PLFromPMissRange.size() - 1;
+		}	
 
-	std::vector<double> PMissRange{0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,10.};
-	const int NRanges = PMissRange.size() - 1;
-	double SplitPoint = 0.3; // GeV, split for PT
+		// Loop over the DeltaPtx slices
+		for (int ideltaptx = 0; ideltaptx < int(TwoDArrayNBinsDeltaPtx.size()) + 1;ideltaptx++ ) {
 
-	TH1F* h1_PMiss_Slice[NRanges];
-	TH1F* h1_kMiss_Slice[NRanges];	
-	TH1F* h1_PnProxy_Slice[NRanges];
-	TH1F* h1_PLFromPMiss_Slice[NRanges];
-	TH1F* h1_PL_Slice[NRanges];	
+			TString DeltaPtyTwoDInDeltaPtxLabel = InteractionLabels[iinte]+"DeltaPty_DeltaPtx_"+ConvertToString(TwoDArrayNBinsDeltaPty[ideltaptx])+"To"+ConvertToString(TwoDArrayNBinsDeltaPty[ideltaptx+1])+"Plot";			
+			DeltaPty_InDeltaPtxPlot[ideltaptx][iinte] = new TH1D(DeltaPtyTwoDInDeltaPtxLabel,";#delta#alpha_{T,y} [GeV/c]",TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx].size()-1,&TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx][0]);			
 
-	// Jackson's suggestion
-	// P- vs Pperp in Pmiss slices	
+		}				
 
-	TH2F *h2_PPerp_PMinus_Slice[NRanges];			
 
-	for (int slice = 0; slice < NRanges; slice ++) {
+	} // End of the loop over the interactions				
 
-		h1_PMiss_Slice[slice] = new TH1F("PMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_kMiss_Slice[slice] = new TH1F("kMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_PnProxy_Slice[slice] = new TH1F("PnProxy_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_PLFromPMiss_Slice[slice] = new TH1F("PLFromPMiss_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
-		h1_PL_Slice[slice] = new TH1F("PL_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);	
+	//----------------------------------------//
 
-		h2_PPerp_PMinus_Slice[slice] = new TH2F("PPerp_PMinus_Slice_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,0.3,1.8);			
-
-	}	
-
-	// ------------------------------------------------------------------------------		
-
-	int GoodBadResoRegions = 2;	
-	TH1F* h1_PMiss_GoodBad[GoodBadResoRegions];
-	TH1F* h1_kMiss_GoodBad[GoodBadResoRegions];		
-	TH1F* h1_PnProxy_GoodBad[GoodBadResoRegions];
-	TH1F* h1_PLFromPMiss_GoodBad[GoodBadResoRegions];
-	TH1F* h1_PL_GoodBad[GoodBadResoRegions];
-	TH2F *h2_PMiss_kMiss_GoodBad[GoodBadResoRegions];	
-	TH2F *h2_PLFromPMiss_PL_GoodBad[GoodBadResoRegions];
-
-	TH1F *h1_PMiss_GoodBad_BreakDown[Regions][NInt];
-	TH1F *h1_kMiss_GoodBad_BreakDown[Regions][NInt];
-	TH1F *h1_PnProxy_GoodBad_BreakDown[Regions][NInt];				
-	TH1F *h1_PL_GoodBad_BreakDown[Regions][NInt];
-	TH1F *h1_PLFromPMiss_GoodBad_BreakDown[Regions][NInt];			
-
-	for (int slice = 0; slice < GoodBadResoRegions; slice ++) {
-
-		h1_PMiss_GoodBad[slice] = new TH1F("PMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-		h1_kMiss_GoodBad[slice] = new TH1F("kMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);				
-		h1_PnProxy_GoodBad[slice] = new TH1F("PnProxy_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-
-		h1_PLFromPMiss_GoodBad[slice] = new TH1F("PLFromPMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
-		h1_PL_GoodBad[slice] = new TH1F("PL_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL);
-
-		h2_PMiss_kMiss_GoodBad[slice] = new TH2F("PMiss_kMiss_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinNucMom,MaxNucMom,NBinsNucMom,MinNucMom,MaxNucMom);
-		h2_PLFromPMiss_PL_GoodBad[slice] = new TH2F("PLFromPMiss_PL_GoodBad_"+TString(std::to_string(slice)),"",NBinsNucMom,MinPL,MaxPL,NBinsNucMom,MinPL,MaxPL);
-
-		for (int WhichInt = 1; WhichInt < NInt; WhichInt++) {
-
-			h1_PMiss_GoodBad_BreakDown[slice][WhichInt] = new TH1F("PMiss_GoodBad_"+TString(std::to_string(slice))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-			h1_kMiss_GoodBad_BreakDown[slice][WhichInt] = new TH1F("kMiss_GoodBad_"+TString(std::to_string(slice))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);			
-			h1_PnProxy_GoodBad_BreakDown[slice][WhichInt] = new TH1F("PnProxy_GoodBad_"+TString(std::to_string(slice))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinNucMom,MaxNucMom);
-
-			h1_PL_GoodBad_BreakDown[slice][WhichInt] = new TH1F("PL_GoodBad_"+TString(std::to_string(slice))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
-			h1_PLFromPMiss_GoodBad_BreakDown[slice][WhichInt] = new TH1F("PLFromPMiss_GoodBad_"+TString(std::to_string(slice))+"_BreakDown_"+TString(std::to_string(WhichInt)),"",NBinsNucMom,MinPL,MaxPL);
-
-		}			
-
-	}			
-
-	// ------------------------------------------------------------------------------	
-
-	// Signal Event Counter -> 1e1p0pi events (everything else is bkg)
-
+	int TotalCounter = 0;
 	int SignalEvents = 0;
 	int QESignalEvents = 0;
 	int MECSignalEvents = 0;
@@ -561,13 +462,7 @@ void genie_analysis::Loop(Int_t choice) {
 	int DISSignalEvents = 0;
 	int OtherSignalEvents = 0;
 
-	// ---------------------------------------------------------------------------------------------------------------
-
-	// Get the number of events to run overall
-	
-//	int Nentries = TMath::Min(Ntfileentries,NtweightsEntries);
-
-	// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 	// Justification for the parameter choice
 	// https://docs.google.com/presentation/d/1ghG08JfCYXRXh6O8hcXKrhJOFxkAs_9i5ZfoIkiiEHU/edit?usp=sharing
@@ -578,15 +473,10 @@ void genie_analysis::Loop(Int_t choice) {
 	if (en_beam[fbeam_en] == 2.261) { myElectronFit->SetParameters(16,10.5); }
 	if (en_beam[fbeam_en] == 4.461) { myElectronFit->SetParameters(13.5,15); }
 
-	// ---------------------------------------------------------------------------------------------------------------
-	// ---------------------------------------------------------------------------------------------------------------
-
-	/** Beginning of Event Loop **/
-
-	int TotalCounter = 0;
+	//----------------------------------------//
+	//----------------------------------------//
 
 	for (Long64_t jentry=0; jentry<nentries;jentry++) {
-//	for (Long64_t jentry=0; jentry<Nentries;jentry++) {
 
 		Long64_t ientry = LoadTree(jentry);
 		if (ientry < 0) break;
@@ -604,11 +494,11 @@ void genie_analysis::Loop(Int_t choice) {
 
 		TotalCounter ++;
 
-		// ---------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		std::string StoreEnergy = fbeam_en;
 
-		// -------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// For GENIE samples, identify the interaction type
 
@@ -623,7 +513,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 		}
 
-		// ---------------------------------------------------------------------------------------------------------------
+	//----------------------------------------//
 
 		if (jentry == 0) { //first entry to initialize TorusCurrent, Fiducials and Subtraction classes
 
@@ -649,7 +539,7 @@ void genie_analysis::Loop(Int_t choice) {
 		//Resets q vector to (0,0,0)
 		rotation->ResetQVector();
 
-		// -----------------------------------------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// Counters for truth level studies
 
@@ -660,7 +550,7 @@ void genie_analysis::Loop(Int_t choice) {
 		int TruePiMinusAboveThreshold = 0;
 		int TrueGammasAboveThreshold = 0;
 
-		// -----------------------------------------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		double SmearedPe;
 		double SmearedEe;
@@ -675,7 +565,7 @@ void genie_analysis::Loop(Int_t choice) {
 		double el_momentum = V3_el.Mag();
 		double el_theta = V3_el.Theta();
 
-		// ----------------------------------------------------------------------------------------------------------------------	
+		//----------------------------------------//	
 
 		if (choice > 0) { //smearing, fiducials and acceptance ratio for GENIE simulation data
 
@@ -702,12 +592,12 @@ void genie_analysis::Loop(Int_t choice) {
 
 		}
 
-		// ----------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		double theta_min = myElectronFit->Eval(el_momentum); // in deg
 		if (el_theta*180./TMath::Pi() < theta_min) { continue; }
 
-		// ----------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// Explicit cuts on electron momentum
 
@@ -727,7 +617,7 @@ void genie_analysis::Loop(Int_t choice) {
 		double Q4 = reco_Q2 * reco_Q2;
 		double Mott_cross_sec = (1./Q4);
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// Sanity check, especially for radiation
 		if (wght < 0 || wght > 10) { std::cout << "Something is really wrong with your radiation weights !!!" << std::endl; }
@@ -739,12 +629,12 @@ void genie_analysis::Loop(Int_t choice) {
 
 		//Calculation of kinematic quantities (nu, Q2, x bjorken, q and W)
 		double nu = -(V4_el-V4_beam).E();
-		double x_bjk = reco_Q2/(2*m_prot*nu);
+		//double x_bjk = reco_Q2/(2*m_prot*nu);
 
 		// QE selection
 		//if ( fabs(x_bjk - 1.) > 0.2) { continue; }
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		TVector3 V3_q = (V4_beam-V4_el).Vect();
 		double W_var = TMath::Sqrt((m_prot+nu)*(m_prot+nu)-V3_q*V3_q);
@@ -755,7 +645,7 @@ void genie_analysis::Loop(Int_t choice) {
 		//Cuts on Q2 and W, only keep events with Q2 > Q2cut and W < Wcut
 		if ( reco_Q2 < Q2cut || W_var > Wcut) continue;
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// apapadop Nov 4 2020: true electron counter for truth level studies
 		TrueElectronsAboveThreshold++;
@@ -766,7 +656,7 @@ void genie_analysis::Loop(Int_t choice) {
 			if (ApplyFiducials)  { if (!EFiducialCut(fbeam_en,V3_el) ) continue;} // Electron theta & phi fiducial cuts 
 		}
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		//Set q vector for the following rotations for the subtraction procedure
 		rotation->SetQVector(V3_q);
@@ -774,7 +664,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 		int ElectronSector = el_phi_mod / 60.;
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// apapadop: Oct 8 2020: ditching bad sectors
 		// Counting sectors from 0 to 5
@@ -786,46 +676,52 @@ void genie_analysis::Loop(Int_t choice) {
 
 		}
 
-		// ---------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
  
 		//Now we are done with the selection of electrons. Next step is looking for other hadrons in the events
 
 		//Index variables for hadrons (p and pions)
 		int index_p[20]; //index for each proton
-		int index_pi[20]; //index for each pion
+		//int index_pi[20]; //index for each pion
 		int ind_pi_phot[20]; //index for pions and photons
-		int index_pipl[20]; //index for each pi plus
-		int index_pimi[20]; //index for each pi minus
+		//int index_pipl[20]; //index for each pi plus
+		//int index_pimi[20]; //index for each pi minus
 
 		int charge_pi[20]; //Charge for the pions and photons
 		//Smeared Momentum and Energy values for GENIE (simulation) data
 		double Smeared_Pp[20]; //smeared momentum values for protons
 		double Smeared_Ep[20]; //smeared energy values for protons
 		double Smeared_Ppi[20]; //smeared momentum values for pions
-		double Smeared_Epi[20]; //smeared energy values for pions
+		//double Smeared_Epi[20]; //smeared energy values for pions
 
 		//Number of hadrons
 		int num_p = 0;
 		int num_pi = 0;
 		int num_pi_phot = 0; //couting all pions and photons
-		int num_phot = 0; //couting all photons
+		//int num_phot = 0; //couting all photons
 		int num_pimi = 0;
 		int num_pipl = 0;
 		int num_pi_phot_nonrad = 0; //counting all pions and non-radiation photons
 		int num_phot_rad = 0; //counting radiation photons
 		int num_phot_nonrad = 0;
 		//Index and number variables for neutral particles
-		int ec_index_n[20];
+		//int ec_index_n[20];
 		int ec_num_n = 0;
 		bool ec_radstat_n[20];
 
 		//Array initialize to -1 or false
 		for (int i = 0; i < 20; i++) {
-			index_p[i] = -1;   index_pi[i] = -1;   index_pipl[i] = -1;   index_pimi[i] = -1;   ind_pi_phot[i] = -1;
-			ec_index_n[i] = -1;   ec_radstat_n[i] = false;
+			index_p[i] = -1;   
+			//index_pi[i] = -1;   
+			//index_pipl[i] = -1;   
+			//index_pimi[i] = -1;   
+			ind_pi_phot[i] = -1;
+			//ec_index_n[i] = -1;   
+			ec_radstat_n[i] = false;
 			charge_pi[i] = -2; //default number should be not a possible real charge
 			Smeared_Pp[i]  = 0; Smeared_Ep[i]  = 0;  //default 0 momentum and energy after smearing
-			Smeared_Ppi[i] = 0; Smeared_Epi[i] = 0;  //default 0 momentum and energy after smearing
+			Smeared_Ppi[i] = 0; 
+			//Smeared_Epi[i] = 0;  //default 0 momentum and energy after smearing
 		}
 
 		const double phot_rad_cut = 40;
@@ -835,10 +731,10 @@ void genie_analysis::Loop(Int_t choice) {
 		vector <int> ProtonID; vector <int> PiPlusID; vector <int> PiMinusID; vector <int> PhotonID;
 		ProtonID.clear(); PiPlusID.clear(); PiMinusID.clear();  PhotonID.clear();
 
+		//----------------------------------------//
+
 		//Loop for Hadrons
 		for (int i = 0; i < nf; i++) {
-
-			// -----------------------------------------------------------------------------------------------------------------------------------------------
 
 			//Start of proton selection
 
@@ -857,7 +753,6 @@ void genie_analysis::Loop(Int_t choice) {
 					// apapadop Nov 4 2020: true proton counter for truth level studies above a min theta threshold (12 deg)
 					if (PFiducialCutExtra(StoreEnergy, V3_prot_corr)) { TrueProtonsAboveThreshold++; }
 
-//					if (ApplyFiducials) { if (!PFiducialCut(fbeam_en, V3_prot_corr) ) { continue; } } // Proton theta & phi fiducial cuts
 					if (ApplyFiducials) { if (!PFiducialCut(StoreEnergy, V3_prot_corr) ) { continue; } } // Proton theta & phi fiducial cuts
 
 					num_p = num_p + 1;
@@ -881,7 +776,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 			}
 
-			// -------------------------------------------------------------------------------------------------------------------
+			//----------------------------------------//
 
 			if (pdgf[i] == -211  && pf[i] > 0.15)  { //Pi minus
 
@@ -911,13 +806,13 @@ void genie_analysis::Loop(Int_t choice) {
 					num_pi = num_pi + 1;
 					num_pi_phot = num_pi_phot + 1;
 					num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
-					index_pimi[num_pi_phot - 1] = i;
-					index_pi[num_pi_phot - 1] = i;
+					//index_pimi[num_pi_phot - 1] = i;
+					//index_pi[num_pi_phot - 1] = i;
 					ind_pi_phot[num_pi_phot - 1] = i;
 					PiMinusID.push_back(i);
 					charge_pi[num_pi_phot - 1] = -1;
 					Smeared_Ppi[num_pi_phot - 1] = temp_smear_P;
-					Smeared_Epi[num_pi_phot - 1] = temp_smear_E;
+					//Smeared_Epi[num_pi_phot - 1] = temp_smear_E;
 
 					phi_pion += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
 
@@ -928,8 +823,8 @@ void genie_analysis::Loop(Int_t choice) {
 					num_pi = num_pi + 1;
 					num_pi_phot = num_pi_phot + 1;
 					num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
-					index_pimi[num_pi_phot - 1] = i;
-					index_pi[num_pi_phot - 1] = i;
+					//index_pimi[num_pi_phot - 1] = i;
+					//index_pi[num_pi_phot - 1] = i;
 					ind_pi_phot[num_pi_phot - 1] = i;
 					PiMinusID.push_back(i);
 					charge_pi[num_pi_phot - 1] = -1;
@@ -940,14 +835,14 @@ void genie_analysis::Loop(Int_t choice) {
 
 			}
 
-			// -------------------------------------------------------------------------------------------------------------------
+			//----------------------------------------//
 
 			if ( pdgf[i] == 211  && pf[i] > 0.15)  {
 
 				if ( choice > 0) { //GENIE data
 					//Smearing of pi plus
 					double temp_smear_P = gRandom->Gaus(pf[i],reso_pi*pf[i]);
-					double temp_smear_E = sqrt( temp_smear_P*temp_smear_P + m_pion * m_pion );
+					//double temp_smear_E = sqrt( temp_smear_P*temp_smear_P + m_pion * m_pion );
 
 					TVector3 V3_pi_corr(temp_smear_P/pf[i] * pxf[i],temp_smear_P/pf[i] * pyf[i],temp_smear_P/pf[i] * pzf[i]);
 					double phi_pion = V3_pi_corr.Phi();
@@ -968,13 +863,13 @@ void genie_analysis::Loop(Int_t choice) {
 					num_pi  = num_pi + 1;
 					num_pi_phot = num_pi_phot + 1;
 					num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
-					index_pipl[num_pi_phot - 1] = i;
-					index_pi[num_pi_phot - 1] = i;
+					//index_pipl[num_pi_phot - 1] = i;
+					//index_pi[num_pi_phot - 1] = i;
 					ind_pi_phot[num_pi_phot - 1] = i;
 					PiPlusID.push_back(i);
 					charge_pi[num_pi_phot - 1] = 1;
 					Smeared_Ppi[num_pi_phot - 1] = temp_smear_P;
-					Smeared_Epi[num_pi_phot - 1] = temp_smear_E;
+					//Smeared_Epi[num_pi_phot - 1] = temp_smear_E;
 
 					phi_pion += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
 
@@ -985,7 +880,7 @@ void genie_analysis::Loop(Int_t choice) {
 					num_pi  = num_pi + 1;
 					num_pi_phot = num_pi_phot + 1;
 					num_pi_phot_nonrad = num_pi_phot_nonrad + 1;
-					index_pipl[num_pi_phot - 1] = i;
+					//index_pipl[num_pi_phot - 1] = i;
 					ind_pi_phot[num_pi_phot - 1] = i;
 					ind_pi_phot[num_pi_phot - 1] = i;
 					PiPlusID.push_back(i);
@@ -997,7 +892,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 			}
 
-			// ---------------------------------------------------------------------------------------------------------------------------
+			//----------------------------------------//
 
 			if (pdgf[i] == 22  && pf[i] > 0.3) {
 
@@ -1029,7 +924,7 @@ void genie_analysis::Loop(Int_t choice) {
 				PhotonID.push_back(i);
 
 				Smeared_Ppi[num_pi_phot - 1] = V3_phot_angles.Mag();
-				Smeared_Epi[num_pi_phot - 1] = V3_phot_angles.Mag();
+				//Smeared_Epi[num_pi_phot - 1] = V3_phot_angles.Mag();
 
 				 // within 40 degrees in theta and 30 degrees in phi. Electron phi has already added 30 degree and between 0 to 360
 
@@ -1053,7 +948,7 @@ void genie_analysis::Loop(Int_t choice) {
 
 		} // end of hadron loop
 
-		// ----------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// Truth level studies
 		// Requiring true level signal 1e 1p 0pi+/- 0 gammas
@@ -1068,13 +963,13 @@ void genie_analysis::Loop(Int_t choice) {
 
 		}
 
-		// ----------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		//Skip event if there is at least one radiation photon
 
 		if (num_phot_rad > 0) {	continue; }
 
-		// -----------------------------------------------------------------------------------------------------------------------------
+		//----------------------------------------//
 
 		// Events with exactly 2 protons
 
@@ -1153,164 +1048,49 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_tot_2p[f];
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[f],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[f].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];
-					double EnuQE = STLV[16];
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];										
+					double Pty = STLV[14];	
+					double PT = p_perp_tot_2p[f];
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);						
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);										
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);														
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
+
+					if (Interaction > 0) {
+
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
+
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
+
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
+
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}							
 
-					if (p_perp_tot_2p[f] < SplitPoint) { 
+				} // End of loop over two protons
 
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight); 
-						h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);
-
-						}						
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-						}						
-						
-					}
-					
-					double PT = p_perp_tot_2p[f];
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);	
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					}
-
-				} //looping through two protons
-
-			}//no pion cut and N_prot_both!=0
+			}// End of no pion cut and N_prot_both!=0
 
 			//---------------------------------- 2p 1pi   ----------------------------------------------
 			//Const int can be placed somewhere up after if for 2 protons F.H. 05.09.19
@@ -1373,452 +1153,117 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = Ecal_2p1pi_to2p0pi[z];
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];
-					double EnuQE = STLV[16];
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];										
+					double Pty = STLV[14];
+					double PT = p_miss_perp_2p1pi_to2p0pi[z];														
+			
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);	
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
+					if (Interaction > 0) {
 
-					}
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (p_miss_perp_2p1pi_to2p0pi[z] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						if (choice > 0) {
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-						}					
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {						
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}																
-					
-					double PT = p_miss_perp_2p1pi_to2p0pi[z];
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}					
+					}															
 
 					//---------------------------------- 2p 1pi ->1p 1pi   ----------------------------------------------
 
 					LocalWeight = P_2p1pito1p1pi[z]*histoweight;
 
-					// -----------------------------------------------------------------------------------------------
-	
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					// -----------------------------------------------------------------------------------------------				
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-					}				
+					if (Interaction > 0) {
 
-					if (p_perp_tot_2p[z] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-						if (choice > 0) {
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-						}				
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}															
-					
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}					
+					}			
 
 					// -----------------------------------------------------------------------------------------------
 
 					LocalWeight = -P_2p1pito1p0pi[z]*histoweight;
 
-					// -----------------------------------------------------------------------------------------------
+					// -----------------------------------------------------------------------------------------------				
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
+					if (Interaction > 0) {
 
-					}				
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (p_perp_tot_2p[z] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						if (choice > 0) {
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-						}					
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
+					}
 
-						if (choice > 0) {
+				} // End of filling the histograms for 2protons
 
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}																		
-					
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}
-												
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}	
-
-				}//filling the histograms for 2protons
-
-			}//1pi requirement
+			} // 1pi requirement
 
 			//---------------------------------- 2p 2pi ----------------------------------------------
 
@@ -1883,158 +1328,43 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_tot_2p[z];
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_2prot_corr[z],V4_el.E(),TMath::Sqrt(TMath::Power(V3_2prot_corr[z].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];
-					double EnuQE = STLV[16];	
+					double DeltaAlphaT = STLV[1];	
 					double Ptx = STLV[13];
-					double Pty = STLV[14];									
+					double Pty = STLV[14];	
+					double PT = p_perp_tot_2p[z];													
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);						
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-					}				
+					if (Interaction > 0) {
 
-					if (p_perp_tot_2p[z] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-						if (choice > 0) {
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-						}					
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}																
-					
-					double PT = p_perp_tot_2p[z];
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}
 
@@ -2053,7 +1383,8 @@ void genie_analysis::Loop(Int_t choice) {
 			const int N_3p = 3;
 			TLorentzVector V4_p_uncorr[N_3p], V4_p_corr[N_3p],V4_prot_el[N_3p];
 			TVector3 V3_prot_uncorr[N_3p],V3_prot_corr[N_3p],V3_3p_rot[N_3p];
-			double E_cal[N_3p],p_miss_perp[N_3p],P_3pto1p[N_3p];
+			//double E_cal[N_3p],
+			double p_miss_perp[N_3p],P_3pto1p[N_3p];
 			double N_p1[N_3p]={0};
 			double N_p_three=0;
 			double E_cal_3pto1p[3]={0};
@@ -2133,160 +1464,45 @@ void genie_analysis::Loop(Int_t choice) {
 
 						// -----------------------------------------------------------------------------------------------
 
-						double Ecal = E_cal_3pto2p[count][j];
-						double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 						double STLV[20] = {};
 						STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-						double Pmiss = STLV[7];
-						double kMiss = STLV[9];
-						double PnProxy = STLV[12];
-						double PL = STLV[11];
-						double PLFromPMiss = STLV[15];	
-						double EnuQE = STLV[16];	
+						double DeltaAlphaT = STLV[1];	
 						double Ptx = STLV[13];
-						double Pty = STLV[14];												
-
-						h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-						h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-						h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h1_PL[0]->Fill(PL,LocalWeight);
-						h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);						
-						int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-						h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-						h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);
-						int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-						h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);
-
-						h1_PTx[0]->Fill(Ptx,LocalWeight);
-						h1_PTy[0]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[0]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-							h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-							h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-							h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-							h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
-
-							h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}
-
-						if (p_miss_perp_3pto2p[count][j] < SplitPoint) { 
-							
-							h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-							h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-							h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
-
-							if (choice > 0) {
-
-								h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-								h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);							
-
-							}	
-							
-						} else {  
-							
-							h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-							h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-							h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-							if (choice > 0) {
-
-								h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-								h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);							
-								
-							}
-
-						}																							
+						double Pty = STLV[14];
+						double PT = p_miss_perp_3pto2p[count][j];	
 						
-						double PT = p_miss_perp_3pto2p[count][j];
-						double PMissMinus = STLV[8];
-						h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+						int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+						int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+						int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+						int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-						if ( TMath::Abs(EcalReso) < ResoThres) {
+						DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-							h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-							h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);							
+						DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-							h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-							h1_PL_GoodBad[0]->Fill(PL,LocalWeight);							
+						DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-							h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-							h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-							h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);							
+						DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-							h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-							h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-							h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-							h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+						if (Interaction > 0) {
 
-							h1_PTx[1]->Fill(Ptx,LocalWeight);
-							h1_PTy[1]->Fill(Pty,LocalWeight);	
-							h1_EnuQE[1]->Fill(EnuQE,LocalWeight);							
+							DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+							DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-							if (choice > 0) {
+							DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+							DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-								h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-								h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-								h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-								h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+							DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+							DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-								h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-								h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-								h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);									
+							DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+							DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-							}						
-
-						} else {
-
-							h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-							h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);							
-
-							h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-							h1_PL_GoodBad[1]->Fill(PL,LocalWeight);							
-
-							h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-							h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-							h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);							
-
-							h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-							h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-							h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-							h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-							h1_PTx[2]->Fill(Ptx,LocalWeight);
-							h1_PTy[2]->Fill(Pty,LocalWeight);	
-							h1_EnuQE[2]->Fill(EnuQE,LocalWeight);							
-
-							if (choice > 0) {
-
-								h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-								h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-								h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-								h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-								h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);
-
-								h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-								h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-								h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);									
-
-							}							
-
-						}
+						}						
 
 					} //end loop over protons
 
@@ -2300,160 +1516,45 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_cal[j];
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];	
-					double EnuQE = STLV[16];
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];										
+					double Pty = STLV[14];	
+					double PT = p_miss_perp[j];													
+			
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
+					if (Interaction > 0) {
 
-					}					
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (p_miss_perp[j] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						if (choice > 0) {
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-						}				
-
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-						
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-						}
-
-					}																		
-					
-					double PT = p_miss_perp[j];
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}
+					}																				
 
 					// -----------------------------------------------------------------------------------------------
 
@@ -2518,158 +1619,43 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_cal[j];
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr[j],V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr[j].Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];	
-					double EnuQE = STLV[16];
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];										
-
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);	
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
-
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);		
-
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}			
-
-					if (p_miss_perp[j] < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);
-
-						}						
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}																															
-					
+					double Pty = STLV[14];	
 					double PT = p_miss_perp[j];
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+		
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					if ( TMath::Abs(EcalReso) < ResoThres) {
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
+					if (Interaction > 0) {
 
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-						if (choice > 0) {
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}
 
@@ -2723,12 +1709,12 @@ void genie_analysis::Loop(Int_t choice) {
 			TLorentzVector V4_prot_el_tot = V4_prot_corr + V4_el;
 
 			double p_perp_tot = TMath::Sqrt(V4_prot_el_tot.Px()*V4_prot_el_tot.Px() + V4_prot_el_tot.Py()*V4_prot_el_tot.Py());
-			double E_tot = V4_el.E() + V4_prot_corr.E() - m_prot + bind_en[ftarget] + offset;
+			//double E_tot = V4_el.E() + V4_prot_corr.E() - m_prot + bind_en[ftarget];
 
 			//These Histograms are events with 1 electron and  1 proton and multiple pions
 			//histoweight_inc is 1/Mott_cross_sec for CLAS data
-			double histoweight_inc = p_acc_ratio * e_acc_ratio * wght/Mott_cross_sec;
-			double histoweight_NoMott = p_acc_ratio * e_acc_ratio * wght;
+			//double histoweight_inc = p_acc_ratio * e_acc_ratio * wght/Mott_cross_sec;
+			//double histoweight_NoMott = p_acc_ratio * e_acc_ratio * wght;
 
 			//---------------------------------- 1p 0pi   ----------------------------------------------
 
@@ -2751,160 +1737,45 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// -----------------------------------------------------------------------------------------------
 
-				double Ecal = E_tot;
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
-				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-				double Pmiss = STLV[7];
-				double kMiss = STLV[9];
-				double PnProxy = STLV[12];	
-				double PL = STLV[11];
-				double PLFromPMiss = STLV[15];			
-				double EnuQE = STLV[16];	
+				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);	
+				double DeltaAlphaT = STLV[1];
 				double Ptx = STLV[13];
-				double Pty = STLV[14];							
+				double Pty = STLV[14];	
+				double PT = p_perp_tot;									
 
-				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-				h1_kMiss[0]->Fill(kMiss,LocalWeight);
-				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-				h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-				h1_PL[0]->Fill(PL,LocalWeight);
-				h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);				
-				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
+				int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+				int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				h1_PTx[0]->Fill(Ptx,LocalWeight);
-				h1_PTy[0]->Fill(Pty,LocalWeight);	
-				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-				if (choice > 0) {
+				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);		
+				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
+				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-				}		
+				if (Interaction > 0) {
 
-				if (p_perp_tot < SplitPoint) { 
-					
-					h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-					h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-					}				
-					
-				} else {  
-					
-					h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-					h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-					if (choice > 0) {
-
-						h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-					}					
-					
-				}																																											
-				
-				double PT = p_perp_tot;
-				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-				if ( TMath::Abs(EcalReso) < ResoThres) {
-
-					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);					
-
-					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
-
-					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[1]->Fill(Ptx,LocalWeight);
-					h1_PTy[1]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);
-
-					}				
-
-				} else {
-
-					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);					
-
-					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);
-
-					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[2]->Fill(Ptx,LocalWeight);
-					h1_PTy[2]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}					
-
-				}
+				}																																								
 
 			} //num pi=0
 
@@ -2965,160 +1836,45 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_tot;
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
 					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];	
-					double EnuQE = STLV[16];	
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];									
+					double Pty = STLV[14];	
+					double PT = p_perp_tot;													
+		
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);		
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
+					if (Interaction > 0) {
+
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
+
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
+
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
+
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}				
-
-					if (p_perp_tot < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL[1]->Fill(PL,LocalWeight); h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy[1]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL[2]->Fill(PL,LocalWeight); h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy[2]->Fill(PnProxy,LocalWeight); h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-						}						
-						
-					}																			
-					
-					double PT = p_perp_tot;
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}	
 
 				} //end of N_piphot_det!=0
 
@@ -3190,161 +1946,46 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------
 
-					double Ecal = E_tot;
-					double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 					double STLV[20] = {};
-					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-					double Pmiss = STLV[7];
-					double kMiss = STLV[9];
-					double PnProxy = STLV[12];	
-					double PL = STLV[11];
-					double PLFromPMiss = STLV[15];	
-					double EnuQE = STLV[16];	
+					STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);	
+					double DeltaAlphaT = STLV[1];
 					double Ptx = STLV[13];
-					double Pty = STLV[14];									
+					double Pty = STLV[14];	
+					double PT = p_perp_tot;		
 
-					h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-					h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);
-					h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h1_PL[0]->Fill(PL,LocalWeight);
-					h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);					
-					int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-					h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-					h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-					int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-					h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+					int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+					int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					h1_PTx[0]->Fill(Ptx,LocalWeight);
-					h1_PTy[0]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[0]->Fill(EnuQE,LocalWeight);					
+					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-						h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-						h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-						h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-						h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);							
+					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-					}				
+					if (Interaction > 0) {
 
-					if (p_perp_tot < SplitPoint) { 
-						
-						h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-						h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-						if (choice > 0) {
+						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-							h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-						}					
-						
-					} else {  
-						
-						h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-						h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-						h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-						if (choice > 0) {
-
-							h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						}					
-						
-					}																			
-					
-					double PT = p_perp_tot;
-					double PMissMinus = STLV[8];
-					h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					if ( TMath::Abs(EcalReso) < ResoThres) {
-
-						h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);
-
-						h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[0]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[1]->Fill(Ptx,LocalWeight);
-						h1_PTy[1]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[1]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}					
-
-					} else {
-
-						h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-						h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);						
-
-						h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-						h1_PL_GoodBad[1]->Fill(PL,LocalWeight);						
-
-						h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-						h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-						h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);						
-
-						h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-						h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-						h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-						h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-						h1_PTx[2]->Fill(Ptx,LocalWeight);
-						h1_PTy[2]->Fill(Pty,LocalWeight);	
-						h1_EnuQE[2]->Fill(EnuQE,LocalWeight);						
-
-						if (choice > 0) {
-
-							h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-							h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-							h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-							h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-							h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-							h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-							h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-							h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);							
-
-						}						
-
-					}
-
+					}																		
+				
 				} //end loop over N_2pi
 
 				//---------------------------------- 1p 2pi->1p0pi   ----------------------------------------------
@@ -3353,162 +1994,46 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// -----------------------------------------------------------------------------------------------
 
-				double Ecal = E_tot;
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
 				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-				double Pmiss = STLV[7];
-				double kMiss = STLV[9];
-				double PnProxy = STLV[12];	
-				double PL = STLV[11];
-				double PLFromPMiss = STLV[15];
-				double EnuQE = STLV[16];
+				double DeltaAlphaT = STLV[1];
 				double Ptx = STLV[13];
-				double Pty = STLV[14];								
+				double Pty = STLV[14];
+				double PT = p_perp_tot;												
 
-				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-				h1_kMiss[0]->Fill(kMiss,LocalWeight);
-				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
-				h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);	
-				h1_PL[0]->Fill(PL,LocalWeight);
-				h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);				
-				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);	
+				int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+				int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				h1_PTx[0]->Fill(Ptx,LocalWeight);
-				h1_PTy[0]->Fill(Pty,LocalWeight);	
-				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-				if (choice > 0) {
+				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);	
+				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
+				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-				}			
+				if (Interaction > 0) {
 
-				if (p_perp_tot < SplitPoint) { 
-					
-					h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-					h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-					}		
-					
-				}																								
-				else {  
-					
-					h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-					h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-					if (choice > 0) {
-
-						h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-					}					
-					
-				}													
+				}		
 				
-				double PT = p_perp_tot;
-				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight); h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-				if ( TMath::Abs(EcalReso) < ResoThres) {
-
-					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);					
-
-					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
-
-					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[1]->Fill(Ptx,LocalWeight);
-					h1_PTy[1]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}				
-
-				} else {
-
-					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);					
-
-					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);					
-
-					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[2]->Fill(Ptx,LocalWeight);
-					h1_PTy[2]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}					
-
-				}
-
 			} //1p 2pi statetment ends
 
 			//---------------------------------- 1p 3pi   ----------------------------------------------
@@ -3569,160 +2094,45 @@ void genie_analysis::Loop(Int_t choice) {
 
 				// -----------------------------------------------------------------------------------------------
 
-				double Ecal = E_tot;
-				double EcalReso = (Ecal-en_beam_Ecal[fbeam_en])/en_beam_Ecal[fbeam_en];
 				double STLV[20] = {};
 				STV_Tools(V3_el,V3_prot_corr,V4_el.E(),TMath::Sqrt(TMath::Power(V3_prot_corr.Mag(),2.) + TMath::Power(m_prot,2.)),STLV,NProtons[target_name],NNeutrons[target_name],BindE[target_name],EE[target_name],en_beam_Ecal[fbeam_en]);
-				double Pmiss = STLV[7];
-				double kMiss = STLV[9];
-				double PnProxy = STLV[12];
-				double PL = STLV[11];
-				double PLFromPMiss = STLV[15];	
-				double EnuQE = STLV[16];
+				double DeltaAlphaT = STLV[1];
 				double Ptx = STLV[13];
-				double Pty = STLV[14];				
+				double Pty = STLV[14];	
+				double PT = p_perp_tot;							
 
-				h1_PMiss[0]->Fill(Pmiss,LocalWeight);
-				h1_kMiss[0]->Fill(kMiss,LocalWeight);
-				h1_PnProxy[0]->Fill(PnProxy,LocalWeight);
-				h2_PMiss_kMiss[0]->Fill(Pmiss,kMiss,LocalWeight);	
-				h2_PLFromPMiss_PL[0]->Fill(PLFromPMiss,PL,LocalWeight);					
-				h1_PL[0]->Fill(PL,LocalWeight);
-				h1_PLFromPMiss[0]->Fill(PLFromPMiss,LocalWeight);				
-				int Index = -1; for (int i = 0; i < NRanges; i++) {  if ( Pmiss > PMissRange[i] && Pmiss < PMissRange[i+1]) { Index = i; } }	
-				h1_PMiss_Slice[Index]->Fill(Pmiss,LocalWeight);
-				h1_kMiss_Slice[Index]->Fill(kMiss,LocalWeight);	
-				h1_PnProxy_Slice[Index]->Fill(PnProxy,LocalWeight);	
-				int PLIndex = -1; for (int i = 0; i < NPLRanges; i++) {  if ( PLFromPMiss > PLFromPMissRange[i] && PLFromPMiss < PLFromPMissRange[i+1]) { PLIndex = i; } }	
-				h1_PLFromPMiss_Slice[PLIndex]->Fill(PLFromPMiss,LocalWeight);	
-				h1_PL_Slice[PLIndex]->Fill(PL,LocalWeight);
+				int DeltaPTTwoDIndex = ReturnIndex(PT, TwoDArrayNBinsDeltaPT);
+				int DeltaAlphaTTwoDIndex = ReturnIndex(DeltaAlphaT, TwoDArrayNBinsDeltaAlphaT);
+				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
+				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				h1_PTx[0]->Fill(Ptx,LocalWeight);
-				h1_PTy[0]->Fill(Pty,LocalWeight);	
-				h1_EnuQE[0]->Fill(EnuQE,LocalWeight);				
+				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
+				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
 
-				if (choice > 0) {
+				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
+				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
 
-					h1_PMiss_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-					h1_PLFromPMiss_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight);						
-					h1_PL_BreakDown[0][Interaction]->Fill(PL,LocalWeight);
+				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
+				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
 
-					h1_PTx_BreakDown[0][Interaction]->Fill(Ptx,LocalWeight);
-					h1_PTy_BreakDown[0][Interaction]->Fill(Pty,LocalWeight);	
-					h1_EnuQE_BreakDown[0][Interaction]->Fill(EnuQE,LocalWeight);					
+				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
+				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
-				}
+				if (Interaction > 0) {
 
-				if (p_perp_tot < SplitPoint) { 
-					
-					h2_PLFromPMiss_PL[1]->Fill(PLFromPMiss,PL,LocalWeight);  h1_PLFromPMiss[1]->Fill(PLFromPMiss,LocalWeight); h1_PL[1]->Fill(PL,LocalWeight); 
-					h1_PMiss[1]->Fill(Pmiss,LocalWeight); h1_kMiss[1]->Fill(kMiss,LocalWeight); h1_PnProxy[1]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[1]->Fill(Pmiss,kMiss,LocalWeight); 
+					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
+					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
 
-					if (choice > 0) {
+					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
+					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
 
-						h1_PLFromPMiss_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
+					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
+					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
 
-					}				
-					
-				} else {  
-					
-					h2_PLFromPMiss_PL[2]->Fill(PLFromPMiss,PL,LocalWeight); h1_PLFromPMiss[2]->Fill(PLFromPMiss,LocalWeight); h1_PL[2]->Fill(PL,LocalWeight); 
-					h1_PMiss[2]->Fill(Pmiss,LocalWeight); h1_kMiss[2]->Fill(kMiss,LocalWeight); h1_PnProxy[2]->Fill(PnProxy,LocalWeight); 
-					h2_PMiss_kMiss[2]->Fill(Pmiss,kMiss,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
+					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
-					if (choice > 0) {
-
-						h1_PLFromPMiss_BreakDown[2][Interaction]->Fill(PLFromPMiss,LocalWeight); h1_PL_BreakDown[2][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_BreakDown[2][Interaction]->Fill(Pmiss,LocalWeight); h1_kMiss_BreakDown[2][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_BreakDown[2][Interaction]->Fill(PnProxy,LocalWeight);
-
-					}					
-					
-				}														
-				
-				double PT = p_perp_tot;
-				double PMissMinus = STLV[8];
-				h2_PPerp_PMinus[0]->Fill(PT,PMissMinus,LocalWeight);  h2_PPerp_PMinus_Slice[Index]->Fill(PT,PMissMinus,LocalWeight);
-				h2_PLMinusPLFromPMiss_PMiss[0]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-				h2_kMissMinusPMiss_PMiss[0]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-				h2_PnProxyMinusPMiss_PMiss[0]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-				if ( TMath::Abs(EcalReso) < ResoThres) {
-
-					h2_PLFromPMiss_PL_GoodBad[0]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[0]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[0]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[0]->Fill(PL,LocalWeight);
-
-					h1_PMiss_GoodBad[0]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[0]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[0]->Fill(PnProxy,LocalWeight);					
-
-					h2_PPerp_PMinus[1]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[1]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[1]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[1]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[1]->Fill(Ptx,LocalWeight);
-					h1_PTy[1]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[1]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[0][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[0][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[0][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[0][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[0][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[1][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[1][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[1][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}				
-
-				} else {
-
-					h2_PLFromPMiss_PL_GoodBad[1]->Fill(PLFromPMiss,PL,LocalWeight);
-					h2_PMiss_kMiss_GoodBad[1]->Fill(Pmiss,kMiss,LocalWeight);					
-
-					h1_PLFromPMiss_GoodBad[1]->Fill(PLFromPMiss,LocalWeight);	
-					h1_PL_GoodBad[1]->Fill(PL,LocalWeight);
-
-					h1_PMiss_GoodBad[1]->Fill(Pmiss,LocalWeight);
-					h1_kMiss_GoodBad[1]->Fill(kMiss,LocalWeight);
-					h1_PnProxy_GoodBad[1]->Fill(PnProxy,LocalWeight);					
-
-					h2_PPerp_PMinus[2]->Fill(PT,PMissMinus,LocalWeight);
-					h2_PLMinusPLFromPMiss_PMiss[2]->Fill(Pmiss,PL-PLFromPMiss,LocalWeight);
-					h2_kMissMinusPMiss_PMiss[2]->Fill(Pmiss,kMiss-Pmiss,LocalWeight);
-					h2_PnProxyMinusPMiss_PMiss[2]->Fill(Pmiss,PnProxy-Pmiss,LocalWeight);
-
-					h1_PTx[2]->Fill(Ptx,LocalWeight);
-					h1_PTy[2]->Fill(Pty,LocalWeight);	
-					h1_EnuQE[2]->Fill(EnuQE,LocalWeight);					
-
-					if (choice > 0) {
-
-						h1_PLFromPMiss_GoodBad_BreakDown[1][Interaction]->Fill(PLFromPMiss,LocalWeight); 
-						h1_PL_GoodBad_BreakDown[1][Interaction]->Fill(PL,LocalWeight); 
-						h1_PMiss_GoodBad_BreakDown[1][Interaction]->Fill(Pmiss,LocalWeight); 
-						h1_kMiss_GoodBad_BreakDown[1][Interaction]->Fill(kMiss,LocalWeight); 
-						h1_PnProxy_GoodBad_BreakDown[1][Interaction]->Fill(PnProxy,LocalWeight);	
-
-						h1_PTx_BreakDown[2][Interaction]->Fill(Ptx,LocalWeight);
-						h1_PTy_BreakDown[2][Interaction]->Fill(Pty,LocalWeight);	
-						h1_EnuQE_BreakDown[2][Interaction]->Fill(EnuQE,LocalWeight);						
-
-					}					
-
-				}	
+				}										
 
 				// -----------------------------------------------------------------------------------------------
 		
@@ -3734,7 +2144,9 @@ void genie_analysis::Loop(Int_t choice) {
 
 	gStyle->SetOptFit(1);
 
-	gDirectory->Write("hist_Files", TObject::kOverwrite);
+	file_out->cd();
+	file_out->Write();
+	//gDirectory->Write("hist_Files", TObject::kOverwrite);
 	// skim_tree->AutoSave();
 
 	// --------------------------------------------------------------------------------------------------------
@@ -3768,12 +2180,6 @@ double genie_analysis::acceptance_c(double p, double cost, double phi, int parti
 
 	if (ApplyAccWeights) {
 
-		//Redefinition of the phi angle
-		//because the acceptance maps are defined between (-30,330)
-
-		// Check that phi is between (0,360)
-
-		//int redef = -30;
 		int redef = 0;
 
 		TH3D * acc;
@@ -3799,8 +2205,7 @@ double genie_analysis::acceptance_c(double p, double cost, double phi, int parti
 		double num_acc = acc->GetBinContent(pbin_acc, tbin_acc, phibin_acc);
 
 		double acc_ratio = (double)num_acc / (double)num_gen;
-		double acc_err = (double)sqrt(acc_ratio*(1-acc_ratio)) / (double)num_gen;
-
+		//double acc_err = (double)sqrt(acc_ratio*(1-acc_ratio)) / (double)num_gen;
 
 		return acc_ratio;
 
