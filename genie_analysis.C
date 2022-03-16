@@ -28,10 +28,11 @@ int ReturnIndex(double value, std::vector<double> vec) {
 
 	for (int i = 0; i < length-1; i ++) {
 
-		if (value > vec.at(i) && value < vec.at(i+1)) { return i; }
+		if (value >= vec.at(i) && value < vec.at(i+1)) { return i; }
 
 	}	
 
+	cout << "value " << value << " results in a -1 index !!! About to crash !!!" << endl;
 	return index;
 
 }
@@ -406,46 +407,46 @@ void genie_analysis::Loop(Int_t choice) {
 	//----------------------------------------//
 
 	// KI multi dim plots
-	// 1st index: 0 = all events, 1,2... = slices
+	// 1st index: 1,2... = slices
 	// 2nd index: 0 = all events, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
 
-	TH1D* DeltaPT_InDeltaAlphaTPlot[int(TwoDArrayNBinsDeltaAlphaT.size()) + 1][NInt];
-	TH1D* DeltaAlphaT_InDeltaPTPlot[int(TwoDArrayNBinsDeltaPT.size()) + 1][NInt];
-	TH1D* DeltaPtx_InDeltaPtyPlot[int(TwoDArrayNBinsDeltaPty.size()) + 1][NInt];
-	TH1D* DeltaPty_InDeltaPtxPlot[int(TwoDArrayNBinsDeltaPtx.size()) + 1][NInt];			
+	TH1D* DeltaPT_InDeltaAlphaTPlot[int(TwoDArrayNBinsDeltaAlphaT.size()) -1][NInt];
+	TH1D* DeltaAlphaT_InDeltaPTPlot[int(TwoDArrayNBinsDeltaPT.size()) -1][NInt];
+	TH1D* DeltaPtx_InDeltaPtyPlot[int(TwoDArrayNBinsDeltaPty.size()) -1][NInt];
+	TH1D* DeltaPty_InDeltaPtxPlot[int(TwoDArrayNBinsDeltaPtx.size()) -1][NInt];			
 
 	// Loop over the interactions
 	for (int iinte = 0; iinte < NInt; iinte++) {
 
 		// Loop over the DeltaAlphaT slices
-		for (int ideltaalphat = 0; ideltaalphat < int(TwoDArrayNBinsDeltaAlphaT.size()) + 1;ideltaalphat++ ) {
+		for (int ideltaalphat = 0; ideltaalphat < int(TwoDArrayNBinsDeltaAlphaT.size() -1);ideltaalphat++ ) {
 
-			TString DeltaPTTwoDInDeltaAlphaTLabel = InteractionLabels[iinte]+"DeltaPT_DeltaAlphaT_"+ConvertToString(TwoDArrayNBinsDeltaAlphaT[ideltaalphat])+"To"+ConvertToString(TwoDArrayNBinsDeltaAlphaT[ideltaalphat+1])+"Plot";			
-			DeltaPT_InDeltaAlphaTPlot[ideltaalphat][iinte] = new TH1D(DeltaPTTwoDInDeltaAlphaTLabel,";#delta p_{T} [GeV/c]",TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat].size()-1,&TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat][0]);			
+			TString DeltaPTTwoDInDeltaAlphaTLabel = InteractionLabels[iinte]+"DeltaPT_InDeltaAlphaT_Slice_"+TString( std::to_string(ideltaalphat) )+"Plot";			
+			DeltaPT_InDeltaAlphaTPlot[ideltaalphat][iinte] = new TH1D(DeltaPTTwoDInDeltaAlphaTLabel,";#deltap_{T} [GeV/c]",TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat].size()-1,&TwoDArrayNBinsDeltaPTInDeltaAlphaTSlices[ideltaalphat][0]);			
 
 		}
 
 		// Loop over the DeltaPT slices
-		for (int ideltapt = 0; ideltapt < int(TwoDArrayNBinsDeltaPT.size()) + 1;ideltapt++ ) {
+		for (int ideltapt = 0; ideltapt < int(TwoDArrayNBinsDeltaPT.size() -1);ideltapt++ ) {
 
-			TString DeltaAlphaTTwoDInDeltaPTLabel = InteractionLabels[iinte]+"DeltaAlphaT_DeltaPT_"+ConvertToString(TwoDArrayNBinsDeltaPT[ideltapt])+"To"+ConvertToString(TwoDArrayNBinsDeltaPT[ideltapt+1])+"Plot";			
+			TString DeltaAlphaTTwoDInDeltaPTLabel = InteractionLabels[iinte]+"DeltaAlphaT_InDeltaPT_Slice_"+TString( std::to_string(ideltapt) )+"Plot";			
 			DeltaAlphaT_InDeltaPTPlot[ideltapt][iinte] = new TH1D(DeltaAlphaTTwoDInDeltaPTLabel,";#delta#alpha_{T} [deg]",TwoDArrayNBinsDeltaAlphaTInDeltaPTSlices[ideltapt].size()-1,&TwoDArrayNBinsDeltaAlphaTInDeltaPTSlices[ideltapt][0]);			
 
 		}	
 
 		// Loop over the DeltaPty slices
-		for (int ideltapty = 0; ideltapty < int(TwoDArrayNBinsDeltaPty.size()) + 1;ideltapty++ ) {
+		for (int ideltapty = 0; ideltapty < int(TwoDArrayNBinsDeltaPty.size() -1);ideltapty++ ) {
 
-			TString DeltaPtxTwoDInDeltaPtyLabel = InteractionLabels[iinte]+"DeltaPtx_DeltaPty_"+ConvertToString(TwoDArrayNBinsDeltaPtx[ideltapty])+"To"+ConvertToString(TwoDArrayNBinsDeltaPtx[ideltapty+1])+"Plot";			
-			DeltaPtx_InDeltaPtyPlot[ideltapty][iinte] = new TH1D(DeltaPtxTwoDInDeltaPtyLabel,";#delta#alpha_{T,x} [GeV/c]",TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty].size()-1,&TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty][0]);			
+			TString DeltaPtxTwoDInDeltaPtyLabel = InteractionLabels[iinte]+"DeltaPtx_InDeltaPty_Slice_"+TString( std::to_string(ideltapty) )+"Plot";			
+			DeltaPtx_InDeltaPtyPlot[ideltapty][iinte] = new TH1D(DeltaPtxTwoDInDeltaPtyLabel,";#deltap_{T,x} [GeV/c]",TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty].size()-1,&TwoDArrayNBinsDeltaPtxInDeltaPtySlices[ideltapty][0]);			
 
 		}	
 
 		// Loop over the DeltaPtx slices
-		for (int ideltaptx = 0; ideltaptx < int(TwoDArrayNBinsDeltaPtx.size()) + 1;ideltaptx++ ) {
+		for (int ideltaptx = 0; ideltaptx < int(TwoDArrayNBinsDeltaPtx.size() -1);ideltaptx++ ) {
 
-			TString DeltaPtyTwoDInDeltaPtxLabel = InteractionLabels[iinte]+"DeltaPty_DeltaPtx_"+ConvertToString(TwoDArrayNBinsDeltaPty[ideltaptx])+"To"+ConvertToString(TwoDArrayNBinsDeltaPty[ideltaptx+1])+"Plot";			
-			DeltaPty_InDeltaPtxPlot[ideltaptx][iinte] = new TH1D(DeltaPtyTwoDInDeltaPtxLabel,";#delta#alpha_{T,y} [GeV/c]",TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx].size()-1,&TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx][0]);			
+			TString DeltaPtyTwoDInDeltaPtxLabel = InteractionLabels[iinte]+"DeltaPty_InDeltaPtx_Slice_"+TString( std::to_string(ideltaptx) ) +"Plot";			
+			DeltaPty_InDeltaPtxPlot[ideltaptx][iinte] = new TH1D(DeltaPtyTwoDInDeltaPtxLabel,";#deltap_{T,y} [GeV/c]",TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx].size()-1,&TwoDArrayNBinsDeltaPtyInDeltaPtxSlices[ideltaptx][0]);			
 
 		}				
 
@@ -1060,30 +1061,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}							
@@ -1165,30 +1152,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}															
@@ -1199,30 +1172,16 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------				
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}			
@@ -1233,30 +1192,16 @@ void genie_analysis::Loop(Int_t choice) {
 
 					// -----------------------------------------------------------------------------------------------				
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}
@@ -1340,30 +1285,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}
@@ -1476,30 +1407,16 @@ void genie_analysis::Loop(Int_t choice) {
 						int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 						int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-						DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-						DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-						DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 						if (Interaction > 0) {
 
-							DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 							DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-							DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 							DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-							DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 							DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-							DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 							DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 						}						
@@ -1528,30 +1445,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}																				
@@ -1631,30 +1534,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}
@@ -1749,30 +1638,16 @@ void genie_analysis::Loop(Int_t choice) {
 				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 				if (Interaction > 0) {
 
-					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 				}																																								
@@ -1848,30 +1723,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}				
@@ -1958,30 +1819,16 @@ void genie_analysis::Loop(Int_t choice) {
 					int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 					int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-					DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-					DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-					DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 					if (Interaction > 0) {
 
-						DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 						DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-						DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 						DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-						DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 						DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-						DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 						DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 					}																		
@@ -2006,30 +1853,16 @@ void genie_analysis::Loop(Int_t choice) {
 				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 				if (Interaction > 0) {
 
-					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 				}		
@@ -2106,30 +1939,16 @@ void genie_analysis::Loop(Int_t choice) {
 				int DeltaPtxTwoDIndex = ReturnIndex(Ptx, TwoDArrayNBinsDeltaPtx);
 				int DeltaPtyTwoDIndex = ReturnIndex(Pty, TwoDArrayNBinsDeltaPty);					
 
-				DeltaPT_InDeltaAlphaTPlot[0][0]->Fill(PT,LocalWeight);
 				DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][0]->Fill(PT,LocalWeight);
-
-				DeltaAlphaT_InDeltaPTPlot[0][0]->Fill(DeltaAlphaT,LocalWeight);
 				DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][0]->Fill(DeltaAlphaT,LocalWeight);
-
-				DeltaPtx_InDeltaPtyPlot[0][0]->Fill(Ptx,LocalWeight);
 				DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][0]->Fill(Ptx,LocalWeight);		
-
-				DeltaPty_InDeltaPtxPlot[0][0]->Fill(Pty,LocalWeight);
 				DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][0]->Fill(Pty,LocalWeight);																														
 
 				if (Interaction > 0) {
 
-					DeltaPT_InDeltaAlphaTPlot[0][Interaction]->Fill(PT,LocalWeight);
 					DeltaPT_InDeltaAlphaTPlot[DeltaAlphaTTwoDIndex][Interaction]->Fill(PT,LocalWeight);	
-
-					DeltaAlphaT_InDeltaPTPlot[0][Interaction]->Fill(DeltaAlphaT,LocalWeight);
 					DeltaAlphaT_InDeltaPTPlot[DeltaPTTwoDIndex][Interaction]->Fill(DeltaAlphaT,LocalWeight);											
-
-					DeltaPtx_InDeltaPtyPlot[0][Interaction]->Fill(Ptx,LocalWeight);
 					DeltaPtx_InDeltaPtyPlot[DeltaPtyTwoDIndex][Interaction]->Fill(Ptx,LocalWeight);		
-
-					DeltaPty_InDeltaPtxPlot[0][Interaction]->Fill(Pty,LocalWeight);
 					DeltaPty_InDeltaPtxPlot[DeltaPtxTwoDIndex][Interaction]->Fill(Pty,LocalWeight);
 
 				}										

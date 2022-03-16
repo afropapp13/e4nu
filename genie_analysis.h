@@ -341,7 +341,7 @@ genie_analysis::genie_analysis(std::string a_target,std::string a_beam_en, int n
 
 	if (fchoice == 0) { 
 
-		chain->Add(Form("/w/hallb-scifs17exp/clas/claseg2/apapadop/GetCharge_genie_filtered_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test_100M.root",ftarget.c_str(), fbeam_en.c_str())); 
+		chain->Add(Form("/w/hallb-scshelf2102/clas/claseg2/apapadop/GetCharge_genie_filtered_data_e2a_ep_%s_%s_neutrino6_united4_radphot_test_100M.root",ftarget.c_str(), fbeam_en.c_str())); 
 
 	}
 
