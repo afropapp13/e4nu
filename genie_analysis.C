@@ -28,11 +28,11 @@ int ReturnIndex(double value, std::vector<double> vec) {
 
 	for (int i = 0; i < length-1; i ++) {
 
-		if (value >= vec.at(i) && value < vec.at(i+1)) { return i; }
+		if (value >= vec.at(i) && value <= vec.at(i+1)) { return i; }
 
 	}	
 
-	cout << "value " << value << " results in a -1 index !!! About to crash !!!" << endl;
+	cout << "value " << value << " results in -1 index !!! About to crash !!!" << endl;
 	return index;
 
 }
@@ -372,8 +372,8 @@ void genie_analysis::Loop(Int_t choice) {
 	TFile* file_acceptance_pim = nullptr;
 
 	TString Target = "12C";
-	if ( TString(ftarget.c_str()) == "3He") { Target = "3He"; }
-	if ( TString(ftarget.c_str()) == "4He") { Target = "4He"; }
+	if ( ftarget.c_str() == "3He") { Target = "3He"; }
+	if ( ftarget.c_str() == "4He") { Target = "4He"; }
 
 	if ( choice > 0 ) { // Only need acceptance maps for GENIE simulation
 
