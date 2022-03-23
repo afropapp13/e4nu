@@ -37,7 +37,7 @@
 
 	// ------------------------------------------------------------------------------------
 
-	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles/";		
+	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/e4v_MultiDimKineImb/myFiles/";		
 	const TString version = "v3_0_6/";	
 /*	const TString DoubleXSecTitle = "#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]";*/
 	const TString DoubleXSecTitle = "Normalized Yield";
@@ -746,8 +746,7 @@
 	//  ------------------------------------------------------------------------------
 	//  ------------------------------------------------------------------------------
 
-//	const std::vector<int> BreakDownColors{kBlue,429,410,610}; // QE, MEC, RES, DIS
-	const std::vector<int> BreakDownColors{kBlue+1,kRed-3,kGreen+1,kOrange+1};
+	const std::vector<int> BreakDownColors{kBlack,kBlue+1,kRed-3,kGreen+1,kOrange+1}; // QE, MEC, RES, DIS
 
 	const std::vector<int> SectorColors{kBlack,610,410,kRed+1,kGreen+3,kBlue};
 	const std::vector<int> Style{1,1,kDashed,1,1};
@@ -763,6 +762,102 @@
 
 	TString ResoXSecEcalLabel = "#frac{d#sigma}{dE_{cal}^{Feed}} #left[#mub#right]";
 	TString ResoXSecEQELabel = "#frac{d#sigma}{dE_{QE}^{Feed}} #left[#mub#right]";
+	
+	//----------------------------------------//	
+	
+	std::vector<double> TwoDArrayNBinsDeltaPT{0.0,0.2,0.4,1.0};
+	std::vector<double> TwoDArrayNBinsDeltaAlphaT{0.0,45.0,90.0,135.0,180.0};		
+	std::vector<double> TwoDArrayNBinsDeltaPtx{-5.,-0.15,0.15,2.};
+	std::vector<double> TwoDArrayNBinsDeltaPty{-5.,-0.15,0.15,5.};
+	
+	//----------------------------------------//			
+
+	// Plots to loop over
+
+	static std::vector<TString> PlotNames = {
+		"DeltaPT_InDeltaAlphaT_Slice_0Plot",
+		"DeltaPT_InDeltaAlphaT_Slice_1Plot",		
+		"DeltaPT_InDeltaAlphaT_Slice_2Plot",
+		"DeltaPT_InDeltaAlphaT_Slice_3Plot",
+		"DeltaAlphaT_InDeltaPT_Slice_0Plot",
+		"DeltaAlphaT_InDeltaPT_Slice_1Plot",
+		"DeltaAlphaT_InDeltaPT_Slice_2Plot",
+		"DeltaPtx_InDeltaPty_Slice_0Plot",
+		"DeltaPtx_InDeltaPty_Slice_1Plot",	
+		"DeltaPtx_InDeltaPty_Slice_2Plot",	
+		"DeltaPty_InDeltaPtx_Slice_0Plot",
+		"DeltaPty_InDeltaPtx_Slice_1Plot",
+		"DeltaPty_InDeltaPtx_Slice_2Plot",			
+	};	
+	
+	//----------------------------------------//			
+
+	// Scaling factor for multi dimensional analysis
+
+	static std::map<TString,double> MultiDimScaleFactor =
+	{
+		{ "DeltaPT_InDeltaAlphaT_Slice_0Plot", TwoDArrayNBinsDeltaAlphaT.at(1) - TwoDArrayNBinsDeltaAlphaT.at(0) },
+		{ "DeltaPT_InDeltaAlphaT_Slice_1Plot", TwoDArrayNBinsDeltaAlphaT.at(2) - TwoDArrayNBinsDeltaAlphaT.at(1) },		
+		{ "DeltaPT_InDeltaAlphaT_Slice_2Plot", TwoDArrayNBinsDeltaAlphaT.at(3) - TwoDArrayNBinsDeltaAlphaT.at(2) },
+		{ "DeltaPT_InDeltaAlphaT_Slice_3Plot", TwoDArrayNBinsDeltaAlphaT.at(4) - TwoDArrayNBinsDeltaAlphaT.at(3) },
+		{ "DeltaAlphaT_InDeltaPT_Slice_0Plot", TwoDArrayNBinsDeltaPT.at(1) - TwoDArrayNBinsDeltaPT.at(0) },
+		{ "DeltaAlphaT_InDeltaPT_Slice_1Plot", TwoDArrayNBinsDeltaPT.at(2) - TwoDArrayNBinsDeltaPT.at(1) },
+		{ "DeltaAlphaT_InDeltaPT_Slice_2Plot", TwoDArrayNBinsDeltaPT.at(3) - TwoDArrayNBinsDeltaPT.at(2) },
+		{ "DeltaPtx_InDeltaPty_Slice_0Plot", TwoDArrayNBinsDeltaPty.at(1) - TwoDArrayNBinsDeltaPty.at(0) },
+		{ "DeltaPtx_InDeltaPty_Slice_1Plot", TwoDArrayNBinsDeltaPty.at(2) - TwoDArrayNBinsDeltaPty.at(1) },	
+		{ "DeltaPtx_InDeltaPty_Slice_2Plot", TwoDArrayNBinsDeltaPty.at(3) - TwoDArrayNBinsDeltaPty.at(2) },	
+		{ "DeltaPty_InDeltaPtx_Slice_0Plot", TwoDArrayNBinsDeltaPtx.at(1) - TwoDArrayNBinsDeltaPtx.at(0) },
+		{ "DeltaPty_InDeltaPtx_Slice_1Plot", TwoDArrayNBinsDeltaPtx.at(2) - TwoDArrayNBinsDeltaPtx.at(1) },	
+		{ "DeltaPty_InDeltaPtx_Slice_2Plot", TwoDArrayNBinsDeltaPtx.at(3) - TwoDArrayNBinsDeltaPtx.at(2) },			
+	};	
+	
+	//----------------------------------------//	
+	
+	// Labels for slices
+
+	static std::map<TString,TString> LatexLabel =
+	{
+		{ "DeltaPT_InDeltaAlphaT_Slice_0Plot", "#delta#alpha_{T} < 45^{o}" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_1Plot", "45^{o} < #delta#alpha_{T} < 90^{o}"},		
+		{ "DeltaPT_InDeltaAlphaT_Slice_2Plot", "90^{o} < #delta#alpha_{T} < 135^{o}" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_3Plot", "135^{o} < #delta#alpha_{T} < 180^{o}" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_0Plot", "#deltap_{T} < 0.2 GeV/c" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_1Plot", "0.2 < #deltap_{T} < 0.4 GeV/c" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_2Plot", "#deltap_{T} > 0.4 GeV/c" },
+		{ "DeltaPtx_InDeltaPty_Slice_0Plot", "#deltap_{T,y} < -0.15 GeV/c" },
+		{ "DeltaPtx_InDeltaPty_Slice_1Plot", "-0.15 < #deltap_{T,y} < 0.15 GeV/c" },	
+		{ "DeltaPtx_InDeltaPty_Slice_2Plot", "#deltap_{T,y} > 0.15 GeV/c" },	
+		{ "DeltaPty_InDeltaPtx_Slice_0Plot", "#deltap_{T,x} < -0.15 GeV/c" },
+		{ "DeltaPty_InDeltaPtx_Slice_1Plot", "-0.15 < #deltap_{T,x} < 0.15 GeV/c" },	
+		{ "DeltaPty_InDeltaPtx_Slice_2Plot", "#deltap_{T,x} > 0.15 GeV/c" },			
+		
+	};	
+	
+	//----------------------------------------//	
+	
+	// Labels for slices
+
+	static std::map<TString,TString> VarLabel =
+	{
+		{ "DeltaPT_InDeltaAlphaT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]"},		
+		{ "DeltaPT_InDeltaAlphaT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_3Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPtx_InDeltaPty_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPtx_InDeltaPty_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },	
+		{ "DeltaPtx_InDeltaPty_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },	
+		{ "DeltaPty_InDeltaPtx_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPty_InDeltaPtx_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },	
+		{ "DeltaPty_InDeltaPtx_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },			
+		
+	};	
+	
+	//----------------------------------------//	
+	
+	std::vector<TString> InteractionLabels = {"","QE","MEC","RES","DIS","COH"};	
 
 	//  ------------------------------------------------------------------------------
 

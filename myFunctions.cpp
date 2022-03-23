@@ -13,6 +13,7 @@
 #include <utility>
 
 #include "AfroConstants.h"
+#include "Constants.h"
 
 using namespace std;
 
@@ -521,25 +522,14 @@ void AbsoluteXSecScaling(TH1D* h, TString Sample, TString Nucleus, TString E) {
 
 	}
 
-//	else if (Sample == "G18_02c NoRad") { 
-
-//		SF = ( G18_02cGenieXSec[std::make_pair(Nucleus, E)] * TMath::Power(10.,-38.) *\
-//					ConversionFactorCm2ToMicroBarn / (NoRadG18_02cNumberEvents[std::make_pair(Nucleus, E)] ) );
-
-//	}
-
-//	else if (Sample == "G18_02d NoRad") { 
-
-//		SF = ( G18_02dGenieXSec[std::make_pair(Nucleus, E)] * TMath::Power(10.,-38.) *\
-//					ConversionFactorCm2ToMicroBarn / (NoRadG18_02dNumberEvents[std::make_pair(Nucleus, E)] ) );
-
-//	}
-
 	else {
 
 		std::cout << "Craaaaaaaaaaaaaaap !!!!!!!!! What is the SF in AbsoluteXSecScaling for " << h->GetName() << " in " << Sample << "???????????????" << std::endl;
 
 	}		
+
+	// Additional scaling factor for multi dimentional analysis
+	//SF *= (1./ Constants::MultiDimScaleFactor[h->GetName()])
 
 	h->Scale(SF);
 
@@ -654,126 +644,21 @@ void AbsoluteXSec2DScaling(TH2D* h, TString Sample, TString Nucleus, TString E) 
 
 // -------------------------------------------------------------------------------------------------------------------------------------
 
-void ApplyRebinningTProfile(TProfile* h, TString Energy, TString PlotVar) {
-
-	// -----------------------------------------------------------------------------------------------------------------------------
-
-	if (string(PlotVar).find("Omega") != std::string::npos) {
-
-		if (Energy == "1_161") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
-		if (Energy == "2_261") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
-		if (Energy == "4.461") { for (int i = 0; i < 6; i++) { h->Rebin(); } }
-
-	} else if (string(PlotVar).find("EcalReso") != std::string::npos || string(PlotVar).find("ECalReso") != std::string::npos || string(PlotVar).find("h_Etot_subtruct_piplpimi_factor_fracfeed") != std::string::npos ) {
-
-	} else if (
-		string(PlotVar).find("T2KEQEReso") != std::string::npos
-	) {
-
-		for (int i = 0; i < 2; i++) { h->Rebin();} 
-
-	} else if (
-		string(PlotVar).find("EQEReso") != std::string::npos || 
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_noprot_frac_feed") != std::string::npos
-	) {
-
-	} else if (string(PlotVar).find("EQE") != std::string::npos || string(PlotVar).find("eReco") != std::string::npos || string(PlotVar).find("Erec") != std::string::npos) {
-
-	} else if (string(PlotVar).find("cal") != std::string::npos || string(PlotVar).find("Cal") != std::string::npos || string(PlotVar).find("epReco") != std::string::npos || string(PlotVar).find("Etot") != std::string::npos || string(PlotVar).find("E_tot") != std::string::npos) {
-
-	} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
-
-		for (int i = 0; i < 2; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("DeltaAlphaT") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("DeltaPhiT") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("Wvar") != std::string::npos || string(PlotVar).find("W_") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("T2KEQEReso") != std::string::npos || string(PlotVar).find("W_") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot in ApplyRebinningTProfile ?" << endl; }
-
-	return;	
-
-}
-
-// -------------------------------------------------------------------------------------------------------------------------------------
-
 void ApplyRebinning(TH1D* h, TString Energy, TString PlotVar) {
 
 	// -----------------------------------------------------------------------------------------------------------------------------
 
-	if (string(PlotVar).find("Omega_FullyInclusive") != std::string::npos) {
+	if (string(PlotVar).find("DeltaPT_InDeltaAlphaT") != std::string::npos) {
 
-		if (Energy == "1_161") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
+		//if (Energy == "1_161") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
+		//if (Energy == "2_261") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
+		//if (Energy == "4.461") { for (int i = 0; i < 6; i++) { h->Rebin(); } }
 
-	} else if (string(PlotVar).find("Omega") != std::string::npos) {
+	} else if (string(PlotVar).find("DeltaAlphaT_InDeltaPT") != std::string::npos) {
 
-		if (Energy == "1_161") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
-		if (Energy == "2_261") { for (int i = 0; i < 5; i++) { h->Rebin(); } }
-		if (Energy == "4.461") { for (int i = 0; i < 6; i++) { h->Rebin(); } }
+	} else if (string(PlotVar).find("DeltaPtx_InDeltaPty") != std::string::npos) {		
 
-	} else if (string(PlotVar).find("EcalReso") != std::string::npos || string(PlotVar).find("ECalReso") != std::string::npos || string(PlotVar).find("h_Etot_subtruct_piplpimi_factor_fracfeed") != std::string::npos ) {
-
-	} else if (
-		string(PlotVar).find("T2KEQEReso") != std::string::npos
-	) {
-
-		for (int i = 0; i < 2; i++) { h->Rebin();}
-
-	} else if (
-		string(PlotVar).find("EQEReso") != std::string::npos || 
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_noprot_frac_feed") != std::string::npos
-
-	) {
-
-	} else if (string(PlotVar).find("EQE") != std::string::npos || string(PlotVar).find("eReco") != std::string::npos || string(PlotVar).find("Erec") != std::string::npos) {
-
-	} else if (string(PlotVar).find("cal") != std::string::npos || string(PlotVar).find("Cal") != std::string::npos || string(PlotVar).find("epReco") != std::string::npos || string(PlotVar).find("Etot") != std::string::npos || string(PlotVar).find("E_tot") != std::string::npos) {
-
-	} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
-
-		for (int i = 0; i < 2; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("DeltaAlphaT") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("DeltaPhiT") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("Wvar") != std::string::npos || string(PlotVar).find("W_") != std::string::npos ) {
-
-		for (int i = 0; i < 2; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("PMiss") != std::string::npos || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
-
-	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
-
-		for (int i = 0; i < 1; i++) { h->Rebin();} 
+	} else if (string(PlotVar).find("DeltaPty_InDeltaPtx") != std::string::npos) {
 
 	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot ?" << endl; }
 
@@ -787,74 +672,13 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 
 	// -----------------------------------------------------------------------------------------------------------------------------
 
-	if (string(PlotVar).find("Omega") != std::string::npos) {
+	if (string(PlotVar).find("DeltaPT_In") != std::string::npos) {
 
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.,0.7); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.,1.5); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(0.5,3.); }
+	} else if (string(PlotVar).find("DeltaAlphaT_In") != std::string::npos ) {
 
-	} else if (
-		string(PlotVar).find("EcalReso") != std::string::npos || string(PlotVar).find("ECalReso") != std::string::npos || 
-		string(PlotVar).find("h_Etot_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h1_Ecal_Reso") != std::string::npos ||
-		string(PlotVar).find("h_Etot_subtruct_piplpimi_2p1pi_1p0pi_fracfeed") != std::string::npos
+	} else if (string(PlotVar).find("DeltaPtx_In") != std::string::npos ) {
 
-	) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(-0.7,0.06); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(-0.7,0.06); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(-0.7,0.03); }
-
-	} else if (
-		string(PlotVar).find("T2KEQEReso") != std::string::npos
-		) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(-0.75,0.39); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(-0.69,0.21); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(-0.75,0.21); }
-
-
-	} else if (
-		string(PlotVar).find("EQEReso") != std::string::npos || 
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_noprot_frac_feed") != std::string::npos
-		) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(-0.75,0.21); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(-0.69,0.21); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(-0.75,0.21); }
-
-	} else if (string(PlotVar).find("EQE") != std::string::npos || string(PlotVar).find("eReco") != std::string::npos || string(PlotVar).find("Erec") != std::string::npos) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.47,1.4); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.7,2.6); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(1.9,5.2); }
-
-	} else if (string(PlotVar).find("Etot") != std::string::npos || string(PlotVar).find("Cal") != std::string::npos || string(PlotVar).find("cal") != std::string::npos || string(PlotVar).find("epReco") != std::string::npos || string(PlotVar).find("E_tot") != std::string::npos || string(PlotVar).find("h1_Ecal_SuperFine") != std::string::npos) {
-
-//		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.57,1.23); } // default, but now in the Ecal 6-pannel, we need to expand the range for smaller box 
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.5,1.23); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.67,2.4); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(1.5,4.6); }
-
-	} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
-
-	} else if (string(PlotVar).find("DeltaAlphaT") != std::string::npos ) {
-
-	} else if (string(PlotVar).find("DeltaPhiT") != std::string::npos ) {
-
-	} else if (string(PlotVar).find("Wvar") != std::string::npos || string(PlotVar).find("W_") != std::string::npos ) {
-
-		h->GetXaxis()->SetRangeUser(0.6,1.5);
-
-	} else if (PlotVar == "PMiss_0" || PlotVar == "PMiss_1" || PlotVar == "PMiss_2" || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
-
-		h->GetXaxis()->SetRangeUser(0.,2.);
-
-	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
-
-		h->GetXaxis()->SetRangeUser(-2.,0.5);
+	} else if (string(PlotVar).find("DeltaPty_In") != std::string::npos ) {
 
 	} else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
 
@@ -864,61 +688,6 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 
 // -----------------------------------------------------------------------------------------------------------------------------
 
-void ApplyRange(TGraph* h, TString Energy, TString PlotVar) {
-
-	// -----------------------------------------------------------------------------------------------------------------------------
-
-	if (string(PlotVar).find("Omega") != std::string::npos) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.,0.7); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.,1.5); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(0.5,3.); }
-
-	} else if (string(PlotVar).find("EcalReso") != std::string::npos || string(PlotVar).find("ECalReso") != std::string::npos || string(PlotVar).find("h_Etot_subtruct_piplpimi_factor_fracfeed") != std::string::npos ) {
-
-		h->GetXaxis()->SetRangeUser(-0.81,0.07);
-
-	} else if (
-		string(PlotVar).find("EQEReso") != std::string::npos || 
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_factor_fracfeed") != std::string::npos ||
-		string(PlotVar).find("h_Erec_subtruct_piplpimi_noprot_frac_feed") != std::string::npos
-		) {
-
-		h->GetXaxis()->SetRangeUser(-0.85,0.2);
-
-	} else if (string(PlotVar).find("EQE") != std::string::npos || string(PlotVar).find("eReco") != std::string::npos || string(PlotVar).find("Erec") != std::string::npos) {
-
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.47,1.4); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.7,2.6); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(2.,5.); }
-
-	} else if (string(PlotVar).find("Etot") != std::string::npos || string(PlotVar).find("Cal") != std::string::npos || string(PlotVar).find("cal") != std::string::npos || string(PlotVar).find("epReco") != std::string::npos || string(PlotVar).find("E_tot") != std::string::npos || string(PlotVar).find("h1_Ecal_SuperFine") != std::string::npos) {
-
-//		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.57,1.23); } // default, but now in the Ecal 6-pannel, we need to expand the range for smaller box 
-		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.5,1.23); }
-		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.67,2.4); }
-		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(1.5,4.6); }
-
-	} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
-
-	} else if (string(PlotVar).find("DeltaAlphaT") != std::string::npos ) {
-
-	} else if (string(PlotVar).find("DeltaPhiT") != std::string::npos ) {
-
-	} else if (string(PlotVar).find("Wvar") != std::string::npos || string(PlotVar).find("W_") != std::string::npos ) {
-
-		h->GetXaxis()->SetRangeUser(0.6,1.5);
-
-	}
-
-
-	else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
-
-	return;	
-
-}
-// -------------------------------------------------------------------------------------------------------------------------------------
-
 void UniversalE4vFunction(TH1D* h, TString DataSetLabel, TString nucleus, TString E, TString name) {
 
 	// Scale to obtain absolute double differential cross sections 
@@ -926,6 +695,9 @@ void UniversalE4vFunction(TH1D* h, TString DataSetLabel, TString nucleus, TStrin
 	// Use total number of events in genie sample and relevant genie cross sections for simulation
 
 	AbsoluteXSecScaling(h,DataSetLabel,nucleus,E);
+
+	// Area width for multi-dimentional analysis
+	h->Scale( MultiDimScaleFactor[name] );
 
 	// Rebin if necessary
 
@@ -948,15 +720,6 @@ void UniversalE4vFunction(TH1D* h, TString DataSetLabel, TString nucleus, TStrin
 	// 	apply acceptance systematics using sector-by -sector uncertainties
 
 	if (string(DataSetLabel).find("Data") != std::string::npos) { ApplySectorSystUnc(h, E); }
-
-	//	3% overall normalization uncertainty 
-	//	2% electron efficiency
-	// 	not included in plots, will be mentioned in text 
-
-	//if (string(DataSetLabel).find("Data") != std::string::npos) { ApplyOverallNormUnc(h); }
-
-	//	acceptance constant correction uncertainty
-	//if (string(DataSetLabel).find("Data") != std::string::npos) { ApplyAcceptanceCorrUnc(h); }
 	
 }
 
