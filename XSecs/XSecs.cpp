@@ -86,8 +86,8 @@ void XSecs() {
 
 	// ------------------------------------------------------------------------
 
-	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
-	//E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");
+	//E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");
 	//E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");
 
 	// ------------------------------------------------------------------------
@@ -219,11 +219,12 @@ void XSecs() {
 						Plots[WhichFSIModel]->SetLineColor(DataSetColors[WhichFSIModel]);
 						PrettyDoubleXSecPlot(Plots[WhichFSIModel]);
 
-						Plots[WhichFSIModel]->GetXaxis()->SetTitle("Energy Transfer [GeV]");
+						Plots[WhichFSIModel]->GetXaxis()->SetTitleOffset(0.95);
+						Plots[WhichFSIModel]->GetXaxis()->SetTitle("(e,e') Energy Transfer [GeV]");
 						Plots[WhichFSIModel]->GetXaxis()->CenterTitle(0);
 
-						Plots[WhichFSIModel]->GetYaxis()->SetTitleOffset(1.1);
-						Plots[WhichFSIModel]->GetYaxis()->SetTitle("#frac{d#sigma}{d#Omega dE} [#frac{#mub}{sr GeV " + JustNucleus[WhichNucleus] + "}]");						
+						Plots[WhichFSIModel]->GetYaxis()->SetTitleOffset(1.05);
+						Plots[WhichFSIModel]->GetYaxis()->SetTitle("#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV " + JustNucleus[WhichNucleus] + "}]");						
 
 						// -----------------------------------------------------------------------------------
 
