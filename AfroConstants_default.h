@@ -37,7 +37,7 @@
 
 	// ------------------------------------------------------------------------------------
 
-	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/e4v_MultiDimKineImb/myFiles/";		
+	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/e4v_LightFrontNeutrinos/myFiles/";		
 	const TString version = "v3_0_6/";	
 /*	const TString DoubleXSecTitle = "#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]";*/
 	const TString DoubleXSecTitle = "Normalized Yield";
@@ -489,7 +489,8 @@
 		{ std::make_pair("12C", "2_261"),  174600000 }, // Q2 > 0.4
 		{ std::make_pair("12C", "4_461"),  164300000 }, // Q2 > 0.8
 		{ std::make_pair("56Fe", "2_261"), 167000000 }, // Q2 > 0.4
-		{ std::make_pair("56Fe", "4_461"), 49900000 } // Q2 > 0.8
+//		{ std::make_pair("56Fe", "4_461"), 190600000 } // Q2 > 0.8
+		{ std::make_pair("56Fe", "4_461"), 49900000 } // Q2 > 0.8		
 	};
 
 	// Rad SuSav2 GENIE number events 
@@ -746,7 +747,8 @@
 	//  ------------------------------------------------------------------------------
 	//  ------------------------------------------------------------------------------
 
-	const std::vector<int> BreakDownColors{kBlack,kBlue+1,kRed-3,kGreen+1,kOrange+1}; // QE, MEC, RES, DIS
+//	const std::vector<int> BreakDownColors{kBlue,429,410,610}; // QE, MEC, RES, DIS
+	const std::vector<int> BreakDownColors{kBlue+1,kRed-3,kGreen+1,kOrange+1};
 
 	const std::vector<int> SectorColors{kBlack,610,410,kRed+1,kGreen+3,kBlue};
 	const std::vector<int> Style{1,1,kDashed,1,1};
@@ -762,7 +764,7 @@
 
 	TString ResoXSecEcalLabel = "#frac{d#sigma}{dE_{cal}^{Feed}} #left[#mub#right]";
 	TString ResoXSecEQELabel = "#frac{d#sigma}{dE_{QE}^{Feed}} #left[#mub#right]";
-	
+
 	//----------------------------------------//	
 	
 	std::vector<double> TwoDArrayNBinsDeltaPT{0.0,0.2,0.4,1.0};
@@ -839,19 +841,19 @@
 
 	static std::map<TString,TString> VarLabel =
 	{
-		{ "DeltaPT_InDeltaAlphaT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaPT_InDeltaAlphaT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]"},		
-		{ "DeltaPT_InDeltaAlphaT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaPT_InDeltaAlphaT_Slice_3Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaAlphaT_InDeltaPT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaAlphaT_InDeltaPT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaAlphaT_InDeltaPT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}dP_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
-		{ "DeltaPtx_InDeltaPty_Slice_0Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },
-		{ "DeltaPtx_InDeltaPty_Slice_1Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
-		{ "DeltaPtx_InDeltaPty_Slice_2Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
-		{ "DeltaPty_InDeltaPtx_Slice_0Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },
-		{ "DeltaPty_InDeltaPtx_Slice_1Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
-		{ "DeltaPty_InDeltaPtx_Slice_2Plot", "#frac{d^{2}#sigma}{dP_{T,x}dP_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },			
+		{ "DeltaPT_InDeltaAlphaT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]"},		
+		{ "DeltaPT_InDeltaAlphaT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPT_InDeltaAlphaT_Slice_3Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_0Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_1Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaAlphaT_InDeltaPT_Slice_2Plot", "#frac{d^{2}#sigma}{d#delta#alpha_{T}d#deltap_{T}} #left[#frac{#mub}{deg GeV/c}#right]" },
+		{ "DeltaPtx_InDeltaPty_Slice_0Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },
+		{ "DeltaPtx_InDeltaPty_Slice_1Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
+		{ "DeltaPtx_InDeltaPty_Slice_2Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
+		{ "DeltaPty_InDeltaPtx_Slice_0Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },
+		{ "DeltaPty_InDeltaPtx_Slice_1Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },	
+		{ "DeltaPty_InDeltaPtx_Slice_2Plot", "#frac{d^{2}#sigma}{d#deltap_{T,x}d#deltap_{T,y}} #left[#frac{#mub}{GeV^{2}/c^{2}}#right]" },			
 		
 	};	
 	

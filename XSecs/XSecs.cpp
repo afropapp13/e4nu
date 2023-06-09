@@ -25,6 +25,10 @@ void XSecs() {
 	//------------------------------//
 
 	GlobalSettings();
+	TGaxis::SetMaxDigits(3);
+	//TGaxis::SetExponentOffset(-0.1,0., "y");	
+	gStyle->SetTitleSize(TextSize-0.01,"t"); 
+	gStyle->SetTitleFont(FontStyle,"t");
 
 	TString xBCut = "NoxBCut";	
 
@@ -49,9 +53,9 @@ void XSecs() {
 
 	//------------------------------//
 
-	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
-	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");	
-	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");		
+	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.159");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.257");	
+	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.453");		
 
 	//------------------------------//
 
@@ -102,7 +106,7 @@ void XSecs() {
 				TCanvas* PlotCanvas = new TCanvas(CanvasName,CanvasName,205,34,1024,768);
 				PlotCanvas->SetTopMargin(0.1);
 				PlotCanvas->SetBottomMargin(0.18);
-				PlotCanvas->SetLeftMargin(0.18); 
+				PlotCanvas->SetLeftMargin(0.19); 
 				PlotCanvas->SetRightMargin(0.04);				
 
 				//------------------------------//
@@ -112,7 +116,16 @@ void XSecs() {
 				TLegend* legGenie = new TLegend(0.71,0.45,0.86,0.7);
 				TLegend* legGenieBlackLine = new TLegend(0.71,0.74,0.86,0.88);
 				TLegend* legGenieBreak = new TLegend(0.74,0.63,0.91,0.75);					
-				TLegend* legG2018 = new TLegend(0.71,0.57,0.89,0.63);					
+				TLegend* legG2018 = new TLegend(0.71,0.57,0.89,0.63);	
+
+				if ( string(PlotNames[WhichPlot]).find("DeltaAlphaT_In") != std::string::npos) {
+
+					legGenie = new TLegend(0.21,0.45,0.36,0.7);
+					legGenieBlackLine = new TLegend(0.21,0.74,0.36,0.88);
+					legGenieBreak = new TLegend(0.24,0.63,0.41,0.75);					
+					legG2018 = new TLegend(0.21,0.57,0.39,0.63);								
+
+				}						
 
 				legGenie->SetNColumns(1);
 				legGenieBlackLine->SetNColumns(1);
@@ -229,10 +242,16 @@ void XSecs() {
 						DataPlot->SetMarkerColor(kBlack);
 						max = DataPlot->GetMaximum();
 
-						DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.1*max);	
+						TString Xaxis = DataPlot->GetXaxis()->GetTitle();
+						Xaxis.ReplaceAll("#deltap_{T}","P_{T}");
+						Xaxis.ReplaceAll("#deltap_{T,x}","P_{T,x}");
+						Xaxis.ReplaceAll("#deltap_{T,y}","P_{T,y}");												
+						DataPlot->GetXaxis()->SetTitle("(e,e'p)_{1p0#pi} " + Xaxis);
+
+						DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.15*max);	
 						DataPlot->GetYaxis()->SetTitle( VarLabel[ PlotNames[WhichPlot] ] );
 
-						DataPlot->SetTitle( nucleus[WhichNucleus] + " @" + LabelE[WhichEnergy] + " GeV, " + LatexLabel[ PlotNames[WhichPlot] ]);
+						DataPlot->SetTitle( "                       " + nucleus[WhichNucleus] + " @" + LabelE[WhichEnergy] + " GeV, " + LatexLabel[ PlotNames[WhichPlot] ]);
 
 						DataPlot->Draw("e same"); 
 
@@ -283,9 +302,13 @@ void XSecs() {
 				legG2018->SetTextSize(TextSize-0.03);
 				legG2018->AddEntry(Plots[2],"G2018","l");	
 
-				legGenieBlackLine->Draw();
-				legGenieBreak->Draw();
-				legG2018->Draw();
+				if (string(PlotNames[WhichPlot]).find("Slice_0Plot") != std::string::npos) {
+
+					//legGenieBlackLine->Draw();
+					//legGenieBreak->Draw();
+					//legG2018->Draw();
+
+				}
 
 				// -------------------------------------------------------------------------------------------
 

@@ -697,7 +697,7 @@ void UniversalE4vFunction(TH1D* h, TString DataSetLabel, TString nucleus, TStrin
 	AbsoluteXSecScaling(h,DataSetLabel,nucleus,E);
 
 	// Area width for multi-dimentional analysis
-	h->Scale( MultiDimScaleFactor[name] );
+	h->Scale( 1./MultiDimScaleFactor[name] );
 
 	// Rebin if necessary
 

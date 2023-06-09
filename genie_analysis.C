@@ -422,7 +422,7 @@ void genie_analysis::Loop(Int_t choice) {
 		for (int ideltaalphat = 0; ideltaalphat < int(TwoDArrayNBinsDeltaAlphaT.size() -1);ideltaalphat++ ) {
 
 			TString DeltaPTTwoDInDeltaAlphaTLabel = InteractionLabels[iinte]+"DeltaPT_InDeltaAlphaT_Slice_"+TString( std::to_string(ideltaalphat) )+"Plot";			
-			DeltaPT_InDeltaAlphaTPlot[ideltaalphat][iinte] = new TH1D(DeltaPTTwoDInDeltaAlphaTLabel,";#deltap_{T} [GeV/c]",30,0.,1.);			
+			DeltaPT_InDeltaAlphaTPlot[ideltaalphat][iinte] = new TH1D(DeltaPTTwoDInDeltaAlphaTLabel,";P_{T} [GeV/c]",30,0.,1.);			
 
 		}
 
@@ -438,7 +438,7 @@ void genie_analysis::Loop(Int_t choice) {
 		for (int ideltapty = 0; ideltapty < int(TwoDArrayNBinsDeltaPty.size() -1);ideltapty++ ) {
 
 			TString DeltaPtxTwoDInDeltaPtyLabel = InteractionLabels[iinte]+"DeltaPtx_InDeltaPty_Slice_"+TString( std::to_string(ideltapty) )+"Plot";			
-			DeltaPtx_InDeltaPtyPlot[ideltapty][iinte] = new TH1D(DeltaPtxTwoDInDeltaPtyLabel,";#deltap_{T,x} [GeV/c]",30,-0.7,0.7);			
+			DeltaPtx_InDeltaPtyPlot[ideltapty][iinte] = new TH1D(DeltaPtxTwoDInDeltaPtyLabel,";P_{T,x} [GeV/c]",30,-0.7,0.7);			
 
 		}	
 
@@ -446,7 +446,7 @@ void genie_analysis::Loop(Int_t choice) {
 		for (int ideltaptx = 0; ideltaptx < int(TwoDArrayNBinsDeltaPtx.size() -1);ideltaptx++ ) {
 
 			TString DeltaPtyTwoDInDeltaPtxLabel = InteractionLabels[iinte]+"DeltaPty_InDeltaPtx_Slice_"+TString( std::to_string(ideltaptx) ) +"Plot";			
-			DeltaPty_InDeltaPtxPlot[ideltaptx][iinte] = new TH1D(DeltaPtyTwoDInDeltaPtxLabel,";#deltap_{T,y} [GeV/c]",30,-1.,0.5);			
+			DeltaPty_InDeltaPtxPlot[ideltaptx][iinte] = new TH1D(DeltaPtyTwoDInDeltaPtxLabel,";P_{T,y} [GeV/c]",30,-1.5,0.5);			
 
 		}				
 
