@@ -39,7 +39,9 @@ void OverlayXSec() {
 	std::vector<double>  DoubleE;
 	std::vector<TString> FSILabel; 
 	std::vector<TString> NameOfPlots;
-	std::vector<TString> NameOfSubPlots;	 
+	std::vector<TString> NameOfSubPlots;
+	std::vector<TString> LabelOfSubPlots;
+	std::vector<TString> XaxisLabel;			 
 	std::vector<TString> LabelOfPlots;  	
 	std::vector<TString> Yaxis;
 
@@ -53,9 +55,9 @@ void OverlayXSec() {
 
 	// ------------------------------------------------------------------------
 
-	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
-	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");	
-	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");	
+	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.159");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.257");	
+	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.453");	
 
 	// ------------------------------------------------------------------------
 
@@ -63,7 +65,8 @@ void OverlayXSec() {
 
 	// ------------------------------------------------------------------------	
 
-	NameOfPlots = {"Total","Longitudinal"};		
+	//NameOfPlots = {"Total","Longitudinal"};
+	NameOfPlots = {"Total"};			
 
 	// ------------------------------------------------------------------------
 
@@ -105,16 +108,17 @@ void OverlayXSec() {
 				for (int WhichPlot = 0; WhichPlot < NPlots; WhichPlot ++) {
 
 					NameOfSubPlots.clear();
+					LabelOfSubPlots.clear();					
 					if (NameOfPlots[WhichPlot] == "Total") {  
 
-						NameOfSubPlots.push_back("PMiss_0");
-						NameOfSubPlots.push_back("kMiss_0");
-						NameOfSubPlots.push_back("PnProxy_0");
+						NameOfSubPlots.push_back("PMiss_0"); LabelOfSubPlots.push_back("P_{Miss}");  XaxisLabel.push_back("P_{Miss}");
+						//NameOfSubPlots.push_back("kMiss_0"); LabelOfSubPlots.push_back("k_{Miss}");  XaxisLabel.push_back("P_{Miss}");
+						NameOfSubPlots.push_back("PnProxy_0"); LabelOfSubPlots.push_back("P_{n,proxy}");  XaxisLabel.push_back("P_{Miss}");
 
 					} else if (NameOfPlots[WhichPlot] == "Longitudinal") {
 
-						NameOfSubPlots.push_back("PLFromPMiss_0");
-						NameOfSubPlots.push_back("PL_0");	
+						NameOfSubPlots.push_back("PLFromPMiss_0"); LabelOfSubPlots.push_back("P_{L,Miss}"); XaxisLabel.push_back("P_{L,Miss}");
+						NameOfSubPlots.push_back("PL_0"); LabelOfSubPlots.push_back("P_{L}"); XaxisLabel.push_back("P_{L,Miss}");
 
 					} else { cout << "No clue what you are asking me to plot!" << endl; }
 
@@ -127,9 +131,9 @@ void OverlayXSec() {
 					TString CanvasName = nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_"+xBCut[WhichxBCut];
 					TCanvas* PlotCanvas = new TCanvas(CanvasName,CanvasName,205,34,1024,768);
 					PlotCanvas->SetBottomMargin(0.18);
-					PlotCanvas->SetLeftMargin(0.18);					
+					PlotCanvas->SetLeftMargin(0.2);					
 
-					TLegend* leg = new TLegend(0.71,0.45,0.86,0.7);	
+					TLegend* leg = new TLegend(0.71,0.5,0.86,0.7);	
 					if (NameOfPlots[WhichPlot] == "Longitudinal") { leg = new TLegend(0.21,0.45,0.36,0.7); }	
 
 					leg->SetNColumns(1);	
@@ -154,10 +158,14 @@ void OverlayXSec() {
 
 						Plots[WhichSubPlot]->Draw("e1x0 same");
 						Plots[0]->GetYaxis()->SetRangeUser(0.,1.03*max);
+						Plots[0]->GetYaxis()->SetTitleOffset(1.3);
+
+						Plots[0]->GetXaxis()->SetTitle("(e,e'p)_{1p0#pi} " + XaxisLabel[WhichPlot] + " [GeV/c]");						
+
 						Plots[0]->Draw("e1x0 same");						
 
 						TString CopyString = NameOfSubPlots[WhichSubPlot];
-						leg->AddEntry(Plots[WhichSubPlot],CopyString.ReplaceAll("_0",""),"p");
+						leg->AddEntry(Plots[WhichSubPlot],LabelOfSubPlots[WhichSubPlot],"p");
 
 						// --------------------------------------------------------------------------------------
 
@@ -177,7 +185,7 @@ void OverlayXSec() {
 
 					TString CanvasSaveName = "myPlots/"+ext+nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_OverlayDataXSec_"+NameOfPlots[WhichPlot];
 					PlotCanvas->SaveAs(CanvasSaveName+".pdf");
-					PlotCanvas->SaveAs(CanvasSaveName+".eps");
+					//PlotCanvas->SaveAs(CanvasSaveName+".eps");
 
 					delete PlotCanvas;				
 	

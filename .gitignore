@@ -1,3 +1,5 @@
+XSecs/myXSec/*.root
+XSecs/myPlots/*.pdf
 myFiles/*
 *.pcm
 *_maincxx

@@ -775,6 +775,14 @@ void ApplyRebinning(TH1D* h, TString Energy, TString PlotVar) {
 
 		for (int i = 0; i < 1; i++) { h->Rebin();} 
 
+	}  else if (string(PlotVar).find("PTx") != std::string::npos || string(PlotVar).find("PTy") != std::string::npos ) {
+
+		for (int i = 0; i < 1; i++) { h->Rebin();} 
+
+	}  else if (string(PlotVar).find("EnuQE") != std::string::npos ) {
+
+		for (int i = 0; i < 3; i++) { h->Rebin();} 
+
 	} else { cout << "Aaaaaaaaaaaah ! How do I rebin this plot ?" << endl; }
 
 	return;	
@@ -838,7 +846,7 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.67,2.4); }
 		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(1.5,4.6); }
 
-	} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
+	//} else if (string(PlotVar).find("PT") != std::string::npos || string(PlotVar).find("MissMomentum") != std::string::npos) {
 
 	} else if (string(PlotVar).find("DeltaAlphaT") != std::string::npos ) {
 
@@ -850,11 +858,26 @@ void ApplyRange(TH1D* h, TString Energy, TString PlotVar) {
 
 	} else if (PlotVar == "PMiss_0" || PlotVar == "PMiss_1" || PlotVar == "PMiss_2" || string(PlotVar).find("kMiss") != std::string::npos || string(PlotVar).find("PnProxy") != std::string::npos ) {
 
-		h->GetXaxis()->SetRangeUser(0.,2.);
+		h->GetXaxis()->SetRangeUser(0.,1.5);
 
 	} else if (string(PlotVar).find("PL") != std::string::npos || string(PlotVar).find("PLFromPMiss") != std::string::npos ) {
 
 		h->GetXaxis()->SetRangeUser(-2.,0.5);
+
+	} else if (string(PlotVar).find("PTx") != std::string::npos ) {
+
+		h->GetXaxis()->SetRangeUser(-0.9,0.9);
+
+	} else if (string(PlotVar).find("PTy") != std::string::npos ) {
+
+		h->GetXaxis()->SetRangeUser(-1.45,0.45);		
+
+	} else if (string(PlotVar).find("EnuQE") != std::string::npos) {
+
+		if (Energy == "1_161") { h->GetXaxis()->SetRangeUser(0.5,1.23); }
+		if (Energy == "2_261") { h->GetXaxis()->SetRangeUser(0.67,2.4); }
+		if (Energy == "4_461") { h->GetXaxis()->SetRangeUser(1.5,4.6); }	
+
 
 	} else { cout << "Aaaaaaaaaaaah ! How do I set the range for this plot ?" << endl; }
 

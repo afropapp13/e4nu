@@ -245,8 +245,8 @@ void genie_analysis::Loop(Int_t choice) {
 	std::map<std::string,double> EE;	
 	EE["3He"]  = 0.0042;
 	EE["4He"]  = 0.0083;
-	EE["C12"]  = 0.0261;
-	EE["56Fe"]  = 0.0191;
+	EE["C12"]  = 0.024;
+	EE["56Fe"]  = 0.0296;
 
 	// ---------------------------------
 
@@ -261,7 +261,6 @@ void genie_analysis::Loop(Int_t choice) {
 	if (fChain == 0) return;
 
 	Long64_t nentries = fChain->GetEntriesFast();
-	//nentries =8000000;
 
 	//Resolutions for Smearing for GENIE simulation data
 	double reso_p = 0.01; // smearing for the proton
@@ -3767,13 +3766,7 @@ void genie_analysis::Loop(Int_t choice) {
 double genie_analysis::acceptance_c(double p, double cost, double phi, int particle_id,TFile* file_acceptance, bool ApplyAccWeights) {
 
 	if (ApplyAccWeights) {
-
-		//Redefinition of the phi angle
-		//because the acceptance maps are defined between (-30,330)
-
-		// Check that phi is between (0,360)
-
-		//int redef = -30;
+		
 		int redef = 0;
 
 		TH3D * acc;

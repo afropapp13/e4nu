@@ -28,8 +28,8 @@ void XSecs() {
 
 	GlobalSettings();
 	//TGaxis::SetMaxDigits(3);
-//	double EnhaceTail = 1./4.;
-	double EnhaceTail = 1./1.;
+	gStyle->SetTitleSize(TextSize-0.01,"t"); 
+	gStyle->SetTitleFont(FontStyle,"t");	
 
 	// ------------------------------------------------------------------------
 
@@ -55,38 +55,53 @@ void XSecs() {
 
 	// ------------------------------------------------------------------------
 
-	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.161");
-	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.261");	
-	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.461");	
+	E.push_back("1_161"); DoubleE.push_back(1.161); LabelE.push_back("1.159");
+	E.push_back("2_261"); DoubleE.push_back(2.261); LabelE.push_back("2.257");	
+	E.push_back("4_461"); DoubleE.push_back(4.461); LabelE.push_back("4.453");	
 
 	// ------------------------------------------------------------------------
 
 	xBCut.push_back("NoxBCut");
 
-	NameOfPlots.push_back("PMiss_0"); OutputPlotNames.push_back("PMiss_AllEvents"); 
+	NameOfPlots.push_back("PMiss_0"); OutputPlotNames.push_back("PMiss_Slice_AllEventsPlot"); 
 	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{Miss} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{Miss}} [#frac{#mub}{GeV nucleus}]");
+	Yaxis.push_back("#frac{d#sigma}{dP_{Miss}} [#frac{#mub}{GeV/c}]");
 	BreakDown.push_back("PMiss_0_BreakDown_");
 
-	NameOfPlots.push_back("kMiss_0"); OutputPlotNames.push_back("kMiss_AllEvents"); 
+	NameOfPlots.push_back("kMiss_0"); OutputPlotNames.push_back("kMiss_Slice_AllEventsPlot"); 
 	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} k_{Miss} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dk_{Miss}} [#frac{#mub}{GeV nucleus}]");
+	Yaxis.push_back("#frac{d#sigma}{dk_{Miss}} [#frac{#mub}{GeV/c}]");
 	BreakDown.push_back("kMiss_0_BreakDown_");	
 
-	NameOfPlots.push_back("PnProxy_0"); OutputPlotNames.push_back("PnProxy_AllEvents"); 
+	NameOfPlots.push_back("PnProxy_0"); OutputPlotNames.push_back("PnProxy_Slice_AllEventsPlot"); 
 	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{n,proxy} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{n,proxy}} [#frac{#mub}{GeV nucleus}]");
+	Yaxis.push_back("#frac{d#sigma}{dP_{n,proxy}} [#frac{#mub}{GeV/c}]");
 	BreakDown.push_back("PnProxy_0_BreakDown_");
 
-	NameOfPlots.push_back("PL_0"); OutputPlotNames.push_back("PL_AllEvents"); 
-	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{L}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("PL_0_BreakDown_");	
+	//NameOfPlots.push_back("PL_0"); OutputPlotNames.push_back("PL_Slice_AllEventsPlot"); 
+	//LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L} [GeV/c]"); 
+	//Yaxis.push_back("#frac{d#sigma}{dP_{L}} [#frac{#mub}{GeV/c}]");
+	//BreakDown.push_back("PL_0_BreakDown_");	
 
-	NameOfPlots.push_back("PLFromPMiss_0"); OutputPlotNames.push_back("PLFromPMiss_AllEvents"); 
-	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L,Miss} [GeV/c]"); 
-	Yaxis.push_back("#frac{d#sigma}{dP_{L,Miss}} [#frac{#mub}{GeV nucleus}]");
-	BreakDown.push_back("PLFromPMiss_0_BreakDown_");		
+	//NameOfPlots.push_back("PLFromPMiss_0"); OutputPlotNames.push_back("PLFromPMiss_Slice_AllEventsPlot"); 
+	//LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{L,Miss} [GeV/c]"); 
+	//Yaxis.push_back("#frac{d#sigma}{dP_{L,Miss}} [#frac{#mub}{GeV/c}]");
+	//BreakDown.push_back("PLFromPMiss_0_BreakDown_");
+
+	NameOfPlots.push_back("PTx_0"); OutputPlotNames.push_back("DeltaPtx_Slice_AllEventsPlot"); 
+	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{T,x} [GeV/c]"); 
+	Yaxis.push_back("#frac{d#sigma}{dP_{T,x}} [#frac{#mub}{GeV/c}]");
+	BreakDown.push_back("PTx_0_BreakDown_");
+
+	NameOfPlots.push_back("PTy_0"); OutputPlotNames.push_back("DeltaPty_Slice_AllEventsPlot"); 
+	LabelOfPlots.push_back("(e,e'p)_{1p0#pi} P_{T,y} [GeV/c]"); 
+	Yaxis.push_back("#frac{d#sigma}{dP_{T,y}} [#frac{#mub}{GeV/c}]");
+	BreakDown.push_back("PTy_0_BreakDown_");	
+
+	//NameOfPlots.push_back("EnuQE_0"); OutputPlotNames.push_back("EnuQE_Slice_AllEventsPlot"); 
+	//LabelOfPlots.push_back("(e,e'p)_{1p0#pi} E_{#nu^{QE}} [GeV/c]"); 
+	//Yaxis.push_back("#frac{d#sigma}{dE_{#nu}^{QE}} [#frac{#mub}{GeV/c}]");
+	//BreakDown.push_back("EnuQE_0_BreakDown_");				
 
 	// ------------------------------------------------------------------------
 
@@ -167,10 +182,10 @@ void XSecs() {
 
 					Plots.clear();
 
-					TLegend* legGenie = new TLegend(0.71,0.45,0.86,0.7);
-					TLegend* legGenieBlackLine = new TLegend(0.71,0.74,0.86,0.88);
-					TLegend* legGenieBreak = new TLegend(0.74,0.63,0.91,0.75);					
-					TLegend* legG2018 = new TLegend(0.71,0.57,0.89,0.63);					
+					TLegend* legGenie = new TLegend(0.69,0.45,0.84,0.7);
+					TLegend* legGenieBlackLine = new TLegend(0.69,0.74,0.84,0.88);
+					TLegend* legGenieBreak = new TLegend(0.72,0.63,0.89,0.75);					
+					TLegend* legG2018 = new TLegend(0.69,0.57,0.87,0.63);					
 
 					if (string(NameOfPlots[WhichPlot]).find("PL") != std::string::npos) { 
 
@@ -180,6 +195,15 @@ void XSecs() {
 						legG2018 = new TLegend(0.21,0.57,0.39,0.63);						
 
 					}
+
+					if (string(NameOfPlots[WhichPlot]).find("PTy") != std::string::npos) { 
+
+						legGenie = new TLegend(0.21,0.45,0.36,0.7);
+						legGenieBlackLine = new TLegend(0.21,0.74,0.36,0.88);
+						legGenieBreak = new TLegend(0.24,0.63,0.41,0.75);					
+						legG2018 = new TLegend(0.21,0.57,0.39,0.63);						
+
+					}					
 
 					legGenie->SetNColumns(1);
 					legGenieBlackLine->SetNColumns(1);
@@ -210,7 +234,7 @@ void XSecs() {
 						Plots[WhichFSIModel]->SetLineColor(DataSetColors[WhichFSIModel]);
 						PrettyDoubleXSecPlot(Plots[WhichFSIModel]);
 
-						Plots[WhichFSIModel]->GetXaxis()->SetTitle(JustNucleus[WhichNucleus]+LabelOfPlots[WhichPlot]);
+						Plots[WhichFSIModel]->GetXaxis()->SetTitle(LabelOfPlots[WhichPlot]);
 						Plots[WhichFSIModel]->GetXaxis()->CenterTitle(0);
 
 						Plots[WhichFSIModel]->GetYaxis()->SetTitleOffset(1.1);
@@ -300,7 +324,7 @@ void XSecs() {
 							max = DataPlot->GetMaximum();
 							DataPlot->GetYaxis()->SetRangeUser(-0.005*max,1.1*max);	
 
-							DataPlot->SetTitle( LabelE[WhichEnergy] + " GeV");
+							DataPlot->SetTitle( nucleus[WhichNucleus] + " @" +LabelE[WhichEnergy] + " GeV, All events");
 
 							DataPlot->Draw("e same"); 
 
@@ -362,9 +386,9 @@ void XSecs() {
 					TString ext = "";
 					if ( xBCut[WhichxBCut] == "xBCut" ) { ext = "xB_"; } 
 
-					TString CanvasSaveName = "myPlots/"+ext+nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_" +OutputPlotNames[WhichPlot]+"_XSec";
+					TString CanvasSaveName = "myPlots/"+ext+nucleus[WhichNucleus]+"_"+E[WhichEnergy]+"_" +OutputPlotNames[WhichPlot]+""+"_XSec";
 					PlotCanvas->SaveAs(CanvasSaveName+".pdf");
-					PlotCanvas->SaveAs(CanvasSaveName+".eps");
+					//PlotCanvas->SaveAs(CanvasSaveName+".eps");
 
 					delete PlotCanvas;
 

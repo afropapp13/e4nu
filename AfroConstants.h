@@ -37,7 +37,7 @@
 
 	// ------------------------------------------------------------------------------------
 
-	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/43rd_LightFrontNeutrinos/myFiles/";		
+	const TString GlobalPathToFiles = "/home/afroditi/Dropbox/PhD/myCode/e4v_LightFrontNeutrinos/myFiles/";		
 	const TString version = "v3_0_6/";	
 /*	const TString DoubleXSecTitle = "#frac{d^{2}#sigma}{d#Omega dE} [#frac{#mub}{sr GeV nucleus}]";*/
 	const TString DoubleXSecTitle = "Normalized Yield";
@@ -489,7 +489,8 @@
 		{ std::make_pair("12C", "2_261"),  174600000 }, // Q2 > 0.4
 		{ std::make_pair("12C", "4_461"),  164300000 }, // Q2 > 0.8
 		{ std::make_pair("56Fe", "2_261"), 167000000 }, // Q2 > 0.4
-		{ std::make_pair("56Fe", "4_461"), 190600000 } // Q2 > 0.8
+//		{ std::make_pair("56Fe", "4_461"), 190600000 } // Q2 > 0.8
+		{ std::make_pair("56Fe", "4_461"), 49900000 } // Q2 > 0.8		
 	};
 
 	// Rad SuSav2 GENIE number events 
