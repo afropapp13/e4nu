@@ -175,7 +175,7 @@ void genie_analysis::Loop() {
 
 	//Output file definition
 
-	TString FileName = Form("genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());
+	TString FileName = Form("output_files/genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());
 	TFile *file_out = new TFile(FileName, "Recreate");
 
 	// ---------------------------------------------------------------------------------------------------------------

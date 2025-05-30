@@ -1,4 +1,6 @@
-{
+#include "../../helper_functions.cxx"
+
+void EQE_12C_1161(){
 //=========Macro generated from canvas: 12C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut/12C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut
 //=========  (Sun Feb 13 16:51:10 2022) by ROOT version 6.24/02
    TCanvas *C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut = new TCanvas("C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut", "C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut",205,71,1024,768);
@@ -118,7 +120,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi__1->GetYaxis()->SetTitleSize(0.07);
@@ -575,7 +577,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi__6->GetYaxis()->SetTitleSize(0.07);
@@ -680,7 +682,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi__7->GetYaxis()->SetTitleSize(0.07);
@@ -782,7 +784,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi__8->GetYaxis()->SetTitleSize(0.07);
@@ -965,7 +967,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi__10->GetYaxis()->SetTitleSize(0.07);
@@ -1071,7 +1073,7 @@
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetXaxis()->SetTitleFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetTitle("#frac{d#sigma}{dE_{QE}} #left[#frac{#mub}{GeV}#right]");
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->CenterTitle(true);
-   h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetNdivisions(6);
+   h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetNdivisions(10);
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetLabelFont(132);
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetLabelSize(0.07);
    h_Erec_subtruct_piplpimi_noprot_3pi_copy__11->GetYaxis()->SetTitleSize(0.07);
@@ -1191,7 +1193,7 @@
    entry->SetTextFont(132);
    leg->Draw();
    TLatex *   tex = new TLatex(0.72,0.28,"E_{beam}");
-tex->SetNDC();
+   tex->SetNDC();
 
    ci = TColor::GetColor("#006699");
    tex->SetTextColor(ci);
@@ -1211,4 +1213,31 @@ tex->SetNDC();
    C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->Modified();
    C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->cd();
    C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->SetSelected(C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut);
+
+   // ------------------------ //
+
+   TFile* f = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/genie_e2a_ep_C12_1161.root","readonly");
+   TH1D* theory_h = (TH1D*)(f->Get("h_Erec_subtruct_piplpimi_noprot_3pi"));
+
+   h_Erec_subtruct_piplpimi_noprot_3pi->cd();
+
+   double tot_xsec = 1056.746; // #mub/sr
+   double nentries = 10000;
+
+   //divide_bin_width(theory_h);
+   theory_h->Scale(tot_xsec / (4.*TMath::Pi() * nentries) ); 
+
+   theory_h->SetLineWidth(3);
+   theory_h->SetLineColor(kOrange+7);   
+   theory_h->Draw("hist c same");
+
+   TLatex *th_tex = new TLatex(0.22,0.52,"2p theory");
+   th_tex->SetNDC();
+   th_tex->SetTextColor(kOrange+7);
+   th_tex->SetTextFont(132);
+   th_tex->SetLineWidth(2);
+   th_tex->Draw("same");
+
+   C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->SaveAs("EQE_1161.pdf");
+
 }

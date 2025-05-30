@@ -294,7 +294,9 @@ genie_analysis::genie_analysis(std::string a_target,std::string a_beam_en, TTree
       // of trees.
       TChain * chain = new TChain("gst","genie_analysis");
 
-	chain->Add(Form("/pnfs/genie/persistent/users/apapadop/e4v_SuSav2/Exclusive/electrons/%s_%sGeV/apapadop_SuSav2_%s_%sGeV_master*.root", ftarget.c_str(),fbeam_en.c_str(),ftarget.c_str(),fbeam_en.c_str()));	   
+	//chain->Add(Form("/pnfs/genie/persistent/users/apapadop/e4v_SuSav2/Exclusive/electrons/%s_%sGeV/apapadop_SuSav2_%s_%sGeV_master*.root", ftarget.c_str(),fbeam_en.c_str(),ftarget.c_str(),fbeam_en.c_str()));	   
+	chain->Add("/pnfs/uboone/persistent/users/apapadop/GENIETweakedSamples/v3_6_0_achilles/calculation_e4v_1161/11_1000060120_EMMEC_v3_6_0_G18_02a_00_000.gst.root");	   
+
 
       tree = chain;
 #endif // SINGLE_TREE

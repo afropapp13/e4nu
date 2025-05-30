@@ -1,3 +1,4 @@
+output_files/*.root
 myFiles/
 eGENIEPaperCode/save/
 EmpiricalMEC/
