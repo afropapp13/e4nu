@@ -481,6 +481,8 @@ void genie_analysis::Loop() {
 
 		TrueElectronsAboveThreshold++;
 
+		if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts		
+
 		// ---------------------------------------------------------------------------------------------------------------------
 
 		int ElectronSector = el_phi_mod / 60.;
