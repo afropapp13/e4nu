@@ -6995,4 +6995,6 @@ tex->SetNDC();
    NoxBCut->Modified();
    NoxBCut->cd();
    NoxBCut->SetSelected(NoxBCut);
+
+   NoxBCut->SaveAs("ECal_panel.pdf");
 }

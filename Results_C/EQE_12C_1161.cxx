@@ -1216,28 +1216,91 @@ void EQE_12C_1161(){
 
    // ------------------------ //
 
+   // 2p theory prediction
+
    TFile* f = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/genie_e2a_ep_C12_1161.root","readonly");
    TH1D* theory_h = (TH1D*)(f->Get("h_Erec_subtruct_piplpimi_noprot_3pi"));
 
    h_Erec_subtruct_piplpimi_noprot_3pi->cd();
 
-   double tot_xsec = 1056.746; // #mub/sr
-   double nentries = 10000;
+   double tot_xsec = 1.056746; // #mub/sr
+   double nentries = 100000;
 
-   //divide_bin_width(theory_h);
-   theory_h->Scale(tot_xsec / (4.*TMath::Pi() * nentries) ); 
+   theory_h->Rebin();
+   divide_bin_width(theory_h);
+   theory_h->Scale(tot_xsec /nentries); 
 
    theory_h->SetLineWidth(3);
-   theory_h->SetLineColor(kOrange+7);   
+   theory_h->SetLineColor(kMagenta);   
    theory_h->Draw("hist c same");
 
    TLatex *th_tex = new TLatex(0.22,0.52,"2p theory");
    th_tex->SetNDC();
-   th_tex->SetTextColor(kOrange+7);
+   th_tex->SetTextColor(kMagenta);
    th_tex->SetTextFont(132);
    th_tex->SetLineWidth(2);
    th_tex->Draw("same");
 
-   C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->SaveAs("EQE_1161.pdf");
+   // ------------------------ //  
+
+   TFile* f_e4v = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/noah_e4v_genie_e2a_ep_C12_1161.root","readonly");
+   TH1D* theory_h_e4v = (TH1D*)(f_e4v->Get("h_Erec_subtruct_piplpimi_noprot_3pi"));
+
+   h_Erec_subtruct_piplpimi_noprot_3pi->cd();
+
+   //fix
+   double tot_xsec_e4v = 18.8755; // #mub/sr
+   double nentries_e4v = 200000;
+
+   theory_h_e4v->Rebin();
+   divide_bin_width(theory_h_e4v);
+   theory_h_e4v->Scale(tot_xsec_e4v /nentries_e4v); 
+
+   theory_h_e4v->SetLineWidth(3);
+   theory_h_e4v->SetLineColor(kCyan);   
+   theory_h_e4v->Draw("hist c same");
+
+   TLatex *th_tex_e4v = new TLatex(0.22,0.47,"e4v");
+   th_tex_e4v->SetNDC();
+   th_tex_e4v->SetTextColor(kCyan);
+   th_tex_e4v->SetTextFont(132);
+   th_tex_e4v->SetLineWidth(2);
+   th_tex_e4v->Draw("same");  
+   
+   TFile* e4v_f_out = new TFile("EQE_e4v_f_out.root","recreate");
+   theory_h_e4v->Write();   
+
+   // ------------------------ // 
+
+   TFile* f_e4v_delta = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/noah_e4v_DeltaCascade_genie_e2a_ep_C12_1161.root","readonly");
+   TH1D* theory_h_e4v_delta = (TH1D*)(f_e4v_delta->Get("h_Erec_subtruct_piplpimi_noprot_3pi"));
+
+   h_Erec_subtruct_piplpimi_noprot_3pi->cd();
+
+   //fix
+   double tot_xsec_e4v_delta = 18.8755; // #mub/sr
+   double nentries_e4v_delta = 200000;
+
+   theory_h_e4v_delta->Rebin();
+   divide_bin_width(theory_h_e4v_delta);
+   theory_h_e4v_delta->Scale(tot_xsec_e4v_delta /nentries_e4v_delta); 
+
+   theory_h_e4v_delta->SetLineWidth(3);
+   theory_h_e4v_delta->SetLineColor(kGreen + 2);   
+   theory_h_e4v_delta->Draw("hist c same");
+
+   TLatex *th_tex_e4v_delta = new TLatex(0.22,0.42,"e4v casc");
+   th_tex_e4v_delta->SetNDC();
+   th_tex_e4v_delta->SetTextColor(kGreen + 2);
+   th_tex_e4v_delta->SetTextFont(132);
+   th_tex_e4v_delta->SetLineWidth(2);
+   th_tex_e4v_delta->Draw("same"); 
+
+   TFile* e4v_delta_f_out = new TFile("root/EQE_e4v_delta_f_out.root","recreate");
+   theory_h_e4v_delta->Write();
+
+   // ------------------------ //   
+
+   C_1_161_h_Erec_subtruct_piplpimi_noprot_3pi_NoxBCut->SaveAs("./pdf/EQE_1161.pdf");
 
 }

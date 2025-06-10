@@ -175,8 +175,11 @@ void genie_analysis::Loop() {
 
 	//Output file definition
 
-	TString FileName = Form("output_files/genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());
-	TFile *file_out = new TFile(FileName, "Recreate");
+	//TString FileName = Form("output_files/genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());
+	TString FileName = Form("output_files/noah_e4v_genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());
+	//TString FileName = Form("output_files/noah_e4v_DeltaCascade_genie_e2a_ep_%s_%s.root",ftarget.c_str(),fbeam_en.c_str());	
+
+	TFile *file_out = new TFile(FileName, "recreate");
 
 	// ---------------------------------------------------------------------------------------------------------------
 
@@ -430,7 +433,6 @@ void genie_analysis::Loop() {
 		// ----------------------------------------------------------------------------------------------------------------------
 
 		// Explicit cuts on electron momentum
-
 		if (fbeam_en=="1161" && el_momentum < 0.4) { continue; }
 		if (fbeam_en=="2261" && el_momentum < 0.55) { continue; }
 		if (fbeam_en=="4461" && el_momentum < 1.1) { continue; }
@@ -440,7 +442,7 @@ void genie_analysis::Loop() {
 		if(el_phi_mod<0)  el_phi_mod  = el_phi_mod+360; //Add 360 so that electron phi is between 0 and 360 degree
 
 		double reco_q3 = (V4_el-V4_beam).Rho();
-		double reco_Q2 = -(V4_el-V4_beam).Mag2();
+		double reco_Q2 = TMath::Abs(-(V4_el-V4_beam).Mag2());
 		double Q4 = reco_Q2 * reco_Q2;
 		double Mott_cross_sec = (1./Q4);
 
@@ -456,6 +458,7 @@ void genie_analysis::Loop() {
 
 		//Calculation of Reconstructed Energy from ELectron only
 		//using the same value of single nucleon separation E Ecal and Eqe
+
 		double E_rec = (m_prot*bind_en[ftarget]+m_prot*V4_el.E())/(m_prot-V4_el.E()+V4_el.Rho()*cos(el_theta));
 		double EQE_Reso = (E_rec - en_beam_Ecal[fbeam_en]) / en_beam_Ecal[fbeam_en]; 
 
@@ -480,6 +483,8 @@ void genie_analysis::Loop() {
 		// ---------------------------------------------------------------------------------------------------------------------
 
 		TrueElectronsAboveThreshold++;
+
+		if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts 		
 
 		// ---------------------------------------------------------------------------------------------------------------------
 
