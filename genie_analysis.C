@@ -80,6 +80,8 @@ void genie_analysis::Loop() {
 	int NDeltaAlphaTBins = 36; double DeltaAlphaTMin = 0.; double DeltaAlphaTMax = 180.;
 	int NDeltaPhiTBins = 36; double DeltaPhiTMin = 0.; double DeltaPhiTMax = 180.;
 
+	double sum_weights = 0;
+
 	const int NInt = 6; // All Interactions = 0, QE = 1, MEC = 2, RES = 3, DIS = 4, COH = 5
 
 	// ---------------------------------------------------------------------------------------------------------------
@@ -349,6 +351,7 @@ void genie_analysis::Loop() {
 		}
 
 		TotalCounter ++;
+		sum_weights += wght;
 
 		// ---------------------------------------------------------------------------------------------------------------
 
@@ -361,9 +364,10 @@ void genie_analysis::Loop() {
 		int Interaction = -1;
 
 		if (qel) { Interaction = 1; }
-		if (mec) { Interaction = 2; }
-		if (res) { Interaction = 3; }
-		if (dis) { Interaction = 4; }
+		else if (mec) { Interaction = 2; }
+		else if (res) { Interaction = 3; }
+		else if (dis) { Interaction = 4; }
+		else { cout << "unknown process" << endl; continue; }
 
 		// ---------------------------------------------------------------------------------------------------------------
 
@@ -484,7 +488,10 @@ void genie_analysis::Loop() {
 
 		TrueElectronsAboveThreshold++;
 
-		if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts 		
+		//if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts 		
+
+		// electron upper limit for angle
+		if (el_theta > 45) { continue; }
 
 		// ---------------------------------------------------------------------------------------------------------------------
 
@@ -559,20 +566,21 @@ void genie_analysis::Loop() {
 				//Smearing of proton
 				double temp_smear_P = pf[i];
 				double temp_smear_E = sqrt( temp_smear_P*temp_smear_P + m_prot * m_prot );
-
 				TVector3 V3_prot_corr(pxf[i],pyf[i],pzf[i]);
 				double phi_prot = V3_prot_corr.Phi();
-				V3_prot_corr.SetPhi(phi_prot + TMath::Pi()); // Vec.Phi() is between (-180,180), // GENIE coordinate system flipped with respect to CLAS
+				//V3_prot_corr.SetPhi(phi_prot + TMath::Pi()); // Vec.Phi() is between (-180,180), // GENIE coordinate system flipped with respect to CLAS
 
-				if (PFiducialCutExtra(StoreEnergy, V3_prot_corr)) { TrueProtonsAboveThreshold++; }
+				//if (PFiducialCutExtra(StoreEnergy, V3_prot_corr)) { TrueProtonsAboveThreshold++; }
+
+				double theta_proton = V3_prot_corr.Theta() * 180./TMath::Pi();
+				if (theta_proton > 12) { TrueProtonsAboveThreshold++; }
 
 				num_p = num_p + 1;
 				index_p[num_p - 1] = i;
 				ProtonID.push_back(i);
 				Smeared_Pp[num_p - 1] = temp_smear_P;
 				Smeared_Ep[num_p - 1] = temp_smear_E;
-
-				phi_prot += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
+				//phi_prot += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
 
 			}
 
@@ -704,7 +712,10 @@ void genie_analysis::Loop() {
 		if (TruthLevel1p0piSignalStudy || TruthLevel0piSignalStudy) {
 
 			if (TrueElectronsAboveThreshold != 1) { continue; }
-			if (TruthLevel1p0piSignalStudy) { if (TrueProtonsAboveThreshold != 1) { continue; } }
+			if (TruthLevel1p0piSignalStudy) { 
+				//cout << "TrueProtonsAboveThreshold = " << TrueProtonsAboveThreshold << endl;
+				if (TrueProtonsAboveThreshold != 1) { continue; } 
+			}
 			if (TrueChargedPionsAboveThreshold != 0) { continue; }
 			if (TrueGammasAboveThreshold != 0) { continue; }
 
@@ -872,6 +883,10 @@ void genie_analysis::Loop() {
 		} // End of 1-proton case
 
 	} //end of event loop (jentry)
+
+	h1_E_rec_0pi->Scale(1./sum_weights);
+	h1_E_tot_cut2->Scale(1./sum_weights);
+	h1_MissMomentum->Scale(1./sum_weights);
 
 	gStyle->SetOptFit(1);
 	gDirectory->Write("hist_Files", TObject::kOverwrite);

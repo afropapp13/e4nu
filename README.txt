@@ -13,7 +13,9 @@
 3) Min electron angle
 	a) theta_e > 17 + 7 / Pe @ 1.1 GeV [deg]
 	b) theta_e > 16 + 10.5 / Pe @ 2.2 GeV [deg]
-	c) theta_e > 13.5 + 15 / Pe @ 1.1 GeV [deg]		
+	c) theta_e > 13.5 + 15 / Pe @ 1.1 GeV [deg]	
+
+	Max electron angle: 45 deg regardless of the energy	
 
 4) Invariant mass W < 2 GeV^{2}/c^{2}
 

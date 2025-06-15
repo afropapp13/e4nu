@@ -1228,7 +1228,8 @@ void EQE_12C_1161(){
 
    theory_h->Rebin();
    divide_bin_width(theory_h);
-   theory_h->Scale(tot_xsec /nentries); 
+   // it has already been divided by the number of events in genie_analysis.cxx
+   theory_h->Scale(tot_xsec); 
 
    theory_h->SetLineWidth(3);
    theory_h->SetLineColor(kMagenta);   
@@ -1248,13 +1249,11 @@ void EQE_12C_1161(){
 
    h_Erec_subtruct_piplpimi_noprot_3pi->cd();
 
-   //fix
    double tot_xsec_e4v = 18.8755; // #mub/sr
-   double nentries_e4v = 200000;
 
    theory_h_e4v->Rebin();
    divide_bin_width(theory_h_e4v);
-   theory_h_e4v->Scale(tot_xsec_e4v /nentries_e4v); 
+   theory_h_e4v->Scale(tot_xsec_e4v); 
 
    theory_h_e4v->SetLineWidth(3);
    theory_h_e4v->SetLineColor(kCyan);   
@@ -1267,7 +1266,7 @@ void EQE_12C_1161(){
    th_tex_e4v->SetLineWidth(2);
    th_tex_e4v->Draw("same");  
    
-   TFile* e4v_f_out = new TFile("EQE_e4v_f_out.root","recreate");
+   TFile* e4v_f_out = new TFile("root/EQE_e4v_f_out.root","recreate");
    theory_h_e4v->Write();   
 
    // ------------------------ // 
@@ -1277,13 +1276,11 @@ void EQE_12C_1161(){
 
    h_Erec_subtruct_piplpimi_noprot_3pi->cd();
 
-   //fix
    double tot_xsec_e4v_delta = 18.8755; // #mub/sr
-   double nentries_e4v_delta = 200000;
 
    theory_h_e4v_delta->Rebin();
-   divide_bin_width(theory_h_e4v_delta);
-   theory_h_e4v_delta->Scale(tot_xsec_e4v_delta /nentries_e4v_delta); 
+   divide_bin_width(theory_h_e4v_delta);    
+   theory_h_e4v_delta->Scale(tot_xsec_e4v_delta);      
 
    theory_h_e4v_delta->SetLineWidth(3);
    theory_h_e4v_delta->SetLineColor(kGreen + 2);   

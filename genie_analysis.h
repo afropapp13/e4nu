@@ -295,7 +295,8 @@ genie_analysis::genie_analysis(std::string a_target,std::string a_beam_en, TTree
       TChain * chain = new TChain("gst","genie_analysis");
 
 	//chain->Add("/pnfs/uboone/persistent/users/apapadop/GENIETweakedSamples/v3_6_0_achilles/calculation_e4v_1161/11_1000060120_EMMEC_v3_6_0_G18_02a_00_000.gst.root");
-	chain->Add("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/nuisance/noah_convert_cc1p/C12_1159_e4v.gst.root");   	   
+
+   chain->Add("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/nuisance/noah_convert_cc1p/C12_1159_e4v.gst.root");   	   
 	//chain->Add("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/nuisance/noah_convert_cc1p/C12_1159_e4v_DeltaCascade.gst.root"); 
 
       tree = chain;

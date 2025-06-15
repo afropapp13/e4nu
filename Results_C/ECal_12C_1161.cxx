@@ -11,7 +11,7 @@ void ECal_12C_1161(){
    NoxBCut->SetFrameBorderMode(0);
   
 // ------------>Primitives in pad: epRecoEnergy_slice_0
-   TPad *epRecoEnergy_slice_0 = new TPad("epRecoEnergy_slice_0", "epRecoEnergy_slice_0",0.03,0.01,0.98,1);
+   TPad *epRecoEnergy_slice_0 = new TPad("epRecoEnergy_slice_0", "epRecoEnergy_slice_0",0.03,0.01,0.98,0.98);
    epRecoEnergy_slice_0->Draw();
    epRecoEnergy_slice_0->cd();
    epRecoEnergy_slice_0->Range(0.3613873,-0.4548214,1.24,2.443988);
@@ -737,16 +737,15 @@ void ECal_12C_1161(){
 
    //------------------------------- //
 
-   TFile* f = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/genie_e2a_ep_C12_1161.root","readonly");
+   /*TFile* f = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/genie_e2a_ep_C12_1161.root","readonly");
    TH1D* theory_h = (TH1D*)(f->Get("epRecoEnergy_slice_0"));
 
    epRecoEnergy_slice_0->cd();
    double tot_xsec = 1.056746; // #mub/sr
-   double nentries = 100000;
 
    theory_h->Rebin();
    divide_bin_width(theory_h);
-   theory_h->Scale(tot_xsec /nentries); 
+   theory_h->Scale(tot_xsec); 
    //bc the e4v results are scaled by 0.5 in that pad
    theory_h->Scale(0.5); 
 
@@ -760,9 +759,67 @@ void ECal_12C_1161(){
    th_tex->SetTextFont(132);
    th_tex->SetLineWidth(2);
    th_tex->Draw("same");
+*/
+   // ------------------------ //  
+
+   TFile* f_e4v = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/noah_e4v_genie_e2a_ep_C12_1161.root","readonly");
+   TH1D* theory_h_e4v = (TH1D*)(f_e4v->Get("epRecoEnergy_slice_0"));
+
+   epRecoEnergy_slice_0->cd();
+
+   double tot_xsec_e4v = 18.8755; // #mub/sr
+
+   theory_h_e4v->Rebin();
+   divide_bin_width(theory_h_e4v);
+   theory_h_e4v->Scale(tot_xsec_e4v); 
+   //bc the e4v results are scaled by 0.5 in that pad
+   theory_h_e4v->Scale(0.5);    
+
+   theory_h_e4v->SetLineWidth(3);
+   theory_h_e4v->SetLineColor(kCyan);   
+   theory_h_e4v->Draw("hist c same");
+
+   TLatex *th_tex_e4v = new TLatex(0.22,0.27,"e4v");
+   th_tex_e4v->SetNDC();
+   th_tex_e4v->SetTextColor(kCyan);
+   th_tex_e4v->SetTextFont(132);
+   th_tex_e4v->SetLineWidth(2);
+   th_tex_e4v->Draw("same");  
+   
+   TFile* e4v_f_out = new TFile("root/ECal_e4v_f_out.root","recreate");
+   theory_h_e4v->Write();   
+
+   // ------------------------ // 
+
+   TFile* f_e4v_delta = new TFile("/exp/uboone/app/users/apapadop/cc2p_achilles/electrons/e4nu/output_files/noah_e4v_DeltaCascade_genie_e2a_ep_C12_1161.root","readonly");
+   TH1D* theory_h_e4v_delta = (TH1D*)(f_e4v_delta->Get("epRecoEnergy_slice_0"));
+
+   epRecoEnergy_slice_0->cd();
+
+   double tot_xsec_e4v_delta = 18.8755; // #mub/sr
+
+   theory_h_e4v_delta->Rebin();
+   divide_bin_width(theory_h_e4v_delta);    
+   theory_h_e4v_delta->Scale(tot_xsec_e4v_delta);  
+   //bc the e4v results are scaled by 0.5 in that pad
+   theory_h_e4v_delta->Scale(0.5);        
+
+   theory_h_e4v_delta->SetLineWidth(3);
+   theory_h_e4v_delta->SetLineColor(kGreen + 2);   
+   theory_h_e4v_delta->Draw("hist c same");
+
+   TLatex *th_tex_e4v_delta = new TLatex(0.22,0.22,"e4v casc");
+   th_tex_e4v_delta->SetNDC();
+   th_tex_e4v_delta->SetTextColor(kGreen + 2);
+   th_tex_e4v_delta->SetTextFont(132);
+   th_tex_e4v_delta->SetLineWidth(2);
+   th_tex_e4v_delta->Draw("same"); 
+
+   TFile* e4v_delta_f_out = new TFile("root/ECal_e4v_delta_f_out.root","recreate");
+   theory_h_e4v_delta->Write();   
 
    //------------------------------- //
 
-   NoxBCut->SaveAs("./ECal_1161.pdf");
+   NoxBCut->SaveAs("./pdf/ECal_1161.pdf");
 
 }
