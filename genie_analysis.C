@@ -481,7 +481,10 @@ void genie_analysis::Loop() {
 
 		TrueElectronsAboveThreshold++;
 
-		if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts		
+		//if (!fiducialcut->EFiducialCut(fbeam_en,V3_el) ) continue; // Electron theta & phi fiducial cuts 		
+
+		// electron upper limit for angle
+		if (el_theta > 45) { continue; }
 
 		// ---------------------------------------------------------------------------------------------------------------------
 
@@ -559,9 +562,12 @@ void genie_analysis::Loop() {
 
 				TVector3 V3_prot_corr(pxf[i],pyf[i],pzf[i]);
 				double phi_prot = V3_prot_corr.Phi();
-				V3_prot_corr.SetPhi(phi_prot + TMath::Pi()); // Vec.Phi() is between (-180,180), // GENIE coordinate system flipped with respect to CLAS
+				//V3_prot_corr.SetPhi(phi_prot + TMath::Pi()); // Vec.Phi() is between (-180,180), // GENIE coordinate system flipped with respect to CLAS
 
-				if (PFiducialCutExtra(StoreEnergy, V3_prot_corr)) { TrueProtonsAboveThreshold++; }
+				//if (PFiducialCutExtra(StoreEnergy, V3_prot_corr)) { TrueProtonsAboveThreshold++; }
+
+				double theta_proton = V3_prot_corr.Theta() * 180./TMath::Pi();
+				if (theta_proton > 12) { TrueProtonsAboveThreshold++; }
 
 				num_p = num_p + 1;
 				index_p[num_p - 1] = i;
@@ -569,7 +575,7 @@ void genie_analysis::Loop() {
 				Smeared_Pp[num_p - 1] = temp_smear_P;
 				Smeared_Ep[num_p - 1] = temp_smear_E;
 
-				phi_prot += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
+				//phi_prot += TMath::Pi(); // GENIE coordinate system flipped with respect to CLAS
 
 			}
 
